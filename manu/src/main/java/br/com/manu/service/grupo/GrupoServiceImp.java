@@ -20,6 +20,7 @@ public class GrupoServiceImp implements GrupoService{
         Grupo grupo = new Grupo();
         grupo.setFamilia(request.getFamilia());
         grupo.setDescricao(request.getDescricao());
+        repository.save(grupo);
         return createRequest(grupo);
     }
 
