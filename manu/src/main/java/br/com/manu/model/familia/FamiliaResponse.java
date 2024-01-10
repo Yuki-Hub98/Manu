@@ -3,8 +3,6 @@ package br.com.manu.model.familia;
 import org.springframework.data.annotation.Id;
 
 public class FamiliaResponse {
-    @Id
-    private String id;
     private String linha;
     private String descricao;
 
@@ -12,8 +10,8 @@ public class FamiliaResponse {
 
     }
 
-    public FamiliaResponse(String id, String linha, String descricao) {
-        this.id = id;
+    public FamiliaResponse( String linha, String descricao) {
+
         this.linha = linha;
         this.descricao = descricao;
     }
