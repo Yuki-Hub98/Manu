@@ -7,6 +7,15 @@ public class Cor {
     private String id;
     private String descricao;
 
+    public Cor() {
+
+    }
+
+    public Cor(String id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
     public String getId() {
         return id;
     }
