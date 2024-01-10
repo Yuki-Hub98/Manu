@@ -8,6 +8,15 @@ public class Grupo {
     private String familia;
     private String descricao;
 
+    public Grupo() {
+    }
+
+    public Grupo(String id, String familia, String descricao) {
+        this.id = id;
+        this.familia = familia;
+        this.descricao = descricao;
+    }
+
     public String getId() {
         return id;
     }
