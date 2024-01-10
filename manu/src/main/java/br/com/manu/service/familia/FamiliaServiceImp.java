@@ -20,6 +20,7 @@ public class FamiliaServiceImp implements FamiliaService{
         Familia familia = new Familia();
         familia.setLinha(resquest.getLinha());
         familia.setDescricao(resquest.getDescricao());
+        repository.save(familia);
         return createResponse(familia);
     }
 
