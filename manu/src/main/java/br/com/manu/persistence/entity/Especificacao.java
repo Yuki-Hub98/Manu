@@ -9,6 +9,10 @@ public class Especificacao {
     private String id;
     private String descricao;
 
+    public Especificacao() {
+
+    }
+
     public String getId() {
         return id;
     }
