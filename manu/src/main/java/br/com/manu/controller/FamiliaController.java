@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/arvore-produto-familia")
+@RequestMapping("/arvore-produto/familia")
 public class FamiliaController {
     @Autowired
     private FamiliaService service;

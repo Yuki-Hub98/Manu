@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/arvore-produto-linha")
+@RequestMapping("/arvore-produto/linha")
 public class LinhaController {
     @Autowired
     private LinhaService service;

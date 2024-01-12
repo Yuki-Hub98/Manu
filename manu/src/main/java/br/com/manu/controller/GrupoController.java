@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/arvore-produto-grupo")
+@RequestMapping("/arvore-produto/grupo")
 public class GrupoController {
     @Autowired
     private GrupoService service;

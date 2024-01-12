@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/arvore-produto-cor")
+@RequestMapping("/arvore-produto/cor")
 public class CorController {
     @Autowired
     CorService service;
