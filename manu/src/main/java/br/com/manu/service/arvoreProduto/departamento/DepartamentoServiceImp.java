@@ -4,10 +4,11 @@ import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.repository.arvoreProduto.DepartamentoRepository;
-import br.com.manu.service.exceptions.EntityNotValue;
+import br.com.manu.service.exceptions.Exe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.InvalidRelationIdException;
 import java.util.ArrayList;
 import java.util.List;
 @Service
@@ -18,14 +19,17 @@ public class DepartamentoServiceImp implements DepartamentoService{
     public DepartamentoResponse create(DepartamentoRequest request) {
         Departamento departamento = new Departamento();
         departamento.setDescricao(request.getDescricao());
-        if(request.getDescricao() == null || request.getDescricao().trim().isEmpty()) {
-           throw new EntityNotValue("O valor está vázio");
-        }else {
-            repository.save(departamento);
-            return createResponse(departamento);
+        if(find(request.getDescricao()).equals(request.getDescricao())){
+            try {
+                throw new InvalidRelationIdException();
+            } catch (InvalidRelationIdException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-    }
+        repository.save(departamento);
+        return createResponse(departamento);
+        }
 
     @Override
     public List<DepartamentoResponse> getAll() {
@@ -42,5 +46,12 @@ public class DepartamentoServiceImp implements DepartamentoService{
         response.setDescricao(departamento.getDescricao());
         return response;
 
+    }
+
+    private String find(String campo){
+        String duplicate;
+        Departamento find = repository.findByname(campo);
+        duplicate = find.getDescricao();
+        return duplicate;
     }
 }
