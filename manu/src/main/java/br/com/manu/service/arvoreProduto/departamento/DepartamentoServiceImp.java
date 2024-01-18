@@ -19,13 +19,15 @@ public class DepartamentoServiceImp implements DepartamentoService{
     public DepartamentoResponse create(DepartamentoRequest request) {
         Departamento departamento = new Departamento();
         departamento.setDescricao(request.getDescricao());
-        if(find(request.getDescricao()).equals(request.getDescricao())){
-            try {
-                throw new InvalidRelationIdException();
-            } catch (InvalidRelationIdException e) {
-                throw new RuntimeException(e);
+        find(departamento).forEach(dep -> {
+            if(dep.getDescricao().equals(departamento.getDescricao())) {
+                try {
+                    throw new InvalidRelationIdException();
+                } catch (InvalidRelationIdException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        }
+        });
 
         repository.save(departamento);
         return createResponse(departamento);
@@ -48,10 +50,8 @@ public class DepartamentoServiceImp implements DepartamentoService{
 
     }
 
-    private String find(String campo){
-        String duplicate;
-        Departamento find = repository.findByname(campo);
-        duplicate = find.getDescricao();
-        return duplicate;
+    private List<Departamento> find(Departamento campo){
+        List<Departamento> find = repository.findByname(campo.getDescricao());
+        return find;
     }
 }
