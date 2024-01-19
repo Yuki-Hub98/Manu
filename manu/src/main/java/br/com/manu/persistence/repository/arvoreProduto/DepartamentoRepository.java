@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface DepartamentoRepository extends MongoRepository<Departamento, String> {
     @Query("{'descricao': ?0 }")
-    List<Departamento> findByname(String valor);
+    List<Departamento> findByname(String descricao);
 
 }
