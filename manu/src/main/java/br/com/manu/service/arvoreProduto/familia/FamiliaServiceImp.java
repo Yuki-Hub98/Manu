@@ -3,10 +3,12 @@ package br.com.manu.service.arvoreProduto.familia;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResponse;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
+import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.repository.arvoreProduto.FamiliaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.InvalidRelationIdException;
 import java.util.ArrayList;
 import java.util.List;
 @Service
@@ -19,6 +21,15 @@ public class FamiliaServiceImp implements FamiliaService{
         Familia familia = new Familia();
         familia.setLinha(resquest.getLinha());
         familia.setDescricao(resquest.getDescricao());
+        find(familia).forEach((li) -> {
+            if (li.getDescricao().equals(familia.getDescricao()) && li.getLinha().equals(familia.getLinha())) {
+                try {
+                    throw new InvalidRelationIdException();
+                } catch (InvalidRelationIdException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         repository.save(familia);
         return createResponse(familia);
     }
@@ -39,5 +50,10 @@ public class FamiliaServiceImp implements FamiliaService{
         response.setLinha(familia.getLinha());
         response.setDescricao(familia.getDescricao());
         return response;
+    }
+
+    private List<Familia> find(Familia campo){
+        List<Familia> find = repository.findByname(campo.getLinha(), campo.getDescricao());
+        return find;
     }
 }
