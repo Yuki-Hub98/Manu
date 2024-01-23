@@ -23,4 +23,9 @@ public class DepartamentoController {
     public ResponseEntity<List<DepartamentoResponse>> getAll(){
         return ResponseEntity.ok(service.getAll());
     }
+
+    @GetMapping("/search")
+    public  ResponseEntity<List<DepartamentoResponse>> getDescricao(@RequestParam DepartamentoRequest request){
+        return  ResponseEntity.ok(service.getDescricao(request));
+    }
 }
