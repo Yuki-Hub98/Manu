@@ -45,6 +45,17 @@ public class FamiliaServiceImp implements FamiliaService{
         }
         return responses;
     }
+
+    @Override
+    public List<FamiliaResponse> getDescricao(String request) {
+        List<FamiliaResponse> response = new ArrayList<>();
+        List<Familia> search = repository.findRegex(request);
+        if(!search.isEmpty()){
+            search.forEach(descricao -> response.add(createResponse(descricao)));
+        }
+        return response;
+    }
+
     private FamiliaResponse createResponse(Familia familia) {
         FamiliaResponse response = new FamiliaResponse();
         response.setLinha(familia.getLinha());

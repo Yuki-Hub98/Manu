@@ -8,4 +8,5 @@ import java.util.List;
 public interface FamiliaService {
     FamiliaResponse create(FamiliaResquest resquest);
     List<FamiliaResponse> getAll();
+    List<FamiliaResponse> getDescricao(String request);
 }
