@@ -25,7 +25,7 @@ public class DepartamentoController {
     }
 
     @GetMapping("/search")
-    public  ResponseEntity<List<DepartamentoResponse>> getDescricao(@RequestParam DepartamentoRequest request){
+    public  ResponseEntity<List<DepartamentoResponse>> getDescricao(@RequestParam("descricao") String request){
         return  ResponseEntity.ok(service.getDescricao(request));
     }
 }
