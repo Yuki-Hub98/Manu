@@ -9,4 +9,5 @@ import java.util.List;
 public interface GrupoService  {
     GrupoResponse create(GrupoRequest request);
     List<GrupoResponse> getAll();
+    List<GrupoResponse> getDescricao(String request);
 }

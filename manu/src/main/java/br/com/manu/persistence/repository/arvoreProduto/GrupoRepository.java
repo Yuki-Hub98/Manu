@@ -11,4 +11,7 @@ import java.util.List;
 public interface GrupoRepository extends MongoRepository<Grupo, String> {
     @Query("{'familia': ?0 }, {'descricao': ?0}")
     List<Grupo> findByname(String familia, String descricao);
+
+    @Query("'descricao':{ $regex: /^?0/i }")
+    List<Grupo> findRegex(String descricao);
 }

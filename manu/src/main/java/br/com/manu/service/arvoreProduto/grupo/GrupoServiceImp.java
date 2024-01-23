@@ -45,6 +45,16 @@ public class GrupoServiceImp implements GrupoService{
         return responses;
     }
 
+    @Override
+    public List<GrupoResponse> getDescricao(String request) {
+        List<GrupoResponse> response = new ArrayList<>();
+        List<Grupo> search = repository.findRegex(request);
+        if(!search.isEmpty()){
+            search.forEach(descricao -> response.add(createRequest(descricao)));
+        }
+        return response;
+    }
+
     private GrupoResponse createRequest(Grupo grupo) {
         GrupoResponse response = new GrupoResponse();
         response.setFamilia(grupo.getFamilia());
