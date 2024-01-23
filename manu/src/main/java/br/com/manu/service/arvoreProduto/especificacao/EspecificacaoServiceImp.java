@@ -1,7 +1,9 @@
 package br.com.manu.service.arvoreProduto.especificacao;
 
+import br.com.manu.model.arvoreProduto.cor.CorResponse;
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoRequest;
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoResponse;
+import br.com.manu.persistence.entity.arvoreProduto.Cor;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.entity.arvoreProduto.Especificacao;
 import br.com.manu.persistence.repository.arvoreProduto.EspecificacaoRespository;
@@ -42,6 +44,17 @@ public class EspecificacaoServiceImp implements EspecificacaoService{
         }
         return responses;
     }
+
+    @Override
+    public List<EspecificacaoResponse> getDescricao(String request) {
+        List<EspecificacaoResponse> response = new ArrayList<>();
+        List<Especificacao> seach = repository.findRegex(request);
+        if(!seach.isEmpty()){
+            seach.forEach(descricao -> response.add(createResponse(descricao)));
+        }
+        return response;
+    }
+
     private EspecificacaoResponse createResponse(Especificacao especificacao) {
         EspecificacaoResponse response = new EspecificacaoResponse();
         response.setDescricao(especificacao.getDescricao());

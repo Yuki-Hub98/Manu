@@ -9,4 +9,5 @@ public interface EspecificacaoService {
 
     EspecificacaoResponse create(EspecificacaoRequest request);
     List<EspecificacaoResponse> getAll();
+    List<EspecificacaoResponse> getDescricao(String request);
 }
