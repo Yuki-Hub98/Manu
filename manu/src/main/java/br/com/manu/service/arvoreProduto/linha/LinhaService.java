@@ -8,4 +8,5 @@ import java.util.List;
 public interface LinhaService {
     LinhaResponse create(LinhaRequest request);
     List<LinhaResponse> getAll();
+    List<LinhaResponse> getDescricao(String request);
 }

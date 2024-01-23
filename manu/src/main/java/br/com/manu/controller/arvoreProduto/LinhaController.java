@@ -23,4 +23,9 @@ public class LinhaController {
     public ResponseEntity<List<LinhaResponse>> getAll(){
         return ResponseEntity.ok(service.getAll());
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<LinhaResponse>> getDescricao(@RequestParam("descricao") String request){
+        return ResponseEntity.ok(service.getDescricao(request));
+    }
 }

@@ -37,8 +37,6 @@ public class LinhaServiceImp implements LinhaService {
 
     }
 
-
-
     @Override
     public List<LinhaResponse> getAll() {
         List<LinhaResponse> responses = new ArrayList<>();
@@ -47,6 +45,16 @@ public class LinhaServiceImp implements LinhaService {
             linhas.forEach(linha -> responses.add(createResponse(linha)));
         }
         return responses;
+    }
+
+    @Override
+    public List<LinhaResponse> getDescricao(String request) {
+        List<LinhaResponse> response = new ArrayList<>();
+        List<Linha> search = repository.findRegex(request);
+        if(!search.isEmpty()){
+            search.forEach(descricao -> response.add(createResponse(descricao)));
+        }
+        return response;
     }
 
     private LinhaResponse createResponse(Linha linha) {

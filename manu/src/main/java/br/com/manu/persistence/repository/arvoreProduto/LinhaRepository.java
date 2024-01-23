@@ -12,4 +12,6 @@ import java.util.List;
 public interface LinhaRepository extends MongoRepository<Linha, String> {
     @Query("{'departamento': ?0 }, {'descricao': ?0}")
     List<Linha> findByname(String departamento, String descricao);
+    @Query("{'descricao': { $regex: /^?0/i }}")
+    List<Linha> findRegex(String descricao);
 }
