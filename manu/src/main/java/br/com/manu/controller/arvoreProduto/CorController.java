@@ -27,8 +27,9 @@ public class CorController {
         return ResponseEntity.ok(service.getAll());
 
     }
+
     @GetMapping("/search")
-    public  ResponseEntity<List<CorResponse>> getDescricao(@RequestParam CorRequest request){
+    public  ResponseEntity<List<CorResponse>> getDescricao(@RequestParam("descricao") String request){
         return  ResponseEntity.ok(service.getDescricao(request));
     }
 }

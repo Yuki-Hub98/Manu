@@ -10,5 +10,5 @@ import java.util.List;
 public interface CorService {
     CorResponse create(CorRequest request);
     List<CorResponse> getAll();
-    List<CorResponse> getDescricao(CorRequest request);
+    List<CorResponse> getDescricao(String request);
 }

@@ -45,9 +45,9 @@ public class CorServiceImp implements CorService{
     }
 
     @Override
-    public List<CorResponse> getDescricao(CorRequest request) {
+    public List<CorResponse> getDescricao(String request) {
         List<CorResponse> response = new ArrayList<>();
-        List<Cor> seach = repository.findRegex(request.getDescricao());
+        List<Cor> seach = repository.findRegex(request);
         if(!seach.isEmpty()){
             seach.forEach(descricao -> response.add(createResponse(descricao)));
         }
