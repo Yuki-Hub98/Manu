@@ -48,7 +48,7 @@ public class DepartamentoServiceImp implements DepartamentoService{
         List<DepartamentoResponse> response = new ArrayList<>();
         List<Departamento> seach = repository.findRegex(request.getDescricao());
         if(!seach.isEmpty()){
-            seach.forEach(departamento -> response.add(createResponse(departamento)));
+            seach.forEach(descricao -> response.add(createResponse(descricao)));
         }
         return response;
     }
