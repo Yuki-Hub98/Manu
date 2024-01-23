@@ -5,7 +5,10 @@ public class CorRequest {
     private String descricao;
 
     public CorRequest() {
+    }
 
+    public CorRequest(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getDescricao() {
