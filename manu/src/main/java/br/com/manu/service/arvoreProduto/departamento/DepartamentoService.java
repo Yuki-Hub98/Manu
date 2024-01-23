@@ -8,4 +8,5 @@ import java.util.List;
 public interface DepartamentoService {
     DepartamentoResponse create(DepartamentoRequest request);
     List<DepartamentoResponse> getAll();
+    List<DepartamentoResponse> getDescricao(DepartamentoRequest request);
 }

@@ -43,6 +43,16 @@ public class DepartamentoServiceImp implements DepartamentoService{
         return responses;
     }
 
+    @Override
+    public List<DepartamentoResponse> getDescricao(DepartamentoRequest request) {
+        List<DepartamentoResponse> response = new ArrayList<>();
+        List<Departamento> seach = repository.findRegex(request.getDescricao());
+        if(!seach.isEmpty()){
+            seach.forEach(departamento -> response.add(createResponse(departamento)));
+        }
+        return response;
+    }
+
     private DepartamentoResponse createResponse(Departamento departamento) {
         DepartamentoResponse response = new DepartamentoResponse();
         response.setDescricao(departamento.getDescricao());
