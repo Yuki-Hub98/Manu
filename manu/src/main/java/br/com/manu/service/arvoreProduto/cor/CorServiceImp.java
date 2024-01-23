@@ -2,6 +2,7 @@ package br.com.manu.service.arvoreProduto.cor;
 
 import br.com.manu.model.arvoreProduto.cor.CorRequest;
 import br.com.manu.model.arvoreProduto.cor.CorResponse;
+import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
 import br.com.manu.persistence.entity.arvoreProduto.Cor;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.repository.arvoreProduto.CorRepository;
@@ -41,6 +42,16 @@ public class CorServiceImp implements CorService{
             cors.forEach(cor -> responses.add(createResponse(cor)));
         }
         return responses;
+    }
+
+    @Override
+    public List<CorResponse> getDescricao(CorRequest request) {
+        List<CorResponse> response = new ArrayList<>();
+        List<Cor> seach = repository.findRegex(request.getDescricao());
+        if(!seach.isEmpty()){
+            seach.forEach(descricao -> response.add(createResponse(descricao)));
+        }
+        return response;
     }
 
     private CorResponse createResponse(Cor cor) {
