@@ -10,5 +10,6 @@ import java.util.List;
 public interface DepartamentoRepository extends MongoRepository<Departamento, String> {
     @Query("{'descricao': ?0 }")
     List<Departamento> findByname(String descricao);
-
+    @Query("{'descricao':{$regex:/^?0/i}}")
+    List<Departamento> findRegex(String descricao);
 }
