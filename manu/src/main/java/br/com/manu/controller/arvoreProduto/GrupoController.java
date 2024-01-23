@@ -24,4 +24,9 @@ public class GrupoController {
     public ResponseEntity<List<GrupoResponse>> getAll(){
         return ResponseEntity.ok(service.getAll());
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<GrupoResponse>> getDescricao(@RequestParam("descricao") String request){
+        return ResponseEntity.ok(service.getDescricao(request));
+    }
 }
