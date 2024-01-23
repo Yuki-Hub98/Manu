@@ -10,4 +10,6 @@ import java.util.List;
 public interface CorRepository extends MongoRepository<Cor, String> {
     @Query("{'descricao': ?0 }")
     List<Cor> findByname(String descricao);
+    @Query("{'descricao':{$regex:/^?0/i}}")
+    List<Cor> findRegex(String descricao);
 }
