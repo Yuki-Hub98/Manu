@@ -1,9 +1,12 @@
 package br.com.manu.service.arvoreProduto.linha;
 
+import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
+import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
 import br.com.manu.model.arvoreProduto.linha.LinhaEdit;
 import br.com.manu.model.arvoreProduto.linha.LinhaRequest;
 import br.com.manu.model.arvoreProduto.linha.LinhaResponse;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
+import br.com.manu.persistence.entity.arvoreProduto.Familia;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.repository.arvoreProduto.LinhaRepository;
 import com.mongodb.client.result.UpdateResult;
@@ -81,9 +84,17 @@ public class LinhaServiceImp implements LinhaService {
                 }
             }
         });
-        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
-                Update.update("descricao", request.getEditDescricao()).set("departamento",
-                        request.getEditDepartamento()), Linha.class, "linha");
+        List<Familia> familias = mongoTemplate.find(Query.query(Criteria.where("linha").is(request.getDescricao())),
+                Familia.class, "familia");
+
+        if(!familias.isEmpty()){
+            editLin(request);
+            mongoTemplate.updateMulti(Query.query(Criteria.where("linha").is(request.getDescricao())),
+                    Update.update("linha", request.getEditDescricao()),
+                    Familia.class, "familia");
+        }else {
+            editLin(request);
+        }
 
         return createResponse(newLinha);
     }
@@ -98,5 +109,11 @@ public class LinhaServiceImp implements LinhaService {
     private List<Linha> find(Linha campo){
         List<Linha> find = repository.findByname(campo.getDepartamento(), campo.getDescricao());
         return find;
+    }
+
+    private void editLin (LinhaEdit request){
+        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
+                Update.update("descricao", request.getEditDescricao()).set("departamento", request.getEditDepartamento()),
+                Linha.class, "linha");
     }
 }
