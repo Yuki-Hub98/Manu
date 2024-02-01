@@ -1,5 +1,6 @@
 package br.com.manu.service.arvoreProduto.grupo;
 
+import br.com.manu.model.arvoreProduto.grupo.GrupoEdit;
 import br.com.manu.model.arvoreProduto.grupo.GrupoRequest;
 import br.com.manu.model.arvoreProduto.grupo.GrupoResponse;
 
@@ -10,4 +11,5 @@ public interface GrupoService  {
     GrupoResponse create(GrupoRequest request);
     List<GrupoResponse> getAll();
     List<GrupoResponse> getDescricao(String request);
+    GrupoResponse edit(GrupoEdit request);
 }
