@@ -1,7 +1,9 @@
 package br.com.manu.persistence.entity.arvoreProduto;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "cor")
 public class Cor {
     @Id
     private String id;

@@ -1,5 +1,6 @@
 package br.com.manu.service.arvoreProduto.cor;
 
+import br.com.manu.model.arvoreProduto.cor.CorEdit;
 import br.com.manu.model.arvoreProduto.cor.CorRequest;
 import br.com.manu.model.arvoreProduto.cor.CorResponse;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
@@ -7,6 +8,10 @@ import br.com.manu.persistence.entity.arvoreProduto.Cor;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.repository.arvoreProduto.CorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.InvalidRelationIdException;
@@ -16,6 +21,12 @@ import java.util.List;
 public class CorServiceImp implements CorService{
     @Autowired
     private CorRepository repository;
+    private MongoTemplate mongoTemplate;
+
+    public CorServiceImp(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+
+    }
 
     @Override
     public CorResponse create(CorRequest request) {
@@ -52,6 +63,24 @@ public class CorServiceImp implements CorService{
             seach.forEach(descricao -> response.add(createResponse(descricao)));
         }
         return response;
+    }
+
+    @Override
+    public CorResponse edit(CorEdit request) {
+        Cor newCor = new Cor();
+        newCor.setDescricao(request.getEdit());
+        find(newCor).forEach(dep -> {
+            if(dep.getDescricao().equals(newCor.getDescricao())) {
+                try {
+                    throw new InvalidRelationIdException();
+                } catch (InvalidRelationIdException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
+                Update.update("descricao", request.getEdit()), Cor.class, "cor");
+        return createResponse(newCor);
     }
 
     private CorResponse createResponse(Cor cor) {

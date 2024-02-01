@@ -1,5 +1,6 @@
 package br.com.manu.controller.arvoreProduto;
 
+import br.com.manu.model.arvoreProduto.cor.CorEdit;
 import br.com.manu.model.arvoreProduto.cor.CorRequest;
 import br.com.manu.model.arvoreProduto.cor.CorResponse;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
@@ -27,9 +28,12 @@ public class CorController {
         return ResponseEntity.ok(service.getAll());
 
     }
-
     @GetMapping("/search")
     public  ResponseEntity<List<CorResponse>> getDescricao(@RequestParam("descricao") String request){
         return  ResponseEntity.ok(service.getDescricao(request));
+    }
+    @PutMapping("/edit")
+    public ResponseEntity<CorResponse> edit(@RequestBody CorEdit request){
+        return ResponseEntity.ok(service.edit(request));
     }
 }

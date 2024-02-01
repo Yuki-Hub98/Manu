@@ -1,5 +1,6 @@
 package br.com.manu.service.arvoreProduto.cor;
 
+import br.com.manu.model.arvoreProduto.cor.CorEdit;
 import br.com.manu.model.arvoreProduto.cor.CorRequest;
 import br.com.manu.model.arvoreProduto.cor.CorResponse;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
@@ -11,4 +12,5 @@ public interface CorService {
     CorResponse create(CorRequest request);
     List<CorResponse> getAll();
     List<CorResponse> getDescricao(String request);
+    CorResponse edit(CorEdit request);
 }
