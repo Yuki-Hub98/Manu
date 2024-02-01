@@ -1,11 +1,16 @@
 package br.com.manu.service.arvoreProduto.familia;
 
+import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResponse;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.repository.arvoreProduto.FamiliaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.InvalidRelationIdException;
@@ -16,6 +21,12 @@ public class FamiliaServiceImp implements FamiliaService{
 
     @Autowired
     private FamiliaRepository repository;
+    private MongoTemplate mongoTemplate;
+    private Linha linha;
+    public FamiliaServiceImp(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+
+    }
     @Override
     public FamiliaResponse create(FamiliaResquest resquest) {
         Familia familia = new Familia();
@@ -54,6 +65,27 @@ public class FamiliaServiceImp implements FamiliaService{
             search.forEach(descricao -> response.add(createResponse(descricao)));
         }
         return response;
+    }
+
+    @Override
+    public FamiliaResponse edit(FamiliaEdit request) {
+        Familia newFamilia = new Familia();
+        newFamilia.setLinha(request.getEditLinha());
+        newFamilia.setDescricao(request.getEditDescricao());
+        find(newFamilia).forEach((li) -> {
+            if (li.getDescricao().equals(newFamilia.getDescricao()) && li.getLinha().equals(newFamilia.getLinha())) {
+                try {
+                    throw new InvalidRelationIdException();
+                } catch (InvalidRelationIdException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
+                Update.update("descricao", request.getEditDescricao()).set("linha", request.getEditLinha()),
+                Familia.class, "familia");
+
+        return createResponse(newFamilia);
     }
 
     private FamiliaResponse createResponse(Familia familia) {

@@ -1,6 +1,7 @@
 package br.com.manu.controller.arvoreProduto;
 
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoResponse;
+import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResponse;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
 import br.com.manu.service.arvoreProduto.familia.FamiliaService;
@@ -29,5 +30,9 @@ public class FamiliaController {
     @GetMapping("/search")
     public  ResponseEntity<List<FamiliaResponse>> getDescricao(@RequestParam("descricao") String request){
         return  ResponseEntity.ok(service.getDescricao(request));
+    }
+    @PutMapping("/edit")
+    public ResponseEntity<FamiliaResponse> edit(@RequestBody FamiliaEdit request){
+        return ResponseEntity.ok(service.edit(request));
     }
 }
