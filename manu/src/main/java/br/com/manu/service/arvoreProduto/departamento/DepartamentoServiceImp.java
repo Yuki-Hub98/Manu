@@ -1,11 +1,15 @@
 package br.com.manu.service.arvoreProduto.departamento;
 
+import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.repository.arvoreProduto.DepartamentoRepository;
-import br.com.manu.service.exceptions.Exe;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.InvalidRelationIdException;
@@ -15,6 +19,13 @@ import java.util.List;
 public class DepartamentoServiceImp implements DepartamentoService{
     @Autowired
     private DepartamentoRepository repository;
+
+    private MongoTemplate mongoTemplate;
+    public DepartamentoServiceImp(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+
+    }
+
     @Override
     public DepartamentoResponse create(DepartamentoRequest request) {
         Departamento departamento = new Departamento();
@@ -28,7 +39,6 @@ public class DepartamentoServiceImp implements DepartamentoService{
                 }
             }
         });
-
         repository.save(departamento);
         return createResponse(departamento);
         }
@@ -52,6 +62,28 @@ public class DepartamentoServiceImp implements DepartamentoService{
         }
         return response;
     }
+
+    @Override
+    public DepartamentoResponse edit(DepartamentoEdit request) {
+        Departamento newDepartamento = new Departamento();
+        newDepartamento.setDescricao(request.getEdit());
+        find(newDepartamento).forEach(newDep -> {
+            if(newDep.getDescricao().equals(newDepartamento.getDescricao())){
+                try {
+                    throw new InvalidRelationIdException();
+                } catch (InvalidRelationIdException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
+                Update.update("descricao", request.getEdit()),
+                Departamento.class, "departamento");
+
+        return createResponse(newDepartamento);
+    }
+
 
     private DepartamentoResponse createResponse(Departamento departamento) {
         DepartamentoResponse response = new DepartamentoResponse();
