@@ -4,6 +4,7 @@ import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResponse;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
+import br.com.manu.persistence.entity.arvoreProduto.Grupo;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.repository.arvoreProduto.FamiliaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,9 +82,15 @@ public class FamiliaServiceImp implements FamiliaService{
                 }
             }
         });
-        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
-                Update.update("descricao", request.getEditDescricao()).set("linha", request.getEditLinha()),
-                Familia.class, "familia");
+        List<Grupo> grupos = mongoTemplate.find(Query.query(Criteria.where("familia").is(request.getDescricao())), Grupo.class, "grupo");
+        if(!grupos.isEmpty()){
+            editFam(request);
+            mongoTemplate.updateMulti(Query.query(Criteria.where("familia").is(request.getDescricao())),
+                    Update.update("familia", request.getEditDescricao()),
+                    Grupo.class, "grupo");
+        }else{
+           editFam(request);
+        }
 
         return createResponse(newFamilia);
     }
@@ -98,5 +105,11 @@ public class FamiliaServiceImp implements FamiliaService{
     private List<Familia> find(Familia campo){
         List<Familia> find = repository.findByname(campo.getLinha(), campo.getDescricao());
         return find;
+    }
+
+    private void editFam(FamiliaEdit request){
+        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
+                Update.update("descricao", request.getEditDescricao()).set("linha", request.getEditLinha()),
+                Familia.class, "familia");
     }
 }
