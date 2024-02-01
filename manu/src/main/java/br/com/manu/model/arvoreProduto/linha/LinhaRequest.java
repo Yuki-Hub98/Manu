@@ -1,5 +1,7 @@
 package br.com.manu.model.arvoreProduto.linha;
 
+import br.com.manu.persistence.entity.arvoreProduto.Departamento;
+
 public class LinhaRequest {
     private String departamento;
     private String descricao;

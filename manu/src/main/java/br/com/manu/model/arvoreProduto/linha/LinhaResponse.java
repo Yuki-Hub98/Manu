@@ -1,16 +1,13 @@
 package br.com.manu.model.arvoreProduto.linha;
 
+import br.com.manu.persistence.entity.arvoreProduto.Departamento;
+
 public class LinhaResponse {
     private String departamento;
     private String descricao;
 
     public LinhaResponse() {
 
-    }
-
-    public LinhaResponse(String departamento, String descricao) {
-        this.departamento = departamento;
-        this.descricao = descricao;
     }
 
     public String getDepartamento() {

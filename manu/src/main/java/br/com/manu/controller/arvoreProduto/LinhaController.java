@@ -1,5 +1,6 @@
 package br.com.manu.controller.arvoreProduto;
 
+import br.com.manu.model.arvoreProduto.linha.LinhaEdit;
 import br.com.manu.model.arvoreProduto.linha.LinhaRequest;
 import br.com.manu.model.arvoreProduto.linha.LinhaResponse;
 import br.com.manu.service.arvoreProduto.linha.LinhaService;
@@ -27,5 +28,10 @@ public class LinhaController {
     @GetMapping("/search")
     public ResponseEntity<List<LinhaResponse>> getDescricao(@RequestParam("descricao") String request){
         return ResponseEntity.ok(service.getDescricao(request));
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<LinhaResponse> edit(@RequestBody LinhaEdit request){
+        return ResponseEntity.ok(service.edit(request));
     }
 }
