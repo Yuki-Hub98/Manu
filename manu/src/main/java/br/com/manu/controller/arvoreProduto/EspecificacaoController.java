@@ -1,6 +1,7 @@
 package br.com.manu.controller.arvoreProduto;
 
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
+import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoEdit;
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoRequest;
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoResponse;
 import br.com.manu.service.arvoreProduto.especificacao.EspecificacaoService;
@@ -30,5 +31,9 @@ public class EspecificacaoController {
     @GetMapping("/search")
     public  ResponseEntity<List<EspecificacaoResponse>> getDescricao(@RequestParam("descricao") String request){
         return  ResponseEntity.ok(service.getDescricao(request));
+    }
+    @PutMapping("/edit")
+    public ResponseEntity<EspecificacaoResponse> edit(@RequestBody EspecificacaoEdit request){
+        return ResponseEntity.ok(service.edite(request));
     }
 }

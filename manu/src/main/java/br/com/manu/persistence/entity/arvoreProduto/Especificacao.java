@@ -3,7 +3,7 @@ package br.com.manu.persistence.entity.arvoreProduto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+@Document(collection = "especificacao")
 public class Especificacao {
     @Id
     private String id;
