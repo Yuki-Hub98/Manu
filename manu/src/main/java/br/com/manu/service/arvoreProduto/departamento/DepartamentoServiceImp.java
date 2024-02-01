@@ -4,6 +4,7 @@ import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
+import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.repository.arvoreProduto.DepartamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -67,6 +68,7 @@ public class DepartamentoServiceImp implements DepartamentoService{
     public DepartamentoResponse edit(DepartamentoEdit request) {
         Departamento newDepartamento = new Departamento();
         newDepartamento.setDescricao(request.getEdit());
+
         find(newDepartamento).forEach(newDep -> {
             if(newDep.getDescricao().equals(newDepartamento.getDescricao())){
                 try {
@@ -76,10 +78,16 @@ public class DepartamentoServiceImp implements DepartamentoService{
                 }
             }
         });
-
-        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
-                Update.update("descricao", request.getEdit()),
-                Departamento.class, "departamento");
+        List<Linha> linhas = mongoTemplate.find(Query.query(Criteria.where("departamento").is(request.getDescricao())), Linha.class, "linha");
+        if(!linhas.isEmpty()){
+            editDep(request);
+            mongoTemplate.updateMulti(Query.query(Criteria.where("departamento").is(request.getDescricao())),
+                    Update.update("departamento", request.getEdit()),
+                    Linha.class, "linha");
+            linhas.forEach(System.out::println);
+        }else {
+            editDep(request);
+        }
 
         return createResponse(newDepartamento);
     }
@@ -95,5 +103,11 @@ public class DepartamentoServiceImp implements DepartamentoService{
     private List<Departamento> find(Departamento campo){
         List<Departamento> find = repository.findByname(campo.getDescricao());
         return find;
+    }
+
+    private void editDep (DepartamentoEdit request){
+        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
+                Update.update("descricao", request.getEdit()),
+                Departamento.class, "departamento");
     }
 }
