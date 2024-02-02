@@ -1,5 +1,6 @@
 package br.com.manu.controller.arvoreProduto;
 
+import br.com.manu.model.arvoreProduto.linha.LinhaDel;
 import br.com.manu.model.arvoreProduto.linha.LinhaEdit;
 import br.com.manu.model.arvoreProduto.linha.LinhaRequest;
 import br.com.manu.model.arvoreProduto.linha.LinhaResponse;
@@ -33,5 +34,10 @@ public class LinhaController {
     @PutMapping("/edit")
     public ResponseEntity<LinhaResponse> edit(@RequestBody LinhaEdit request){
         return ResponseEntity.ok(service.edit(request));
+    }
+
+    @DeleteMapping("/del")
+    public ResponseEntity<LinhaDel>del(@RequestParam("descricao") String descricao, @RequestBody LinhaResponse request){
+        return ResponseEntity.ok(service.del(descricao, request));
     }
 }

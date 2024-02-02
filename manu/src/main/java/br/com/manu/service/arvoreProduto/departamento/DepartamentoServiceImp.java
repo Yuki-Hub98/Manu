@@ -105,7 +105,7 @@ public class DepartamentoServiceImp implements DepartamentoService{
                 throw new DataIntegrityViolationException(request.getDescricao());
             }
         }else{
-            mongoTemplate.remove(Query.query(Criteria.where("descricao").is(request.getDescricao())), Departamento.class);
+            mongoTemplate.remove(Query.query(Criteria.where("descricao").is(request.getDescricao())), Departamento.class, "departamento");
         }
         return responseDel(del);
     }

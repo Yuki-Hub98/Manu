@@ -2,6 +2,7 @@ package br.com.manu.service.arvoreProduto.linha;
 
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
 import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
+import br.com.manu.model.arvoreProduto.linha.LinhaDel;
 import br.com.manu.model.arvoreProduto.linha.LinhaEdit;
 import br.com.manu.model.arvoreProduto.linha.LinhaRequest;
 import br.com.manu.model.arvoreProduto.linha.LinhaResponse;
@@ -11,6 +12,7 @@ import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.repository.arvoreProduto.LinhaRepository;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -99,10 +101,36 @@ public class LinhaServiceImp implements LinhaService {
         return createResponse(newLinha);
     }
 
+    @Override
+    public LinhaDel del(String descricao, LinhaResponse request) {
+        Linha del = new Linha();
+        del.setDepartamento(request.getDepartamento());
+        del.setDescricao(request.getDescricao());
+        List<Familia> familias = mongoTemplate.find(Query.query(Criteria.where("linha").is(descricao)), Familia.class, "familia");
+        if (!familias.isEmpty()){
+            try {
+                throw new DataIntegrityViolationException(descricao);
+            } catch (DataIntegrityViolationException e) {
+                throw new DataIntegrityViolationException(descricao);
+            }
+        }else{
+            mongoTemplate.remove(Query.query(Criteria.where("departamento").is(request.getDepartamento()).and("descricao").is(request.getDescricao())),
+                    Linha.class, "linha");
+        }
+        return responseDel(del);
+    }
+
     private LinhaResponse createResponse(Linha linha) {
         LinhaResponse response = new LinhaResponse();
         response.setDepartamento(linha.getDepartamento());
         response.setDescricao(linha.getDescricao());
+        return response;
+    }
+
+    private LinhaDel responseDel(Linha linha){
+        LinhaDel response = new LinhaDel();
+        response.setDepDel(linha.getDepartamento());
+        response.setDel(linha.getDescricao());
         return response;
     }
 
