@@ -37,7 +37,7 @@ public class LinhaController {
     }
 
     @DeleteMapping("/del")
-    public ResponseEntity<LinhaDel>del(@RequestParam("descricao") String descricao, @RequestBody LinhaResponse request){
+    public ResponseEntity<LinhaDel>del(@RequestParam("descricao") String descricao, @RequestBody LinhaRequest request){
         return ResponseEntity.ok(service.del(descricao, request));
     }
 }

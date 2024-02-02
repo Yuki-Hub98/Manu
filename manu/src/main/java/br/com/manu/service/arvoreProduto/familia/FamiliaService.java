@@ -12,5 +12,5 @@ public interface FamiliaService {
     List<FamiliaResponse> getAll();
     List<FamiliaResponse> getDescricao(String request);
     FamiliaResponse edit(FamiliaEdit request);
-    FamiliaDel del(String descricao, FamiliaResponse request);
+    FamiliaDel del(String descricao, FamiliaResquest request);
 }

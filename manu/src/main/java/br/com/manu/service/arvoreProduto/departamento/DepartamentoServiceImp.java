@@ -94,7 +94,7 @@ public class DepartamentoServiceImp implements DepartamentoService{
     }
 
     @Override
-    public DepartamentoDel del(DepartamentoResponse request) throws DataIntegrityViolationException {
+    public DepartamentoDel del(DepartamentoRequest request) throws DataIntegrityViolationException {
         Departamento del = new Departamento();
         del.setDescricao(request.getDescricao());
         List<Linha> linhas = mongoTemplate.find(Query.query(Criteria.where("departamento").is(request.getDescricao())), Linha.class, "linha");

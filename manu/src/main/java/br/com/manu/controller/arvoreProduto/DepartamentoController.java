@@ -37,7 +37,7 @@ public class DepartamentoController {
     }
 
     @DeleteMapping("/del")
-    public ResponseEntity <DepartamentoDel> del(@RequestParam("descricao") DepartamentoResponse request){
+    public ResponseEntity <DepartamentoDel> del(@RequestParam("descricao") DepartamentoRequest request){
         return ResponseEntity.ok(service.del(request));
     }
 

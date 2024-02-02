@@ -98,7 +98,7 @@ public class FamiliaServiceImp implements FamiliaService{
     }
 
     @Override
-    public FamiliaDel del(String descricao, FamiliaResponse request) {
+    public FamiliaDel del(String descricao, FamiliaResquest request) {
         Familia del = new Familia();
         del.setLinha(request.getLinha());
         del.setDescricao(request.getDescricao());

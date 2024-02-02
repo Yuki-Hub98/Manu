@@ -13,5 +13,5 @@ public interface DepartamentoService {
     List<DepartamentoResponse> getAll();
     List<DepartamentoResponse> getDescricao(String request);
     DepartamentoResponse edit(DepartamentoEdit request);
-    DepartamentoDel del(DepartamentoResponse request) throws DataIntegrityViolationException;
+    DepartamentoDel del(DepartamentoRequest request) throws DataIntegrityViolationException;
 }

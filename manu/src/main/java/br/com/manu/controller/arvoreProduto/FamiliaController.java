@@ -37,7 +37,7 @@ public class FamiliaController {
         return ResponseEntity.ok(service.edit(request));
     }
     @DeleteMapping("/del")
-    public ResponseEntity<FamiliaDel> del(@RequestParam ("descricao") String descricao, @RequestBody FamiliaResponse request){
+    public ResponseEntity<FamiliaDel> del(@RequestParam ("descricao") String descricao, @RequestBody FamiliaResquest request){
         return ResponseEntity.ok(service.del(descricao, request));
     }
 }

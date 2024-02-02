@@ -102,7 +102,7 @@ public class LinhaServiceImp implements LinhaService {
     }
 
     @Override
-    public LinhaDel del(String descricao, LinhaResponse request) {
+    public LinhaDel del(String descricao, LinhaRequest request) {
         Linha del = new Linha();
         del.setDepartamento(request.getDepartamento());
         del.setDescricao(request.getDescricao());

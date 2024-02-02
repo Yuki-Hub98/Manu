@@ -12,5 +12,5 @@ public interface LinhaService {
     List<LinhaResponse> getAll();
     List<LinhaResponse> getDescricao(String request);
     LinhaResponse edit(LinhaEdit request);
-    LinhaDel del(String descricao, LinhaResponse request);
+    LinhaDel del(String descricao, LinhaRequest request);
 }
