@@ -1,5 +1,6 @@
 package br.com.manu.controller.arvoreProduto;
 
+import br.com.manu.model.arvoreProduto.departamento.DepartamentoDel;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
@@ -33,6 +34,11 @@ public class DepartamentoController {
     @PutMapping("/edit")
     public ResponseEntity <DepartamentoResponse> edit(@RequestBody DepartamentoEdit request){
         return ResponseEntity.ok(service.edit(request));
+    }
+
+    @DeleteMapping("/del")
+    public ResponseEntity <DepartamentoDel> del(@RequestParam("descricao") DepartamentoResponse request){
+        return ResponseEntity.ok(service.del(request));
     }
 
 }

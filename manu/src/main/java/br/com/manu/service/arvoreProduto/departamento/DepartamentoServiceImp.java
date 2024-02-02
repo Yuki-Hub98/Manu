@@ -1,5 +1,6 @@
 package br.com.manu.service.arvoreProduto.departamento;
 
+import br.com.manu.model.arvoreProduto.departamento.DepartamentoDel;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
@@ -7,6 +8,7 @@ import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.repository.arvoreProduto.DepartamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -68,7 +70,6 @@ public class DepartamentoServiceImp implements DepartamentoService{
     public DepartamentoResponse edit(DepartamentoEdit request) {
         Departamento newDepartamento = new Departamento();
         newDepartamento.setDescricao(request.getEdit());
-
         find(newDepartamento).forEach(newDep -> {
             if(newDep.getDescricao().equals(newDepartamento.getDescricao())){
                 try {
@@ -92,12 +93,35 @@ public class DepartamentoServiceImp implements DepartamentoService{
         return createResponse(newDepartamento);
     }
 
+    @Override
+    public DepartamentoDel del(DepartamentoResponse request) throws DataIntegrityViolationException {
+        Departamento del = new Departamento();
+        del.setDescricao(request.getDescricao());
+        List<Linha> linhas = mongoTemplate.find(Query.query(Criteria.where("departamento").is(request.getDescricao())), Linha.class, "linha");
+        if(!linhas.isEmpty()){
+            try {
+                throw new DataIntegrityViolationException(request.getDescricao());
+            } catch (DataIntegrityViolationException e) {
+                throw new DataIntegrityViolationException(request.getDescricao());
+            }
+        }else{
+            mongoTemplate.remove(Query.query(Criteria.where("descricao").is(request.getDescricao())), Departamento.class);
+        }
+        return responseDel(del);
+    }
+
 
     private DepartamentoResponse createResponse(Departamento departamento) {
         DepartamentoResponse response = new DepartamentoResponse();
         response.setDescricao(departamento.getDescricao());
         return response;
 
+    }
+
+    private DepartamentoDel responseDel(Departamento departamento){
+        DepartamentoDel response = new DepartamentoDel();
+        response.setDel(departamento.getDescricao());
+        return response;
     }
 
     private List<Departamento> find(Departamento campo){
@@ -110,4 +134,5 @@ public class DepartamentoServiceImp implements DepartamentoService{
                 Update.update("descricao", request.getEdit()),
                 Departamento.class, "departamento");
     }
+
 }
