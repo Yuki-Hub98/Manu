@@ -3,6 +3,7 @@ package br.com.manu.controller.execeptions;
 import br.com.manu.model.exceptions.ExceptionResponse;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,7 +33,7 @@ public class ExceptionsHandlerController {
 
     //Essa validação é para campos duplicados
     @ExceptionHandler(InvalidRelationIdException.class)
-    public  ResponseEntity<ExceptionResponse> Dupicate (InvalidRelationIdException exception, HttpServletRequest request){
+    public  ResponseEntity<ExceptionResponse> Duplicate (InvalidRelationIdException exception, HttpServletRequest request){
         ExceptionResponse error = new ExceptionResponse();
         error.setTimesTamp(Instant.now());
         error.setStatus(422);
@@ -40,6 +41,17 @@ public class ExceptionsHandlerController {
         error.setMessage("Essa informação já está cadastrada");
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(422).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionResponse> ThereIsRegistration(DataIntegrityViolationException exception, HttpServletRequest request){
+        ExceptionResponse error = new ExceptionResponse();
+        error.setTimesTamp(Instant.now());
+        error.setStatus(403);
+        error.setError("Cadastro Relacionado");
+        error.setMessage("Essa informação está relacionada a outro documento");
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(403).body(error);
     }
 
 }
