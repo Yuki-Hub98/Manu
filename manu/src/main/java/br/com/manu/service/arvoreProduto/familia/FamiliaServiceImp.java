@@ -1,5 +1,6 @@
 package br.com.manu.service.arvoreProduto.familia;
 
+import br.com.manu.model.arvoreProduto.familia.FamiliaDel;
 import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResponse;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
@@ -8,6 +9,7 @@ import br.com.manu.persistence.entity.arvoreProduto.Grupo;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.repository.arvoreProduto.FamiliaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -95,10 +97,34 @@ public class FamiliaServiceImp implements FamiliaService{
         return createResponse(newFamilia);
     }
 
+    @Override
+    public FamiliaDel del(String descricao, FamiliaResponse request) {
+        Familia del = new Familia();
+        del.setLinha(request.getLinha());
+        del.setDescricao(request.getDescricao());
+        List<Grupo> grupos = mongoTemplate.find(Query.query(Criteria.where("familia").is(descricao)), Grupo.class, "grupo");
+        if (!grupos.isEmpty()){
+            try {
+                throw new DataIntegrityViolationException(descricao);
+            } catch (DataIntegrityViolationException e) {
+                throw new DataIntegrityViolationException(descricao);
+            }
+        }else{
+            mongoTemplate.remove(Query.query(Criteria.where("linha").is(request.getLinha()).and("descricao").is(request.getDescricao())),
+                    Familia.class, "familia");
+        }
+        return responseDel(del);
+    }
     private FamiliaResponse createResponse(Familia familia) {
         FamiliaResponse response = new FamiliaResponse();
         response.setLinha(familia.getLinha());
         response.setDescricao(familia.getDescricao());
+        return response;
+    }
+    private FamiliaDel responseDel(Familia familia){
+        FamiliaDel response = new FamiliaDel();
+        response.setDelLinha(familia.getLinha());
+        response.setDel(familia.getDescricao());
         return response;
     }
 

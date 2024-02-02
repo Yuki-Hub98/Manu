@@ -1,6 +1,7 @@
 package br.com.manu.controller.arvoreProduto;
 
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoResponse;
+import br.com.manu.model.arvoreProduto.familia.FamiliaDel;
 import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResponse;
 import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
@@ -34,5 +35,9 @@ public class FamiliaController {
     @PutMapping("/edit")
     public ResponseEntity<FamiliaResponse> edit(@RequestBody FamiliaEdit request){
         return ResponseEntity.ok(service.edit(request));
+    }
+    @DeleteMapping("/del")
+    public ResponseEntity<FamiliaDel> del(@RequestParam ("descricao") String descricao, @RequestBody FamiliaResponse request){
+        return ResponseEntity.ok(service.del(descricao, request));
     }
 }
