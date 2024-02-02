@@ -1,5 +1,6 @@
 package br.com.manu.service.arvoreProduto.grupo;
 
+import br.com.manu.model.arvoreProduto.grupo.GrupoDel;
 import br.com.manu.model.arvoreProduto.grupo.GrupoEdit;
 import br.com.manu.model.arvoreProduto.grupo.GrupoRequest;
 import br.com.manu.model.arvoreProduto.grupo.GrupoResponse;
@@ -85,12 +86,28 @@ public class GrupoServiceImp implements GrupoService{
         return createResponse(newGrupo);
     }
 
+    @Override
+    public GrupoDel del(String descricao, GrupoRequest request) {
+        Grupo del = new Grupo();
+        del.setDescricao(request.getDescricao());
+        del.setFamilia(request.getFamilia());
+        mongoTemplate.remove(Query.query(Criteria.where("familia").is(request.getFamilia()).and("descricao").is(request.getDescricao())),
+                Grupo.class, "grupo");
+        return responseDel(del);
+    }
+
     private GrupoResponse createResponse(Grupo grupo) {
         GrupoResponse response = new GrupoResponse();
         response.setFamilia(grupo.getFamilia());
         response.setDescricao(grupo.getDescricao());
         return response;
 
+    }
+    private GrupoDel responseDel(Grupo grupo){
+        GrupoDel response = new GrupoDel();
+        response.setDel(grupo.getDescricao());
+        response.setDelFam(grupo.getFamilia());
+        return response;
     }
     private List<Grupo> find(Grupo campo){
         List<Grupo> find = repository.findByname(campo.getFamilia(), campo.getDescricao());

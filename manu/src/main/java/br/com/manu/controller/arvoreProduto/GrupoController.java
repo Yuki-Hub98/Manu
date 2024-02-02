@@ -1,5 +1,6 @@
 package br.com.manu.controller.arvoreProduto;
 
+import br.com.manu.model.arvoreProduto.grupo.GrupoDel;
 import br.com.manu.model.arvoreProduto.grupo.GrupoEdit;
 import br.com.manu.model.arvoreProduto.grupo.GrupoRequest;
 import br.com.manu.model.arvoreProduto.grupo.GrupoResponse;
@@ -34,5 +35,10 @@ public class GrupoController {
     @PutMapping("/edit")
     public ResponseEntity <GrupoResponse> edit(@RequestBody GrupoEdit request){
         return ResponseEntity.ok(service.edit(request));
+    }
+
+    @DeleteMapping("del")
+    public ResponseEntity<GrupoDel>del(@RequestParam("descricao") String descricao, @RequestBody GrupoRequest request){
+        return ResponseEntity.ok(service.del(descricao, request));
     }
 }
