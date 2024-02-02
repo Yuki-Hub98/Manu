@@ -1,5 +1,6 @@
 package br.com.manu.service.arvoreProduto.cor;
 
+import br.com.manu.model.arvoreProduto.cor.CorDel;
 import br.com.manu.model.arvoreProduto.cor.CorEdit;
 import br.com.manu.model.arvoreProduto.cor.CorRequest;
 import br.com.manu.model.arvoreProduto.cor.CorResponse;
@@ -83,10 +84,24 @@ public class CorServiceImp implements CorService{
         return createResponse(newCor);
     }
 
+    @Override
+    public CorDel del(CorRequest request) {
+        Cor del = new Cor();
+        del.setDescricao(request.getDescricao());
+        mongoTemplate.remove(Query.query(Criteria.where("descricao").is(request.getDescricao())), Cor.class, "cor");
+        return responseDel(del);
+    }
+
     private CorResponse createResponse(Cor cor) {
         CorResponse response = new CorResponse();
         response.setDescricao(cor.getDescricao());
         return response;
+    }
+
+    private CorDel responseDel(Cor cor){
+        CorDel del = new CorDel();
+        del.setDel(cor.getDescricao());
+        return del;
     }
 
     private List<Cor> find(Cor campo){
