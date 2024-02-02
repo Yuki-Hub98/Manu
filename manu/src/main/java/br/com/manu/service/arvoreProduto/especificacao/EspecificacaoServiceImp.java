@@ -1,6 +1,7 @@
 package br.com.manu.service.arvoreProduto.especificacao;
 
 import br.com.manu.model.arvoreProduto.cor.CorResponse;
+import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoDel;
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoEdit;
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoRequest;
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoResponse;
@@ -85,9 +86,24 @@ public class EspecificacaoServiceImp implements EspecificacaoService{
         return createResponse(newEspecificacao);
     }
 
+    @Override
+    public EspecificacaoDel del(EspecificacaoRequest request) {
+        Especificacao del = new Especificacao();
+        del.setDescricao(request.getDescricao());
+        mongoTemplate.remove(Query.query(Criteria.where("descricao").is(request.getDescricao())),
+                Especificacao.class, "especificacao");
+        return responseDel(del);
+    }
+
     private EspecificacaoResponse createResponse(Especificacao especificacao) {
         EspecificacaoResponse response = new EspecificacaoResponse();
         response.setDescricao(especificacao.getDescricao());
+        return response;
+    }
+
+    private EspecificacaoDel responseDel(Especificacao especificacao){
+        EspecificacaoDel response = new EspecificacaoDel();
+        response.setDel(especificacao.getDescricao());
         return response;
     }
 
