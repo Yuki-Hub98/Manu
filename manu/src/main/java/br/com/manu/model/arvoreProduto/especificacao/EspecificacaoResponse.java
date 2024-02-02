@@ -7,6 +7,10 @@ public class EspecificacaoResponse {
 
     }
 
+    public EspecificacaoResponse(String descricao) {
+        this.descricao = descricao;
+    }
+
     public String getDescricao() {
         return descricao;
     }

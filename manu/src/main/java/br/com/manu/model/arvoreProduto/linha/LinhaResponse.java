@@ -10,6 +10,11 @@ public class LinhaResponse {
 
     }
 
+    public LinhaResponse(String departamento, String descricao) {
+        this.departamento = departamento;
+        this.descricao = descricao;
+    }
+
     public String getDepartamento() {
         return departamento;
     }

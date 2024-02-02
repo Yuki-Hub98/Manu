@@ -6,6 +6,9 @@ public class EspecificacaoRequest {
     public EspecificacaoRequest() {
 
     }
+    public EspecificacaoRequest(String descricao) {
+        this.descricao = descricao;
+    }
 
     public String getDescricao() {
         return descricao;
