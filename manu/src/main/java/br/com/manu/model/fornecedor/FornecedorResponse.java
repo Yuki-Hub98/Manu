@@ -480,19 +480,5 @@ public class FornecedorResponse {
         this.pix = pix;
     }
 
-    public Date getDataCriacao() {
-        return dataCriacao;
-    }
 
-    public void setDataCriacao(Date dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public Date getDataModificacao() {
-        return dataModificacao;
-    }
-
-    public void setDataModificacao(Date dataModificacao) {
-        this.dataModificacao = dataModificacao;
-    }
 }

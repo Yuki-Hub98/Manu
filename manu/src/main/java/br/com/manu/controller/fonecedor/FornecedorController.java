@@ -4,10 +4,10 @@ import br.com.manu.model.fornecedor.FornecedorResponse;
 import br.com.manu.service.fornecedor.FornecedorServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("fornecedor")
 public class FornecedorController {
@@ -17,6 +17,24 @@ public class FornecedorController {
     @PostMapping
     public ResponseEntity<FornecedorResponse> create(@RequestBody FornecedorRequest request){
         return ResponseEntity.ok(service.create(request));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FornecedorResponse>>getAll(){
+        return ResponseEntity.ok(service.getAll());
+
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<FornecedorResponse>>getParams(@RequestParam("nomeFatansia") String requestName,
+                                                             @RequestParam("razaoSocial") String requestRazao,
+                                                             @RequestParam("cpfCnpj") String requestCpfCnpj){
+        return ResponseEntity.ok(service.getNameCpf(requestName, requestRazao, requestCpfCnpj));
+    }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<FornecedorResponse> edit(@PathVariable int id, @RequestBody FornecedorRequest request){
+        return ResponseEntity.ok(service.edit(id, request));
     }
 
 
