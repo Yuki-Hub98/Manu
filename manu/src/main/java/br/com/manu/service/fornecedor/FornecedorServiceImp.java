@@ -1,4 +1,5 @@
 package br.com.manu.service.fornecedor;
+import br.com.manu.model.fornecedor.FornecedorDel;
 import br.com.manu.model.fornecedor.FornecedorRequest;
 import br.com.manu.model.fornecedor.FornecedorResponse;
 import br.com.manu.persistence.entity.fornecedor.Fornecedor;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.InvalidRelationIdException;
@@ -26,7 +28,6 @@ public class FornecedorServiceImp implements FornecedorService {
 
     @Override
     public FornecedorResponse create(FornecedorRequest request) {
-        FornecedorResponse response = new FornecedorResponse();
         Fornecedor fornecedor = new Fornecedor();
         if (exist(request.getCpfCnpjFornecedor())){
             try {
@@ -36,56 +37,10 @@ public class FornecedorServiceImp implements FornecedorService {
             }
         }
         fornecedor.setIdCad(incrementId());
-        fornecedor.setRazaoSocialFornecedor(request.getRazaoSocialFornecedor());
-        fornecedor.setNomeFantasiaFornecedor(request.getNomeFantasiaFornecedor());
-        fornecedor.setCpfCnpjFornecedor(request.getCpfCnpjFornecedor());
-        fornecedor.setIeRgFornecedor(request.getIeRgFornecedor());
-        fornecedor.setOrgaoEmissorFornecedor(request.getOrgaoEmissorFornecedor());
-        fornecedor.setUfRgFornecedor(request.getUfRgFornecedor());
-        fornecedor.setDataEmissaoFornecedor(request.getDataEmissaoFornecedor());
-        fornecedor.setCepFornecedor(request.getCepFornecedor());
-        fornecedor.setEnderecoFornecedor(request.getEnderecoFornecedor());
-        fornecedor.setNumeroFornecedor(request.getNumeroFornecedor());
-        fornecedor.setComplementoFornecedor(request.getComplementoFornecedor());
-        fornecedor.setBairroFornecedor(request.getBairroFornecedor());
-        fornecedor.setCidadeFornecedor(request.getCidadeFornecedor());
-        fornecedor.setUfFornecedor(request.getUfFornecedor());
-        fornecedor.setContatoFornecedor(request.getContatoFornecedor());
-        fornecedor.setTelefoneFornecedor(request.getTelefoneFornecedor());
-        fornecedor.setCelularFornecedor(request.getCelularFornecedor());
-        fornecedor.setEmailFornecedor(request.getEmailFornecedor());
-        fornecedor.setSiteFornecedor(request.getSiteFornecedor());
-        fornecedor.setNomeFantasiaRepresentante(request.getNomeFantasiaRepresentante());
-        fornecedor.setRazaoSocialRepresentante(request.getRazaoSocialRepresentante());
-        fornecedor.setCpfCnpjRepresentante(request.getCpfCnpjRepresentante());
-        fornecedor.setIeRgRepresentante(request.getIeRgRepresentante());
-        fornecedor.setOrgaoEmissorRepresentante(request.getOrgaoEmissorRepresentante());
-        fornecedor.setUfRgRepresentante(request.getUfRgRepresentante());
-        fornecedor.setDataEmissaoRepresentante(request.getDataEmissaoRepresentante());
-        fornecedor.setCepRepresentante(request.getCepRepresentante());
-        fornecedor.setEnderecoRepresentante(request.getEnderecoRepresentante());
-        fornecedor.setNumeroRepresentante(request.getNumeroRepresentante());
-        fornecedor.setComplementoRepresentante(request.getComplementoRepresentante());
-        fornecedor.setBairroRepresentante(request.getBairroRepresentante());
-        fornecedor.setCidadeRepresentante(request.getCidadeRepresentante());
-        fornecedor.setUfRepresentante(request.getUfRepresentante());
-        fornecedor.setContatoRepresentante(request.getContatoRepresentante());
-        fornecedor.setTelefoneRepresentante(request.getTelefoneRepresentante());
-        fornecedor.setCelularRepresentante(request.getCelularRepresentante());
-        fornecedor.setEmailRepresentante(request.getEmailRepresentante());
-        fornecedor.setSiteRepresentante(request.getSiteRepresentante());
-
-        fornecedor.setCodBanco(request.getCodBanco());
-        fornecedor.setBanco(request.getBanco());
-        fornecedor.setAgencia(request.getAgencia());
-        fornecedor.setContaBanco(request.getContaBanco());
-        fornecedor.setOrgaoEmissorBanco(request.getOrgaoEmissorBanco());
-        fornecedor.setPix(request.getPix());
+        fornecedor = createFornecedor(fornecedor.getIdCad(), request);
 
         repository.save(fornecedor);
-        response.setIdCad(fornecedor.getIdCad());
-        response.setRazaoSocialFornecedor(fornecedor.getRazaoSocialFornecedor());
-        return response;
+        return createResponse(fornecedor);
     }
 
     @Override
@@ -99,7 +54,7 @@ public class FornecedorServiceImp implements FornecedorService {
     }
 
     @Override
-    public List<FornecedorResponse> getNameCpf(String requestName, String requestRazao, String requestCpfCnpj){
+    public List<FornecedorResponse> getParams(String requestName, String requestRazao, String requestCpfCnpj){
         List<FornecedorResponse> fornecedorResponses = new ArrayList<>();
         if(requestName.isEmpty() || requestCpfCnpj.isEmpty() || requestRazao.isEmpty()){
             List<Fornecedor> fornecedors = mongoTemplate.find(Query.query(
@@ -123,64 +78,126 @@ public class FornecedorServiceImp implements FornecedorService {
 
     @Override
     public FornecedorResponse edit(int id, FornecedorRequest request) {
-        FornecedorResponse response = new FornecedorResponse();
-        Fornecedor fornecedor = new Fornecedor();
-        fornecedor.setIdCad(id);
-        fornecedor = mongoTemplate.findOne(Query.query(Criteria.where("idCad").is(fornecedor.getIdCad())), Fornecedor.class, "fornecedor");
-        if (fornecedor != null) {
-            fornecedor.setRazaoSocialFornecedor(request.getRazaoSocialFornecedor());
-            fornecedor.setNomeFantasiaFornecedor(request.getNomeFantasiaFornecedor());
-            fornecedor.setCpfCnpjFornecedor(request.getCpfCnpjFornecedor());
-            fornecedor.setIeRgFornecedor(request.getIeRgFornecedor());
-            fornecedor.setOrgaoEmissorFornecedor(request.getOrgaoEmissorFornecedor());
-            fornecedor.setUfRgFornecedor(request.getUfRgFornecedor());
-            fornecedor.setDataEmissaoFornecedor(request.getDataEmissaoFornecedor());
-            fornecedor.setCepFornecedor(request.getCepFornecedor());
-            fornecedor.setEnderecoFornecedor(request.getEnderecoFornecedor());
-            fornecedor.setNumeroFornecedor(request.getNumeroFornecedor());
-            fornecedor.setComplementoFornecedor(request.getComplementoFornecedor());
-            fornecedor.setBairroFornecedor(request.getBairroFornecedor());
-            fornecedor.setCidadeFornecedor(request.getCidadeFornecedor());
-            fornecedor.setUfFornecedor(request.getUfFornecedor());
-            fornecedor.setContatoFornecedor(request.getContatoFornecedor());
-            fornecedor.setTelefoneFornecedor(request.getTelefoneFornecedor());
-            fornecedor.setCelularFornecedor(request.getCelularFornecedor());
-            fornecedor.setEmailFornecedor(request.getEmailFornecedor());
-            fornecedor.setSiteFornecedor(request.getSiteFornecedor());
-            fornecedor.setNomeFantasiaRepresentante(request.getNomeFantasiaRepresentante());
-            fornecedor.setRazaoSocialRepresentante(request.getRazaoSocialRepresentante());
-            fornecedor.setCpfCnpjRepresentante(request.getCpfCnpjRepresentante());
-            fornecedor.setIeRgRepresentante(request.getIeRgRepresentante());
-            fornecedor.setOrgaoEmissorRepresentante(request.getOrgaoEmissorRepresentante());
-            fornecedor.setUfRgRepresentante(request.getUfRgRepresentante());
-            fornecedor.setDataEmissaoRepresentante(request.getDataEmissaoRepresentante());
-            fornecedor.setCepRepresentante(request.getCepRepresentante());
-            fornecedor.setEnderecoRepresentante(request.getEnderecoRepresentante());
-            fornecedor.setNumeroRepresentante(request.getNumeroRepresentante());
-            fornecedor.setComplementoRepresentante(request.getComplementoRepresentante());
-            fornecedor.setBairroRepresentante(request.getBairroRepresentante());
-            fornecedor.setCidadeRepresentante(request.getCidadeRepresentante());
-            fornecedor.setUfRepresentante(request.getUfRepresentante());
-            fornecedor.setContatoRepresentante(request.getContatoRepresentante());
-            fornecedor.setTelefoneRepresentante(request.getTelefoneRepresentante());
-            fornecedor.setCelularRepresentante(request.getCelularRepresentante());
-            fornecedor.setEmailRepresentante(request.getEmailRepresentante());
-            fornecedor.setSiteRepresentante(request.getSiteRepresentante());
-
-            fornecedor.setCodBanco(request.getCodBanco());
-            fornecedor.setBanco(request.getBanco());
-            fornecedor.setAgencia(request.getAgencia());
-            fornecedor.setContaBanco(request.getContaBanco());
-            fornecedor.setOrgaoEmissorBanco(request.getOrgaoEmissorBanco());
-            fornecedor.setPix(request.getPix());
-
-            repository.save(fornecedor);
+        if (exist(request.getCpfCnpjFornecedor())){
+            try {
+                throw new InvalidRelationIdException();
+            } catch (InvalidRelationIdException e) {
+                throw new RuntimeException(e);
+            }
         }
-
-
-        return null;
+        editTemplete(id, request);
+        Fornecedor fornecedor = createFornecedor(id, request);
+        return createResponse(fornecedor);
     }
 
+    @Override
+    public FornecedorDel del(int id) {
+        FornecedorDel del = new FornecedorDel();
+        mongoTemplate.remove(Query.query(Criteria.where("idCad").is(id)), Fornecedor.class, "fornecedor");
+        String id_ = String.valueOf(id);
+        del.setDel("idCad: " + id_);
+        del.setMessage("Excluido com sucesso");
+        return del;
+    }
+
+    private void editTemplete (int id, FornecedorRequest request){
+        mongoTemplate.updateFirst(Query.query(Criteria.where("idCad").is(id)),
+                Update.update("razaoSocialFornecedor", request.getRazaoSocialFornecedor()).
+                        set("nomeFantasiaFornecedor", request.getNomeFantasiaFornecedor()).
+                        set("cpfCnpjFornecedor", request.getCpfCnpjFornecedor()).
+                        set("ieRgFornecedor", request.getIeRgFornecedor()).
+                        set("orgaoEmissorFornecedor", request.getOrgaoEmissorFornecedor()).
+                        set("ufRgFornecedor", request.getUfRgFornecedor()).
+                        set("dataEmissaoFornecedor", request.getDataEmissaoFornecedor()).
+                        set("cepFornecedor", request.getCepFornecedor()).
+                        set("enderecoFornecedor", request.getEnderecoFornecedor()).
+                        set("numeroFornecedor", request.getNumeroFornecedor()).
+                        set("complementoFornecedor", request.getComplementoFornecedor()).
+                        set("bairroFornecedor", request.getBairroFornecedor()).
+                        set("cidadeFornecedor", request.getCidadeFornecedor()).
+                        set("ufFornecedor", request.getUfFornecedor()).
+                        set("contatoFornecedor", request.getContatoFornecedor()).
+                        set("telefoneFornecedor", request.getTelefoneFornecedor()).
+                        set("celularFornecedor", request.getCelularFornecedor()).
+                        set("emailFornecedor", request.getEmailFornecedor()).
+                        set("siteFornecedor", request.getSiteFornecedor()).
+                        set("razaoSocialRepresentante", request.getRazaoSocialRepresentante()).
+                        set("nomeFantasiaRepresentante", request.getNomeFantasiaRepresentante()).
+                        set("cpfCnpjRepresentante", request.getCpfCnpjRepresentante()).
+                        set("ieRgRepresentante", request.getIeRgRepresentante()).
+                        set("orgaoEmissorRepresentante", request.getOrgaoEmissorRepresentante()).
+                        set("ufRgRepresentante", request.getUfRgRepresentante()).
+                        set("dataEmissaoRepresentante", request.getDataEmissaoRepresentante()).
+                        set("cepRepresentante", request.getCepRepresentante()).
+                        set("enderecoRepresentante", request.getEnderecoRepresentante()).
+                        set("numeroRepresentante", request.getNumeroRepresentante()).
+                        set("complementoRepresentante", request.getComplementoRepresentante()).
+                        set("bairroRepresentante", request.getBairroRepresentante()).
+                        set("cidadeRepresentante", request.getCidadeRepresentante()).
+                        set("ufRepresentante", request.getUfRepresentante()).
+                        set("contatoRepresentante", request.getContatoRepresentante()).
+                        set("telefoneRepresentante", request.getTelefoneRepresentante()).
+                        set("celularRepresentante", request.getCelularRepresentante()).
+                        set("emailRepresentante", request.getEmailRepresentante()).
+                        set("codBanco", request.getSiteRepresentante()).
+                        set("banco", request.getSiteRepresentante()).
+                        set("agencia", request.getSiteRepresentante()).
+                        set("contaBanco", request.getSiteRepresentante()).
+                        set("orgaoEmissorBanco", request.getOrgaoEmissorBanco()).
+                        set("pix", request.getPix()),
+                Fornecedor.class, "fornecedor");
+    }
+    private Fornecedor createFornecedor (int idCad, FornecedorRequest request){
+        Fornecedor newFornecedor = new Fornecedor();
+        newFornecedor.setIdCad(idCad);
+        newFornecedor.setRazaoSocialFornecedor(request.getRazaoSocialFornecedor());
+        newFornecedor.setNomeFantasiaFornecedor(request.getNomeFantasiaFornecedor());
+        newFornecedor.setCpfCnpjFornecedor(request.getCpfCnpjFornecedor());
+        newFornecedor.setIeRgFornecedor(request.getIeRgFornecedor());
+        newFornecedor.setOrgaoEmissorFornecedor(request.getOrgaoEmissorFornecedor());
+        newFornecedor.setUfRgFornecedor(request.getUfRgFornecedor());
+        newFornecedor.setDataEmissaoFornecedor(request.getDataEmissaoFornecedor());
+        newFornecedor.setCepFornecedor(request.getCepFornecedor());
+        newFornecedor.setEnderecoFornecedor(request.getEnderecoFornecedor());
+        newFornecedor.setNumeroFornecedor(request.getNumeroFornecedor());
+        newFornecedor.setComplementoFornecedor(request.getComplementoFornecedor());
+        newFornecedor.setBairroFornecedor(request.getBairroFornecedor());
+        newFornecedor.setCidadeFornecedor(request.getCidadeFornecedor());
+        newFornecedor.setUfFornecedor(request.getUfFornecedor());
+        newFornecedor.setContatoFornecedor(request.getContatoFornecedor());
+        newFornecedor.setTelefoneFornecedor(request.getTelefoneFornecedor());
+        newFornecedor.setCelularFornecedor(request.getCelularFornecedor());
+        newFornecedor.setEmailFornecedor(request.getEmailFornecedor());
+        newFornecedor.setSiteFornecedor(request.getSiteFornecedor());
+        newFornecedor.setNomeFantasiaRepresentante(request.getNomeFantasiaRepresentante());
+        newFornecedor.setRazaoSocialRepresentante(request.getRazaoSocialRepresentante());
+        newFornecedor.setCpfCnpjRepresentante(request.getCpfCnpjRepresentante());
+        newFornecedor.setIeRgRepresentante(request.getIeRgRepresentante());
+        newFornecedor.setOrgaoEmissorRepresentante(request.getOrgaoEmissorRepresentante());
+        newFornecedor.setUfRgRepresentante(request.getUfRgRepresentante());
+        newFornecedor.setDataEmissaoRepresentante(request.getDataEmissaoRepresentante());
+        newFornecedor.setCepRepresentante(request.getCepRepresentante());
+        newFornecedor.setEnderecoRepresentante(request.getEnderecoRepresentante());
+        newFornecedor.setNumeroRepresentante(request.getNumeroRepresentante());
+        newFornecedor.setComplementoRepresentante(request.getComplementoRepresentante());
+        newFornecedor.setBairroRepresentante(request.getBairroRepresentante());
+        newFornecedor.setCidadeRepresentante(request.getCidadeRepresentante());
+        newFornecedor.setUfRepresentante(request.getUfRepresentante());
+        newFornecedor.setContatoRepresentante(request.getContatoRepresentante());
+        newFornecedor.setTelefoneRepresentante(request.getTelefoneRepresentante());
+        newFornecedor.setCelularRepresentante(request.getCelularRepresentante());
+        newFornecedor.setEmailRepresentante(request.getEmailRepresentante());
+        newFornecedor.setSiteRepresentante(request.getSiteRepresentante());
+
+        newFornecedor.setCodBanco(request.getCodBanco());
+        newFornecedor.setBanco(request.getBanco());
+        newFornecedor.setAgencia(request.getAgencia());
+        newFornecedor.setContaBanco(request.getContaBanco());
+        newFornecedor.setOrgaoEmissorBanco(request.getOrgaoEmissorBanco());
+        newFornecedor.setPix(request.getPix());
+
+        return newFornecedor;
+    }
     private FornecedorResponse createResponse(Fornecedor fornecedor){
         FornecedorResponse response = new FornecedorResponse();
         response.setIdCad(fornecedor.getIdCad());
