@@ -78,13 +78,6 @@ public class FornecedorServiceImp implements FornecedorService {
 
     @Override
     public FornecedorResponse edit(int id, FornecedorRequest request) {
-        if (exist(request.getCpfCnpjFornecedor())){
-            try {
-                throw new InvalidRelationIdException();
-            } catch (InvalidRelationIdException e) {
-                throw new RuntimeException(e);
-            }
-        }
         editTemplete(id, request);
         Fornecedor fornecedor = createFornecedor(id, request);
         return createResponse(fornecedor);
