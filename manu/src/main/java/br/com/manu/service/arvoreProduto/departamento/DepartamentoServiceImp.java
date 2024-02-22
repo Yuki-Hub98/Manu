@@ -23,7 +23,7 @@ public class DepartamentoServiceImp implements DepartamentoService{
     @Autowired
     private DepartamentoRepository repository;
 
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
     public DepartamentoServiceImp(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
 

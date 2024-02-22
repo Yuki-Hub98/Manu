@@ -20,7 +20,7 @@ import java.util.List;
 public class FornecedorServiceImp implements FornecedorService {
     @Autowired
     private FornecedorRepository repository;
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
     public FornecedorServiceImp (MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;

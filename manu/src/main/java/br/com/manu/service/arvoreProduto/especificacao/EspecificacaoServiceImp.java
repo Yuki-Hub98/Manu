@@ -23,7 +23,7 @@ import java.util.List;
 public class EspecificacaoServiceImp implements EspecificacaoService{
     @Autowired
     EspecificacaoRespository repository;
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
     public EspecificacaoServiceImp(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;

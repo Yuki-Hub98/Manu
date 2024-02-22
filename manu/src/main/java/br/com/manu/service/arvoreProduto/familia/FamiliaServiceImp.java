@@ -24,7 +24,7 @@ public class FamiliaServiceImp implements FamiliaService{
 
     @Autowired
     private FamiliaRepository repository;
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
     private Linha linha;
     public FamiliaServiceImp(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;

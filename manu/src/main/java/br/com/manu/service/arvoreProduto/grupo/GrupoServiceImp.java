@@ -22,7 +22,7 @@ public class GrupoServiceImp implements GrupoService{
 
     @Autowired
     GrupoRepository repository;
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
     public GrupoServiceImp(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
     }

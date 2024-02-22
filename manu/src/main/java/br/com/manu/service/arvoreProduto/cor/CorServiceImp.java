@@ -22,7 +22,7 @@ import java.util.List;
 public class CorServiceImp implements CorService{
     @Autowired
     private CorRepository repository;
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
     public CorServiceImp(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
