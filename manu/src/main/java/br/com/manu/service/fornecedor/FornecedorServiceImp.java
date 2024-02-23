@@ -78,7 +78,7 @@ public class FornecedorServiceImp implements FornecedorService {
 
     @Override
     public FornecedorResponse edit(int id, FornecedorRequest request) {
-        editTemplete(id, request);
+        editTemplate(id, request);
         Fornecedor fornecedor = createFornecedor(id, request);
         return createResponse(fornecedor);
     }
@@ -89,11 +89,11 @@ public class FornecedorServiceImp implements FornecedorService {
         mongoTemplate.remove(Query.query(Criteria.where("idCad").is(id)), Fornecedor.class, "fornecedor");
         String id_ = String.valueOf(id);
         del.setDel("idCad: " + id_);
-        del.setMessage("Excluido com sucesso");
+        del.setMessage("Deletado com sucesso");
         return del;
     }
 
-    private void editTemplete (int id, FornecedorRequest request){
+    private void editTemplate (int id, FornecedorRequest request){
         mongoTemplate.updateFirst(Query.query(Criteria.where("idCad").is(id)),
                 Update.update("razaoSocialFornecedor", request.getRazaoSocialFornecedor()).
                         set("nomeFantasiaFornecedor", request.getNomeFantasiaFornecedor()).
