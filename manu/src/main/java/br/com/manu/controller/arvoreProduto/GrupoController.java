@@ -29,8 +29,8 @@ public class GrupoController {
         return ResponseEntity.ok(service.getDescricao(request));
     }
 
-    @GetMapping("/search/familia")
-    public ResponseEntity<List<GrupoResponseFamilia>> getGrupoByFamilia(@RequestParam("linha") String familia){
+    @GetMapping("/search/{familia}")
+    public ResponseEntity<List<GrupoResponseFamilia>> getGrupoByFamilia(@PathVariable String familia){
         return ResponseEntity.ok(service.getGrupoByFamilia(familia));
     }
 
