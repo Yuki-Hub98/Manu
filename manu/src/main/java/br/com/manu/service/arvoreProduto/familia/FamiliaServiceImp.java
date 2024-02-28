@@ -1,9 +1,6 @@
 package br.com.manu.service.arvoreProduto.familia;
 
-import br.com.manu.model.arvoreProduto.familia.FamiliaDel;
-import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
-import br.com.manu.model.arvoreProduto.familia.FamiliaResponse;
-import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
+import br.com.manu.model.arvoreProduto.familia.*;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
 import br.com.manu.persistence.entity.arvoreProduto.Grupo;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
@@ -71,6 +68,14 @@ public class FamiliaServiceImp implements FamiliaService{
     }
 
     @Override
+    public List<FamiliaResponseLinha> getFamiliaByLinha(String request) {
+        List<FamiliaResponseLinha> responses = new ArrayList<>();
+        List<Familia> familias = mongoTemplate.find(Query.query(Criteria.where("linha").is(request)), Familia.class, "familia");
+        familias.forEach(familia -> responses.add(createResponseByLinha(familia)));
+        return responses;
+    }
+
+    @Override
     public FamiliaResponse edit(FamiliaEdit request) {
         Familia newFamilia = new Familia();
         newFamilia.setLinha(request.getEditLinha());
@@ -119,6 +124,13 @@ public class FamiliaServiceImp implements FamiliaService{
         FamiliaResponse response = new FamiliaResponse();
         response.setLinha(familia.getLinha());
         response.setDescricao(familia.getDescricao());
+        return response;
+    }
+
+    private FamiliaResponseLinha createResponseByLinha(Familia familia){
+        FamiliaResponseLinha response = new FamiliaResponseLinha();
+        response.setLinha(familia.getLinha());
+        response.setFamilia(familia.getDescricao());
         return response;
     }
     private FamiliaDel responseDel(Familia familia){

@@ -1,9 +1,6 @@
 package br.com.manu.controller.arvoreProduto;
 
-import br.com.manu.model.arvoreProduto.grupo.GrupoDel;
-import br.com.manu.model.arvoreProduto.grupo.GrupoEdit;
-import br.com.manu.model.arvoreProduto.grupo.GrupoRequest;
-import br.com.manu.model.arvoreProduto.grupo.GrupoResponse;
+import br.com.manu.model.arvoreProduto.grupo.*;
 import br.com.manu.service.arvoreProduto.grupo.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +27,11 @@ public class GrupoController {
     @GetMapping("/search")
     public ResponseEntity<List<GrupoResponse>> getDescricao(@RequestParam("descricao") String request){
         return ResponseEntity.ok(service.getDescricao(request));
+    }
+
+    @GetMapping("/search/familia")
+    public ResponseEntity<List<GrupoResponseFamilia>> getGrupoByFamilia(@RequestParam("linha") String familia){
+        return ResponseEntity.ok(service.getGrupoByFamilia(familia));
     }
 
     @PutMapping("/edit")
