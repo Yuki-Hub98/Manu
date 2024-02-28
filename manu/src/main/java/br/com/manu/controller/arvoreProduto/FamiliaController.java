@@ -1,10 +1,7 @@
 package br.com.manu.controller.arvoreProduto;
 
 import br.com.manu.model.arvoreProduto.especificacao.EspecificacaoResponse;
-import br.com.manu.model.arvoreProduto.familia.FamiliaDel;
-import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
-import br.com.manu.model.arvoreProduto.familia.FamiliaResponse;
-import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
+import br.com.manu.model.arvoreProduto.familia.*;
 import br.com.manu.service.arvoreProduto.familia.FamiliaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +28,10 @@ public class FamiliaController {
     @GetMapping("/search")
     public  ResponseEntity<List<FamiliaResponse>> getDescricao(@RequestParam("descricao") String request){
         return  ResponseEntity.ok(service.getDescricao(request));
+    }
+    @GetMapping("/search/{linha}")
+    public  ResponseEntity<List<FamiliaResponseLinha>> getFamiliaByLinha(@PathVariable String linha){
+        return  ResponseEntity.ok(service.getFamiliaByLinha(linha));
     }
     @PutMapping("/edit")
     public ResponseEntity<FamiliaResponse> edit(@RequestBody FamiliaEdit request){
