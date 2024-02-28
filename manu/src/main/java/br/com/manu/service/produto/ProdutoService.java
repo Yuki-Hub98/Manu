@@ -10,7 +10,10 @@ public interface ProdutoService {
 
     List<ResponseItem> getAll();
 
-    List<ProdutoResponse> getParams(ProdutoRequestParams request);
+    List<ResponseItem> getParams( String idItem, String descricaoItem, String codBarra,String departamento,
+                                  String linha,String familia,String grupo,String fornecedor,String modelo,
+                                  String tipoProduto,String unidadeMedida,String cor,String especificacao);
+    ResponseItem edit(int id, ItemsRequestParams request);
     ProdutoDel del(int id);
 
 }

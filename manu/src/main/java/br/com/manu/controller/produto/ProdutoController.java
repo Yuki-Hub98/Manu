@@ -23,11 +23,30 @@ public class ProdutoController {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<List<ProdutoResponse>> getParams(@RequestBody ProdutoRequestParams request) {
-        return ResponseEntity.ok(service.getParams(request));
+    @GetMapping("/search")
+    public ResponseEntity<List<ResponseItem>> getParams(@RequestParam ("idItem") String idItem,
+                                                        @RequestParam ("descricaoItem") String descricaoItem,
+                                                        @RequestParam ("codBarra") String codBarra,
+                                                        @RequestParam ("departamento") String departamento,
+                                                        @RequestParam ("linha") String linha,
+                                                        @RequestParam ("familia") String familia,
+                                                        @RequestParam ("grupo") String grupo,
+                                                        @RequestParam ("fornecedor") String fornecedor,
+                                                        @RequestParam ("modelo") String modelo,
+                                                        @RequestParam ("tipoProduto") String tipoProduto,
+                                                        @RequestParam ("unidadeMedida") String unidadeMedida,
+                                                        @RequestParam ("cor") String cor,
+                                                        @RequestParam ("especificacao") String especificacao) {
 
+        return ResponseEntity.ok(service.getParams(idItem,descricaoItem,codBarra,departamento,
+                linha,familia,grupo,fornecedor,modelo,tipoProduto,unidadeMedida,cor,especificacao));
     }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<ResponseItem> edit(@PathVariable int id, @RequestBody ItemsRequestParams request){
+        return ResponseEntity.ok(service.edit(id, request));
+    }
+
     @DeleteMapping("/del/{id}")
     public ResponseEntity<ProdutoDel> del(@PathVariable int id){
         return ResponseEntity.ok(service.del(id));

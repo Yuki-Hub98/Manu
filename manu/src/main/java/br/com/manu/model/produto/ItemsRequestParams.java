@@ -4,9 +4,10 @@ import br.com.manu.persistence.entity.produtos.item.Item;
 
 import java.util.List;
 
-public class ProdutoRequestParams {
-    private long idProduto;
-    private String descricaoProduto;
+public class ItemsRequestParams {
+    private long idItem;
+    private String descricaoItem;
+    private String codBarra;
     private String departamento;
     private String linha;
     private String familia;
@@ -15,16 +16,18 @@ public class ProdutoRequestParams {
     private String modelo;
     private String tipoProduto;
     private String unidadeMedida;
-    private List<Item> items;
+    private String cor;
+    private String especificacao;
 
-    public ProdutoRequestParams() {
+    public ItemsRequestParams() {
 
     }
 
-    public ProdutoRequestParams(long idProduto, String descricaoProduto, String departamento, String linha, String familia, String grupo, String fornecedor,
-                                String modelo, String tipoProduto, String unidadeMedida, List<Item> items) {
-        this.idProduto = idProduto;
-        this.descricaoProduto = descricaoProduto;
+    public ItemsRequestParams(long idItem, String descricaoItem, String codBarra, String departamento, String linha, String familia, String grupo, String fornecedor,
+                              String modelo, String tipoProduto, String unidadeMedida, String cor, String especificacao) {
+        this.idItem = idItem;
+        this.descricaoItem = descricaoItem;
+        this.codBarra = codBarra;
         this.departamento = departamento;
         this.linha = linha;
         this.familia = familia;
@@ -33,23 +36,32 @@ public class ProdutoRequestParams {
         this.modelo = modelo;
         this.tipoProduto = tipoProduto;
         this.unidadeMedida = unidadeMedida;
-        this.items = items;
+        this.cor = cor;
+        this.especificacao = especificacao;
     }
 
-    public long getIdProduto() {
-        return idProduto;
+    public long getIdItem() {
+        return idItem;
     }
 
-    public void setIdProduto(long idProduto) {
-        this.idProduto = idProduto;
+    public void setIdItem(long idItem) {
+        this.idItem = idItem;
     }
 
-    public String getDescricaoProduto() {
-        return descricaoProduto;
+    public String getDescricaoItem() {
+        return descricaoItem;
     }
 
-    public void setDescricaoProduto(String descricaoProduto) {
-        this.descricaoProduto = descricaoProduto;
+    public void setDescricaoItem(String descricaoItem) {
+        this.descricaoItem = descricaoItem;
+    }
+
+    public String getCodBarra() {
+        return codBarra;
+    }
+
+    public void setCodBarra(String codBarra) {
+        this.codBarra = codBarra;
     }
 
     public String getDepartamento() {
@@ -116,11 +128,19 @@ public class ProdutoRequestParams {
         this.unidadeMedida = unidadeMedida;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public String getCor() {
+        return cor;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setCor(String cor) {
+        this.cor = cor;
+    }
+
+    public String getEspecificacao() {
+        return especificacao;
+    }
+
+    public void setEspecificacao(String especificacao) {
+        this.especificacao = especificacao;
     }
 }

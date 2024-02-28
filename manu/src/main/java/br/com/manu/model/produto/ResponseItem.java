@@ -1,4 +1,5 @@
 package br.com.manu.model.produto;
+import java.util.Objects;
 
 public class ResponseItem {
     private long idItem;
@@ -138,5 +139,34 @@ public class ResponseItem {
 
     public void setUnidadeMedida(String unidadeMedida) {
         this.unidadeMedida = unidadeMedida;
+    }
+
+    /**
+    * Implementação do método hashCode() e equals() para o response não repetir os objetos.
+    * */
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ResponseItem item = (ResponseItem) o;
+        return idItem == item.idItem &&
+                Objects.equals(descricaoItem, item.descricaoItem) &&
+                Objects.equals(codBarra, item.codBarra) &&
+                Objects.equals(departamento, item.departamento) &&
+                Objects.equals(linha, item.linha) &&
+                Objects.equals(familia, item.familia) &&
+                Objects.equals(grupo, item.grupo) &&
+                Objects.equals(fornecedor, item.fornecedor) &&
+                Objects.equals(modelo, item.modelo) &&
+                Objects.equals(tipoProduto, item.tipoProduto) &&
+                Objects.equals(unidadeMedida, item.unidadeMedida) &&
+                Objects.equals(cor, item.cor) &&
+                Objects.equals(especificacao, item.especificacao);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idItem, descricaoItem, codBarra, departamento, linha, familia, grupo, fornecedor, modelo, tipoProduto, unidadeMedida, cor, especificacao);
     }
 }
