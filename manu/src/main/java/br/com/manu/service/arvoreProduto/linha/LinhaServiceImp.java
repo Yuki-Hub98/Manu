@@ -2,10 +2,7 @@ package br.com.manu.service.arvoreProduto.linha;
 
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
 import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
-import br.com.manu.model.arvoreProduto.linha.LinhaDel;
-import br.com.manu.model.arvoreProduto.linha.LinhaEdit;
-import br.com.manu.model.arvoreProduto.linha.LinhaRequest;
-import br.com.manu.model.arvoreProduto.linha.LinhaResponse;
+import br.com.manu.model.arvoreProduto.linha.*;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
@@ -73,6 +70,14 @@ public class LinhaServiceImp implements LinhaService {
     }
 
     @Override
+    public List<LinhaResponseDepartamento> getDescricaoByDepartamento(String request) {
+        List<LinhaResponseDepartamento> responses = new ArrayList<>();
+        List<Linha> descricoes = mongoTemplate.find(Query.query(Criteria.where("departamento").is(request)), Linha.class, "linha");
+        descricoes.forEach(linha -> responses.add(createResponseByDepartamento(linha)));
+        return responses;
+    }
+
+    @Override
     public LinhaResponse edit(LinhaEdit request) {
         Linha newLinha = new Linha();
         newLinha.setDepartamento(request.getDepartamento());
@@ -126,7 +131,12 @@ public class LinhaServiceImp implements LinhaService {
         response.setDescricao(linha.getDescricao());
         return response;
     }
-
+    private LinhaResponseDepartamento createResponseByDepartamento(Linha linha){
+        LinhaResponseDepartamento response = new LinhaResponseDepartamento();
+        response.setDepartamento(linha.getDepartamento());
+        response.setLinha(linha.getDescricao());
+        return response;
+    }
     private LinhaDel responseDel(Linha linha){
         LinhaDel response = new LinhaDel();
         response.setDepDel(linha.getDepartamento());

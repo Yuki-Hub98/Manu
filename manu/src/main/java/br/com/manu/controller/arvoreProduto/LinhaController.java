@@ -1,9 +1,6 @@
 package br.com.manu.controller.arvoreProduto;
 
-import br.com.manu.model.arvoreProduto.linha.LinhaDel;
-import br.com.manu.model.arvoreProduto.linha.LinhaEdit;
-import br.com.manu.model.arvoreProduto.linha.LinhaRequest;
-import br.com.manu.model.arvoreProduto.linha.LinhaResponse;
+import br.com.manu.model.arvoreProduto.linha.*;
 import br.com.manu.service.arvoreProduto.linha.LinhaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +27,10 @@ public class LinhaController {
     public ResponseEntity<List<LinhaResponse>> getDescricao(@RequestParam("descricao") String request){
         return ResponseEntity.ok(service.getDescricao(request));
     }
-
+    @GetMapping("/search/{departamento}")
+    public ResponseEntity<List<LinhaResponseDepartamento>> getDescricaoByDepartamento(@PathVariable String departamento){
+        return ResponseEntity.ok(service.getDescricaoByDepartamento(departamento));
+    }
     @PutMapping("/edit")
     public ResponseEntity<LinhaResponse> edit(@RequestBody LinhaEdit request){
         return ResponseEntity.ok(service.edit(request));
