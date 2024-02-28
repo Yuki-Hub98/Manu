@@ -1,9 +1,6 @@
 package br.com.manu.service.arvoreProduto.grupo;
 
-import br.com.manu.model.arvoreProduto.grupo.GrupoDel;
-import br.com.manu.model.arvoreProduto.grupo.GrupoEdit;
-import br.com.manu.model.arvoreProduto.grupo.GrupoRequest;
-import br.com.manu.model.arvoreProduto.grupo.GrupoResponse;
+import br.com.manu.model.arvoreProduto.grupo.*;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
 import br.com.manu.persistence.entity.arvoreProduto.Grupo;
 import br.com.manu.persistence.repository.arvoreProduto.GrupoRepository;
@@ -66,6 +63,14 @@ public class GrupoServiceImp implements GrupoService{
     }
 
     @Override
+    public List<GrupoResponseFamilia> getGrupoByFamilia(String request) {
+        List<GrupoResponseFamilia> responses = new ArrayList<>();
+        List<Grupo> grupos = mongoTemplate.find(Query.query(Criteria.where("familia").is(request)), Grupo.class, "grupo");
+        grupos.forEach(grupo -> responses.add(createResponseByFamilia(grupo)));
+        return responses;
+    }
+
+    @Override
     public GrupoResponse edit(GrupoEdit request) {
         Grupo newGrupo = new Grupo();
         newGrupo.setFamilia(request.getEditFamilia());
@@ -102,6 +107,13 @@ public class GrupoServiceImp implements GrupoService{
         response.setDescricao(grupo.getDescricao());
         return response;
 
+    }
+
+    private GrupoResponseFamilia createResponseByFamilia(Grupo grupo){
+        GrupoResponseFamilia response = new GrupoResponseFamilia();
+        response.setFamilia(grupo.getFamilia());
+        response.setGrupo(grupo.getDescricao());
+        return response;
     }
     private GrupoDel responseDel(Grupo grupo){
         GrupoDel response = new GrupoDel();
