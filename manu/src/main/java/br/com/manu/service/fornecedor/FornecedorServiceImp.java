@@ -1,5 +1,6 @@
 package br.com.manu.service.fornecedor;
 import br.com.manu.model.fornecedor.FornecedorDel;
+import br.com.manu.model.fornecedor.FornecedorName;
 import br.com.manu.model.fornecedor.FornecedorRequest;
 import br.com.manu.model.fornecedor.FornecedorResponse;
 import br.com.manu.persistence.entity.fornecedor.Fornecedor;
@@ -74,6 +75,14 @@ public class FornecedorServiceImp implements FornecedorService {
         }
         
         return fornecedorResponses;
+    }
+
+    @Override
+    public List<FornecedorName> getNameFantasiaFornecedor() {
+        List<FornecedorName> responses = new ArrayList<>();
+        List<Fornecedor> fornecedors = mongoTemplate.findAll(Fornecedor.class, "fornecedor");
+        fornecedors.forEach(fornecedor -> responses.add(createResponseNameFornecedor(fornecedor)));
+        return responses;
     }
 
     @Override
@@ -190,6 +199,12 @@ public class FornecedorServiceImp implements FornecedorService {
         newFornecedor.setPix(request.getPix());
 
         return newFornecedor;
+    }
+
+    private FornecedorName createResponseNameFornecedor(Fornecedor fornecedor){
+        FornecedorName response = new FornecedorName();
+        response.setNomeFantasia(fornecedor.getNomeFantasiaFornecedor());
+        return response;
     }
     private FornecedorResponse createResponse(Fornecedor fornecedor){
         FornecedorResponse response = new FornecedorResponse();
