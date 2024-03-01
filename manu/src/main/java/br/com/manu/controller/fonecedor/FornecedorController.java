@@ -1,5 +1,6 @@
 package br.com.manu.controller.fonecedor;
 import br.com.manu.model.fornecedor.FornecedorDel;
+import br.com.manu.model.fornecedor.FornecedorName;
 import br.com.manu.model.fornecedor.FornecedorRequest;
 import br.com.manu.model.fornecedor.FornecedorResponse;
 import br.com.manu.service.fornecedor.FornecedorServiceImp;
@@ -31,6 +32,10 @@ public class FornecedorController {
                                                              @RequestParam("razaoSocial") String requestRazao,
                                                              @RequestParam("cpfCnpj") String requestCpfCnpj){
         return ResponseEntity.ok(service.getParams(requestName, requestRazao, requestCpfCnpj));
+    }
+    @GetMapping("/nameFornecedor")
+    public ResponseEntity<List<FornecedorName>>getNameFantasiaFornecedor(){
+        return ResponseEntity.ok(service.getNameFantasiaFornecedor());
     }
 
     @PutMapping("/edit/{id}")
