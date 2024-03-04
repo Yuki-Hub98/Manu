@@ -1,6 +1,7 @@
 package br.com.manu.model.produto;
 
 public class ItemModel {
+    private int idItem;
     private String descricaoItem;
     private String codBarra;
     private String cor;
@@ -10,11 +11,20 @@ public class ItemModel {
 
     }
 
-    public ItemModel(String descricaoItem, String codBarra, String cor, String especificacao) {
+    public ItemModel(int idItem, String descricaoItem, String codBarra, String cor, String especificacao) {
+        this.idItem = idItem;
         this.descricaoItem = descricaoItem;
         this.codBarra = codBarra;
         this.cor = cor;
         this.especificacao = especificacao;
+    }
+
+    public int getIdItem() {
+        return idItem;
+    }
+
+    public void setIdItem(int idItem) {
+        this.idItem = idItem;
     }
 
     public String getDescricaoItem() {

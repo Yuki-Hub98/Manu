@@ -214,6 +214,7 @@ public class ProdutoServiceImp implements ProdutoService {
 
     private Item generateItem(ItemModel item){
         Item newItem = new Item();
+        newItem.setIdItem(item.getIdItem());
         newItem.setDescricaoItem(item.getDescricaoItem());
         newItem.setCodBarra(item.getCodBarra());
         newItem.setEspecificacao(item.getEspecificacao());
@@ -230,7 +231,7 @@ public class ProdutoServiceImp implements ProdutoService {
     @Transactional
     private Item registerItem(Item item, String idProd){
         Item newItem = new Item();
-        newItem.setIdItem(incrementIdItem());
+        newItem.setIdItem(item.getIdItem());
         newItem.set_idProduto(idProd);
         newItem.setDescricaoItem(item.getDescricaoItem());
         newItem.setCodBarra(item.getCodBarra());
