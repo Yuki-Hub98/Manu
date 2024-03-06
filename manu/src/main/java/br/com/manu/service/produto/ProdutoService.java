@@ -1,6 +1,7 @@
 package br.com.manu.service.produto;
 
 import br.com.manu.model.produto.*;
+import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public interface ProdutoService {
                                   String linha,String familia,String grupo,String fornecedor,String modelo,
                                   String tipoProduto,String unidadeMedida,String cor,String especificacao);
     ResponseItem edit(int id, ItemsRequestParams request);
+    List<ProdutoNcm> getNcm(String request);
     ProdutoDel del(int id);
 
 }

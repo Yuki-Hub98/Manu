@@ -1,6 +1,7 @@
 package br.com.manu.controller.produto;
 
 import br.com.manu.model.produto.*;
+import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 import br.com.manu.service.produto.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,11 @@ public class ProdutoController {
     @PutMapping("/edit/{id}")
     public ResponseEntity<ResponseItem> edit(@PathVariable int id, @RequestBody ItemsRequestParams request){
         return ResponseEntity.ok(service.edit(id, request));
+    }
+
+    @GetMapping("/ncm")
+    public ResponseEntity<List<ProdutoNcm>> getNcm(@RequestParam("ncm") String ncm){
+        return ResponseEntity.ok(service.getNcm(ncm));
     }
 
     @DeleteMapping("/del/{id}")

@@ -1,12 +1,14 @@
 package br.com.manu.service.produto;
 import br.com.manu.model.produto.*;
 import br.com.manu.persistence.entity.produtos.item.Item;
+import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 import br.com.manu.persistence.entity.produtos.produto.Produto;
 import br.com.manu.persistence.repository.item.ItemRepository;
 import br.com.manu.persistence.repository.produto.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Collation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.relation.InvalidRelationIdException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -183,6 +186,18 @@ public class ProdutoServiceImp implements ProdutoService {
         return createResponseItemByProduto(produtoUpdate);
     }
 
+    @Override
+    public List<ProdutoNcm> getNcm(String request) {
+        List<ProdutoNcm> response = new ArrayList<>();
+        List<Ncm> ncms;
+        ncms = mongoTemplate.find(new Query().addCriteria(Criteria.where("Descricao").regex(request)), Ncm.class, "ncm");
+        if(ncms.isEmpty()){
+            ncms = mongoTemplate.find(new Query().addCriteria(Criteria.where("Codigo").regex(request)), Ncm.class, "ncm");
+        }
+        ncms.forEach(ncm -> response.add(responseNcm(ncm)));
+        return response;
+    }
+
     /**
      * Modulo delete
      * Recebe um id como parametro, executa um find na collection de Item, se encontrar algo, com o id do produto associado a collection Item(_idProduto)
@@ -323,6 +338,13 @@ public class ProdutoServiceImp implements ProdutoService {
                 Produto.class, "produto");
 
         return produtos != null;
+    }
+
+    private ProdutoNcm responseNcm(Ncm ncm){
+        ProdutoNcm response = new ProdutoNcm();
+        response.setCodigo(ncm.getCodigo());
+        response.setDescricao(ncm.getDescricao());
+        return response;
     }
 
     /**
