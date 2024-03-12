@@ -21,6 +21,13 @@ public class Produto {
     private String modelo;
     private String tipoProduto;
     private String unidadeMedida;
+    private boolean processado;
+    private String cstIcmsOrigem;
+    private String cstIcmsCodigo;
+    private String cstIcmsDescricao;
+    private String cstPisConfins;
+    private String ncmCodigo;
+    private String ncmDescricao;
     private List<Item> items;
     @CreatedDate
     private Date dataCriacao;
@@ -30,8 +37,9 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(String id, long idProduto, String descricaoProduto, String departamento, String linha, String familia, String grupo, String fornecedor, String modelo, String tipoProduto,
-                   String unidadeMedida, List<Item> items, Date dataCriacao, Date dataModificacao) {
+    public Produto(String id, long idProduto, String descricaoProduto, String departamento, String linha, String familia, String grupo, String fornecedor,
+                   String modelo, String tipoProduto, String unidadeMedida, boolean processado, String cstIcmsOrigem, String cstIcmsCodigo, String cstIcmsDescricao,
+                   String cstPisConfins, String ncmCodigo, String ncmDescricao, List<Item> items, Date dataCriacao, Date dataModificacao) {
         this.id = id;
         this.idProduto = idProduto;
         this.descricaoProduto = descricaoProduto;
@@ -43,6 +51,13 @@ public class Produto {
         this.modelo = modelo;
         this.tipoProduto = tipoProduto;
         this.unidadeMedida = unidadeMedida;
+        this.processado = processado;
+        this.cstIcmsOrigem = cstIcmsOrigem;
+        this.cstIcmsCodigo = cstIcmsCodigo;
+        this.cstIcmsDescricao = cstIcmsDescricao;
+        this.cstPisConfins = cstPisConfins;
+        this.ncmCodigo = ncmCodigo;
+        this.ncmDescricao = ncmDescricao;
         this.items = items;
         this.dataCriacao = dataCriacao;
         this.dataModificacao = dataModificacao;
@@ -141,6 +156,63 @@ public class Produto {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+
+    public boolean isProcessado() {
+        return processado;
+    }
+
+    public void setProcessado(boolean processado) {
+        this.processado = processado;
+    }
+
+    public String getCstIcmsOrigem() {
+        return cstIcmsOrigem;
+    }
+
+    public void setCstIcmsOrigem(String cstIcmsOrigem) {
+        this.cstIcmsOrigem = cstIcmsOrigem;
+    }
+
+    public String getCstIcmsCodigo() {
+        return cstIcmsCodigo;
+    }
+
+    public void setCstIcmsCodigo(String cstIcmsCodigo) {
+        this.cstIcmsCodigo = cstIcmsCodigo;
+    }
+
+    public String getCstIcmsDescricao() {
+        return cstIcmsDescricao;
+    }
+
+    public void setCstIcmsDescricao(String cstIcmsDescricao) {
+        this.cstIcmsDescricao = cstIcmsDescricao;
+    }
+
+    public String getCstPisConfins() {
+        return cstPisConfins;
+    }
+
+    public void setCstPisConfins(String cstPisConfins) {
+        this.cstPisConfins = cstPisConfins;
+    }
+
+    public String getNcmCodigo() {
+        return ncmCodigo;
+    }
+
+    public void setNcmCodigo(String ncmCodigo) {
+        this.ncmCodigo = ncmCodigo;
+    }
+
+    public String getNcmDescricao() {
+        return ncmDescricao;
+    }
+
+    public void setNcmDescricao(String ncmDescricao) {
+        this.ncmDescricao = ncmDescricao;
+    }
+
     public Date getDataCriacao() {
         return dataCriacao;
     }
