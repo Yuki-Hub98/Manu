@@ -1,5 +1,6 @@
 package br.com.manu.service.produto;
 import br.com.manu.model.produto.*;
+import br.com.manu.persistence.entity.produtos.csticms.CstIcms;
 import br.com.manu.persistence.entity.produtos.item.Item;
 import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 import br.com.manu.persistence.entity.produtos.produto.Produto;
@@ -8,7 +9,6 @@ import br.com.manu.persistence.repository.produto.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Collation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.relation.InvalidRelationIdException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -47,6 +46,7 @@ public class ProdutoServiceImp implements ProdutoService {
                 throw new RuntimeException(e);
             }
         }
+        String[] decricaoRequest = request.getCstIcmsDescricao().split(" - ");
         produto.setIdProduto(incrementIdProd());
         produto.setDescricaoProduto(request.getDescricaoProduto());
         produto.setDepartamento(request.getDepartamento());
@@ -57,6 +57,13 @@ public class ProdutoServiceImp implements ProdutoService {
         produto.setModelo(request.getModelo());
         produto.setTipoProduto(request.getTipoProduto());
         produto.setUnidadeMedida(request.getUnidadeMedida());
+        produto.setProcessado(request.isProcessado());
+        produto.setCstIcmsOrigem(request.getCstIcmsOrigem());
+        produto.setCstIcmsCodigo(decricaoRequest[0]);
+        produto.setCstIcmsDescricao(decricaoRequest[1]);
+        produto.setCstPisConfins(request.getCstPisConfins());
+        produto.setNcmCodigo(request.getNcmCodigo());
+        produto.setNcmDescricao(request.getNcmDescricao());
         Produto prodSave = mongoTemplate.save(produto, "produto");
 
         request.getItems().forEach(item -> {
@@ -187,6 +194,14 @@ public class ProdutoServiceImp implements ProdutoService {
     }
 
     @Override
+    public List<ProdutoCstIcmsResponse> getCstIcms(String request) {
+        List<ProdutoCstIcmsResponse> responses = new ArrayList<>();
+        List<CstIcms> cstIcms = mongoTemplate.find(Query.query(Criteria.where("origem").is(request)), CstIcms.class, "csticms");
+        cstIcms.forEach(item -> responses.add(createCstIcmsResponse(item)));
+        return responses;
+    }
+
+    @Override
     public List<ProdutoNcm> getNcm(String request) {
         List<ProdutoNcm> response = new ArrayList<>();
         List<Ncm> ncms;
@@ -274,6 +289,11 @@ public class ProdutoServiceImp implements ProdutoService {
         items.setModelo(produto.getModelo());
         items.setTipoProduto(produto.getTipoProduto());
         items.setUnidadeMedida(produto.getUnidadeMedida());
+        if(produto.isProcessado()){
+            items.setProcessado("sim");
+        }else{
+            items.setProcessado("não");
+        }
         items.setCor(item.getCor());
         items.setEspecificacao(item.getEspecificacao());
         return items;
@@ -301,6 +321,11 @@ public class ProdutoServiceImp implements ProdutoService {
         items.setModelo(produto.getModelo());
         items.setTipoProduto(produto.getTipoProduto());
         items.setUnidadeMedida(produto.getUnidadeMedida());
+        if(produto.isProcessado()){
+            items.setProcessado("sim");
+        }else{
+            items.setProcessado("não");
+        }
         return items;
     }
 
@@ -321,7 +346,25 @@ public class ProdutoServiceImp implements ProdutoService {
         response.setModelo(produto.getModelo());
         response.setTipoProduto(produto.getTipoProduto());
         response.setUnidadeMedida(produto.getUnidadeMedida());
+        if(produto.isProcessado()){
+            response.setProcessado("sim");
+        }else{
+            response.setProcessado("não");
+        }
+        response.setCstIcmsOrigem(produto.getCstIcmsOrigem());
+        response.setCstIcmsCodigo(produto.getCstIcmsCodigo());
+        response.setCstIcmsDescricao(produto.getCstIcmsDescricao());
+        response.setCstPisConfins(produto.getCstPisConfins());
+        response.setNcmCodigo(produto.getNcmCodigo());
+        response.setNcmDescricao(produto.getNcmDescricao());
         response.setItems(produto.getItems());
+        return response;
+    }
+
+    private ProdutoCstIcmsResponse createCstIcmsResponse(CstIcms cstIcms){
+        ProdutoCstIcmsResponse response = new ProdutoCstIcmsResponse();
+        String newDesc = cstIcms.getCodigo() + " - " +cstIcms.getDescricao();
+        response.setDescricao(newDesc);
         return response;
     }
 

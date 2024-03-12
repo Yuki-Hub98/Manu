@@ -48,6 +48,10 @@ public class ProdutoController {
         return ResponseEntity.ok(service.edit(id, request));
     }
 
+    @GetMapping("/csticms")
+    public ResponseEntity<List<ProdutoCstIcmsResponse>> getCstIcms(@RequestParam("origem") String request){
+        return ResponseEntity.ok(service.getCstIcms(request));
+    }
     @GetMapping("/ncm")
     public ResponseEntity<List<ProdutoNcm>> getNcm(@RequestParam("ncm") String ncm){
         return ResponseEntity.ok(service.getNcm(ncm));

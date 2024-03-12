@@ -15,18 +15,17 @@ public class ResponseItem {
     private String unidadeMedida;
     private String cor;
     private String especificacao;
+    private String processado;
 
     public ResponseItem() {
 
     }
 
-    public ResponseItem(long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String departamento,
-                        String linha, String familia, String grupo, String fornecedor, String modelo, String tipoProduto, String unidadeMedida) {
+    public ResponseItem(long idItem, String descricaoItem, String codBarra, String departamento, String linha, String familia, String grupo, String fornecedor,
+                        String modelo, String tipoProduto, String unidadeMedida, String cor, String especificacao, String processado) {
         this.idItem = idItem;
         this.descricaoItem = descricaoItem;
         this.codBarra = codBarra;
-        this.cor = cor;
-        this.especificacao = especificacao;
         this.departamento = departamento;
         this.linha = linha;
         this.familia = familia;
@@ -35,6 +34,9 @@ public class ResponseItem {
         this.modelo = modelo;
         this.tipoProduto = tipoProduto;
         this.unidadeMedida = unidadeMedida;
+        this.cor = cor;
+        this.especificacao = especificacao;
+        processado = processado;
     }
 
     public long getIdItem() {
@@ -141,6 +143,14 @@ public class ResponseItem {
         this.unidadeMedida = unidadeMedida;
     }
 
+    public String getProcessado() {
+        return processado;
+    }
+
+    public void setProcessado(String processado) {
+        this.processado = processado;
+    }
+
     /**
     * Implementação do método hashCode() e equals() para o response não repetir os objetos.
     * */
@@ -162,11 +172,13 @@ public class ResponseItem {
                 Objects.equals(tipoProduto, item.tipoProduto) &&
                 Objects.equals(unidadeMedida, item.unidadeMedida) &&
                 Objects.equals(cor, item.cor) &&
-                Objects.equals(especificacao, item.especificacao);
+                Objects.equals(especificacao, item.especificacao) &&
+                Objects.equals(processado, item.processado);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idItem, descricaoItem, codBarra, departamento, linha, familia, grupo, fornecedor, modelo, tipoProduto, unidadeMedida, cor, especificacao);
+        return Objects.hash(idItem, descricaoItem, codBarra, departamento, linha, familia, grupo, fornecedor,
+                modelo, tipoProduto, unidadeMedida, cor, especificacao, processado);
     }
 }
