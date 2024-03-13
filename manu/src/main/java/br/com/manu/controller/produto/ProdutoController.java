@@ -43,6 +43,11 @@ public class ProdutoController {
                 linha,familia,grupo,fornecedor,modelo,tipoProduto,unidadeMedida,cor,especificacao));
     }
 
+    @GetMapping("/modelo")
+    public ResponseEntity<List<ModeloProduto>> getModels(@RequestParam("linha") String linha){
+        return ResponseEntity.ok(service.getModels(linha));
+    }
+
     @PutMapping("/edit/{id}")
     public ResponseEntity<ResponseItem> edit(@PathVariable int id, @RequestBody ItemsRequestParams request){
         return ResponseEntity.ok(service.edit(id, request));
