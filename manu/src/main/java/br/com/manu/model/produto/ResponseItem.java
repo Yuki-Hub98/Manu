@@ -2,7 +2,7 @@ package br.com.manu.model.produto;
 import java.util.Objects;
 
 public class ResponseItem {
-    private long idItem;
+    private long codigoItem;
     private String descricaoItem;
     private String codBarra;
     private String departamento;
@@ -21,9 +21,9 @@ public class ResponseItem {
 
     }
 
-    public ResponseItem(long idItem, String descricaoItem, String codBarra, String departamento, String linha, String familia, String grupo, String fornecedor,
+    public ResponseItem(long codigoItem, String descricaoItem, String codBarra, String departamento, String linha, String familia, String grupo, String fornecedor,
                         String modelo, String tipoProduto, String unidadeMedida, String cor, String especificacao, String processado) {
-        this.idItem = idItem;
+        this.codigoItem = codigoItem;
         this.descricaoItem = descricaoItem;
         this.codBarra = codBarra;
         this.departamento = departamento;
@@ -39,12 +39,12 @@ public class ResponseItem {
         processado = processado;
     }
 
-    public long getIdItem() {
-        return idItem;
+    public long getCodigoItem() {
+        return codigoItem;
     }
 
-    public void setIdItem(long idItem) {
-        this.idItem = idItem;
+    public void setCodigoItem(long codigoItem) {
+        this.codigoItem = codigoItem;
     }
 
     public String getDescricaoItem() {
@@ -160,7 +160,7 @@ public class ResponseItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResponseItem item = (ResponseItem) o;
-        return idItem == item.idItem &&
+        return codigoItem == item.codigoItem &&
                 Objects.equals(descricaoItem, item.descricaoItem) &&
                 Objects.equals(codBarra, item.codBarra) &&
                 Objects.equals(departamento, item.departamento) &&
@@ -178,7 +178,7 @@ public class ResponseItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(idItem, descricaoItem, codBarra, departamento, linha, familia, grupo, fornecedor,
+        return Objects.hash(codigoItem, descricaoItem, codBarra, departamento, linha, familia, grupo, fornecedor,
                 modelo, tipoProduto, unidadeMedida, cor, especificacao, processado);
     }
 }
