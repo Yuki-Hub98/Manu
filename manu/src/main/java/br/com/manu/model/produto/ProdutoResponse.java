@@ -15,14 +15,14 @@ public class ProdutoResponse {
     private String modelo;
     private String tipoProduto;
     private String unidadeMedida;
-    private String processado;
+    private boolean processado;
     private String cstIcmsOrigem;
     private String cstIcmsCodigo;
     private String cstIcmsDescricao;
     private String cstPisConfins;
     private String ncmCodigo;
     private String ncmDescricao;
-    private List<Item> items;
+    private List<ItemModel> items;
 
 
     public ProdutoResponse() {
@@ -30,8 +30,8 @@ public class ProdutoResponse {
     }
 
     public ProdutoResponse(long idProduto, String descricaoProduto, String departamento, String linha, String familia, String grupo, String fornecedor,
-                           String modelo, String tipoProduto, String unidadeMedida, String processado, String cstIcmsOrigem, String cstIcmsCodigo,
-                           String cstIcmsDescricao, String cstPisConfins, String ncmCodigo, String ncmDescricao, List<Item> items) {
+                           String modelo, String tipoProduto, String unidadeMedida, boolean processado, String cstIcmsOrigem, String cstIcmsCodigo,
+                           String cstIcmsDescricao, String cstPisConfins, String ncmCodigo, String ncmDescricao, List<ItemModel> items) {
         this.idProduto = idProduto;
         this.descricaoProduto = descricaoProduto;
         this.departamento = departamento;
@@ -132,11 +132,11 @@ public class ProdutoResponse {
         this.unidadeMedida = unidadeMedida;
     }
 
-    public String getProcessado() {
+    public boolean isProcessado() {
         return processado;
     }
 
-    public void setProcessado(String processado) {
+    public void setProcessado(boolean processado) {
         this.processado = processado;
     }
 
@@ -188,11 +188,11 @@ public class ProdutoResponse {
         this.ncmDescricao = ncmDescricao;
     }
 
-    public List<Item> getItems() {
+    public List<ItemModel> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<ItemModel> items) {
         this.items = items;
     }
 }

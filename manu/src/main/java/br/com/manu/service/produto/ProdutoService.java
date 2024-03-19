@@ -14,8 +14,10 @@ public interface ProdutoService {
                                   String linha,String familia,String grupo,String fornecedor,String modelo,
                                   String tipoProduto,String unidadeMedida,String cor,String especificacao);
     List<ModeloProduto> getModels(String linha);
-    ResponseItem edit(int id, ItemsRequestParams request);
 
+    lastIdItem getLastId ();
+    ResponseItem edit(int id, ItemsRequestParams request);
+    ProdutoResponse getProduto(String descricaoProduto, String fornecedor);
     List<ProdutoCstIcmsResponse> getCstIcms(String request);
     List<ProdutoNcm> getNcm(String request);
     ProdutoDel del(int id);
