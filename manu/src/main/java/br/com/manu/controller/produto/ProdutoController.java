@@ -47,7 +47,15 @@ public class ProdutoController {
     public ResponseEntity<List<ModeloProduto>> getModels(@RequestParam("linha") String linha){
         return ResponseEntity.ok(service.getModels(linha));
     }
+    @GetMapping("/produto")
+    public ResponseEntity <ProdutoResponse> getProduto(@RequestParam("decricaoProduto") String decricaoProduto, @RequestParam("fornecedor") String fornecedor){
+        return ResponseEntity.ok(service.getProduto(decricaoProduto, fornecedor));
+    }
 
+    @GetMapping("/lastId")
+        public ResponseEntity <lastIdItem> getLastId () {
+            return ResponseEntity.ok(service.getLastId());
+        }
     @PutMapping("/edit/{id}")
     public ResponseEntity<ResponseItem> edit(@PathVariable int id, @RequestBody ItemsRequestParams request){
         return ResponseEntity.ok(service.edit(id, request));

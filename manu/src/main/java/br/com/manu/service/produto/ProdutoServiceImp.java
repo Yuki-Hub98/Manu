@@ -39,22 +39,21 @@ public class ProdutoServiceImp implements ProdutoService {
     public ProdutoResponse create(ProdutoRequest request) {
         Produto produto = new Produto();
         List<Item> itemProd = new ArrayList<>();
+        /*
+         * Verifica se o produto é duplicado, se o produto for duplicado, só vai adicionar o item que vem na array, evitando que duplique produtos,
+         * mas sempre adicione itens
+         */
         if (duplicatedProd(request)){
            Produto duplicateProd = mongoTemplate.findOne(Query.query(Criteria.where("descricaoProduto").is(request.getDescricaoProduto())),
                     Produto.class, "produto");
            if (duplicateProd != null) {
                request.getItems().forEach(item -> {
-                   itemProd.add(generateItem(item));
+                   itemProd.add(generateItem(item, duplicateProd.getFornecedor()));
                });
                itemProd.forEach(
                        item -> {
                            if (duplicatedItem(item)) {
-                               try {
-                                   throw new InvalidRelationIdException();
-                               } catch (InvalidRelationIdException e) {
-                                   mongoTemplate.remove(Query.query(Criteria.where("_id").is(duplicateProd.getId())), Produto.class, "produto");
-                                   throw new RuntimeException(e);
-                               }
+                               mongoTemplate.remove(Query.query(Criteria.where("idItem").is(item.getIdItem())), Item.class, "item");
                            }
                            Item generetedItem = registerItem(item, duplicateProd.getId());
                            mongoTemplate.save(generetedItem, "item");
@@ -64,7 +63,7 @@ public class ProdutoServiceImp implements ProdutoService {
                mongoTemplate.updateFirst(Query.query(Criteria.where("idProduto").is(duplicateProd.getIdProduto())),
                        Update.update("items", duplicateProd.getItems()), Produto.class, "produto");
 
-               return createResponseSave(duplicateProd);
+               return createResponseProduto(duplicateProd);
            }
         }
         String[] decricaoRequest = request.getCstIcmsDescricao().split(" - ");
@@ -88,7 +87,7 @@ public class ProdutoServiceImp implements ProdutoService {
         Produto prodSave = mongoTemplate.save(produto, "produto");
 
         request.getItems().forEach(item -> {
-            itemProd.add(generateItem(item));
+            itemProd.add(generateItem(item, prodSave.getFornecedor()));
         });
         itemProd.forEach(
                 item -> {
@@ -113,7 +112,7 @@ public class ProdutoServiceImp implements ProdutoService {
         mongoTemplate.updateFirst(Query.query(Criteria.where("idProduto").is(prodSave.getIdProduto())),
                 Update.update("items", prodSave.getItems()), Produto.class, "produto");
 
-        return createResponseSave(prodSave);
+        return createResponseProduto(prodSave);
     }
     /**
      * Modulo de pesquisa geral
@@ -197,6 +196,13 @@ public class ProdutoServiceImp implements ProdutoService {
         return modeloProdutos;
     }
 
+    @Override
+    public lastIdItem getLastId() {
+        lastIdItem lasId = new lastIdItem();
+        lasId.setLastIdItem(incrementIdItem());
+        return lasId;
+    }
+
     /**
      * Modulo de edit
      * Faz o update em item e depois em produto, atualiza o documento produto.
@@ -237,6 +243,16 @@ public class ProdutoServiceImp implements ProdutoService {
                 Produto.class, "produto");
 
         return createResponseItemByProduto(produtoUpdate);
+    }
+
+    @Override
+    public ProdutoResponse getProduto(String descricaoProduto, String fornecedor) {
+        Produto produto = mongoTemplate.findOne(Query.query(Criteria.where("descricaoProduto").is(descricaoProduto)
+                .and("fornecedor").is(fornecedor)), Produto.class, "produto");
+        if (produto != null) {
+            return createResponseProduto(produto);
+        }
+        return null;
     }
 
     @Override
@@ -288,13 +304,14 @@ public class ProdutoServiceImp implements ProdutoService {
         return del;
     }
 
-    private Item generateItem(ItemModel item){
+    private Item generateItem(ItemModel item, String fornecedor){
         Item newItem = new Item();
         newItem.setIdItem(item.getIdItem());
         newItem.setDescricaoItem(item.getDescricaoItem());
         newItem.setCodBarra(item.getCodBarra());
         newItem.setEspecificacao(item.getEspecificacao());
         newItem.setCor(item.getCor());
+        newItem.setFornecedor(fornecedor);
         return newItem;
     }
 
@@ -309,6 +326,7 @@ public class ProdutoServiceImp implements ProdutoService {
         Item newItem = new Item();
         newItem.setIdItem(item.getIdItem());
         newItem.set_idProduto(idProd);
+        newItem.setFornecedor(item.getFornecedor());
         newItem.setDescricaoItem(item.getDescricaoItem());
         newItem.setCodBarra(item.getCodBarra());
         newItem.setEspecificacao(item.getEspecificacao());
@@ -381,8 +399,9 @@ public class ProdutoServiceImp implements ProdutoService {
      * @param produto rebece um objeto do tipo Produto
      * @return retorna esse produto como response.
      */
-    private ProdutoResponse createResponseSave(Produto produto){
+    private ProdutoResponse createResponseProduto(Produto produto){
         ProdutoResponse response = new ProdutoResponse();
+        List<ItemModel> itemModel = new ArrayList<>();
         response.setIdProduto(produto.getIdProduto());
         response.setDescricaoProduto(produto.getDescricaoProduto());
         response.setDepartamento(produto.getDepartamento());
@@ -393,18 +412,18 @@ public class ProdutoServiceImp implements ProdutoService {
         response.setModelo(produto.getModelo());
         response.setTipoProduto(produto.getTipoProduto());
         response.setUnidadeMedida(produto.getUnidadeMedida());
-        if(produto.isProcessado()){
-            response.setProcessado("SIM");
-        }else{
-            response.setProcessado("NÃO");
-        }
+        response.setProcessado(produto.isProcessado());
         response.setCstIcmsOrigem(produto.getCstIcmsOrigem());
         response.setCstIcmsCodigo(produto.getCstIcmsCodigo());
         response.setCstIcmsDescricao(produto.getCstIcmsDescricao());
         response.setCstPisConfins(produto.getCstPisConfins());
         response.setNcmCodigo(produto.getNcmCodigo());
         response.setNcmDescricao(produto.getNcmDescricao());
-        response.setItems(produto.getItems());
+        produto.getItems().forEach(item -> {
+            int id = (int) item.getIdItem();
+            itemModel.add(new ItemModel(id, item.getDescricaoItem(), item.getCodBarra(), item.getCor(), item.getEspecificacao()));
+        });
+        response.setItems(itemModel);
         return response;
     }
 
@@ -443,7 +462,8 @@ public class ProdutoServiceImp implements ProdutoService {
      * @return booleano se existe ou não
      */
     private Boolean duplicatedItem (Item item){
-        Item items = mongoTemplate.findOne(Query.query(Criteria.where("descricaoItem").is(item.getDescricaoItem()).and("codBarra").is(item.getCodBarra())),
+        Item items = mongoTemplate.findOne(Query.query(Criteria.where("descricaoItem").is(item.getDescricaoItem())
+                        .and("codBarra").is(item.getCodBarra()).and("fornecedor").is(item.getFornecedor())),
                 Item.class, "item");
 
         return items != null;
