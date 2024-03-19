@@ -15,6 +15,7 @@ public class Item {
     private String cor;
     private String especificacao;
     private String _idProduto;
+    private String fornecedor;
     @CreatedDate
     private Date dataCriacao;
     @LastModifiedDate
@@ -23,7 +24,7 @@ public class Item {
 
     }
 
-    public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto, Date dataCriacao, Date dataModificacao) {
+    public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto, String fornecedor, Date dataCriacao, Date dataModificacao) {
         this.id = id;
         this.idItem = idItem;
         this.descricaoItem = descricaoItem;
@@ -31,6 +32,7 @@ public class Item {
         this.cor = cor;
         this.especificacao = especificacao;
         this._idProduto = _idProduto;
+        this.fornecedor = fornecedor;
         this.dataCriacao = dataCriacao;
         this.dataModificacao = dataModificacao;
     }
@@ -89,6 +91,14 @@ public class Item {
 
     public void set_idProduto(String _idProduto) {
         this._idProduto = _idProduto;
+    }
+
+    public String getFornecedor() {
+        return fornecedor;
+    }
+
+    public void setFornecedor(String fornecedor) {
+        this.fornecedor = fornecedor;
     }
 
     public Date getDataCriacao() {
