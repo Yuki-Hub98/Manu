@@ -24,6 +24,18 @@ public class Item {
 
     }
 
+    /**
+     * Constructor para update item
+     */
+    public Item(long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String fornecedor) {
+        this.idItem = idItem;
+        this.descricaoItem = descricaoItem;
+        this.codBarra = codBarra;
+        this.cor = cor;
+        this.especificacao = especificacao;
+        this.fornecedor = fornecedor;
+    }
+
     public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto, String fornecedor, Date dataCriacao, Date dataModificacao) {
         this.id = id;
         this.idItem = idItem;

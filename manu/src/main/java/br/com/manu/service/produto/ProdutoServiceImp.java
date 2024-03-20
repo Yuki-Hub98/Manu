@@ -4,8 +4,6 @@ import br.com.manu.persistence.entity.produtos.csticms.CstIcms;
 import br.com.manu.persistence.entity.produtos.item.Item;
 import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 import br.com.manu.persistence.entity.produtos.produto.Produto;
-import br.com.manu.persistence.repository.item.ItemRepository;
-import br.com.manu.persistence.repository.produto.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -22,8 +20,6 @@ import java.util.List;
 @Service
 public class ProdutoServiceImp implements ProdutoService {
     @Autowired
-    private ProdutoRepository repositoryProduto;
-    private ItemRepository repositoryItem;
     private final MongoTemplate mongoTemplate;
     public ProdutoServiceImp (MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
@@ -183,7 +179,6 @@ public class ProdutoServiceImp implements ProdutoService {
 
     /**
      * Pesquisa do modelo do produto.
-     * @param linha
      * @return Lista de modelos, daquela linha, daquele produto
      */
     @Override
@@ -194,6 +189,17 @@ public class ProdutoServiceImp implements ProdutoService {
             modeloProdutos.add(new ModeloProduto(item.getModelo()));
         });
         return modeloProdutos;
+    }
+
+    @Override
+    public ProdutoResponse getProdutoToEdit(int id) {
+        Item item = mongoTemplate.findOne(Query.query(Criteria.where("idItem").is(id)), Item.class, "item");
+        if (item != null) {
+            Produto produto = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(item.get_idProduto())), Produto.class, "produto");
+            assert produto != null;
+            return createResponseProduto(produto);
+        }
+        return null;
     }
 
     @Override
@@ -211,14 +217,13 @@ public class ProdutoServiceImp implements ProdutoService {
      * @return retorna o item editado
      */
     @Override
-    public ResponseItem edit(int id, ItemsRequestParams request) {
-        mongoTemplate.updateFirst(Query.query(Criteria.where("idItem").is(id)),
-                Update.update("descricaoItem", request.getDescricaoItem()).set("codBarra", request.getCodBarra()).set("cor", request.getCor())
-                        .set("especificacao", request.getEspecificacao()), Item.class, "item");
+    public ResponseItem edit(int id, ProdutoRequest request) {
+        List<Item> itemUpdate = new ArrayList<>();
 
-        Item itemUpdate = mongoTemplate.findOne(Query.query(Criteria.where("idItem").is(id)), Item.class, "item");
+        Produto produtoUpdate = mongoTemplate.findOne(Query.query(Criteria.where("descricaoProduto").is(request.getDescricaoProduto())
+                .and("fornecedor").is(request.getFornecedor())), Produto.class, "produto");
 
-        Produto produtoUpdate = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(itemUpdate.get_idProduto())), Produto.class, "produto");
+        assert produtoUpdate != null;
         produtoUpdate.setDepartamento(request.getDepartamento());
         produtoUpdate.setLinha(request.getLinha());
         produtoUpdate.setFamilia(request.getFamilia());
@@ -227,20 +232,24 @@ public class ProdutoServiceImp implements ProdutoService {
         produtoUpdate.setModelo(request.getModelo());
         produtoUpdate.setTipoProduto(request.getTipoProduto());
         produtoUpdate.setUnidadeMedida(request.getUnidadeMedida());
-        produtoUpdate.getItems().forEach(item -> {
-            if(item.getIdItem() == request.getIdItem()){
-                item.setDescricaoItem(request.getDescricaoItem());
-                item.setCodBarra(request.getCodBarra());
-                item.setCor(request.getCor());
-                item.setEspecificacao(request.getEspecificacao());
-            }
+        request.getItems().forEach(item -> {
+            itemUpdate.add(new Item(item.getIdItem(), item.getDescricaoItem(), item.getCodBarra(), item.getCor(),
+                    item.getEspecificacao(), produtoUpdate.getFornecedor()));
         });
+        produtoUpdate.setItems(itemUpdate);
 
-        mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(itemUpdate.get_idProduto())),
+        mongoTemplate.updateFirst(Query.query(Criteria.where("descricaoProduto").is(request.getDescricaoProduto())
+                        .and("fornecedor").is(request.getFornecedor())),
                 new Update().set("departamento", produtoUpdate.getDepartamento()).set("linha", produtoUpdate.getLinha()).set("familia", produtoUpdate.getFamilia())
                         .set("grupo", produtoUpdate.getGrupo()).set("fornecedor", produtoUpdate.getFornecedor()).set("modelo", produtoUpdate.getModelo())
                         .set("tipoProduto", produtoUpdate.getTipoProduto()).set("unidadeMedida", produtoUpdate.getUnidadeMedida()).set("items", produtoUpdate.getItems()),
-                Produto.class, "produto");
+                    Produto.class, "produto");
+
+        itemUpdate.forEach(item -> {
+            mongoTemplate.updateFirst(Query.query( new Criteria("idItem").is(item.getIdItem())),
+                    Update.update("descricaoItem", item.getDescricaoItem()).set("cor", item.getCor())
+                            .set("especificacao", item.getEspecificacao()).set("fornecedor", item.getFornecedor()), Item.class, "item");
+        });
 
         return createResponseItemByProduto(produtoUpdate);
     }
@@ -346,22 +355,25 @@ public class ProdutoServiceImp implements ProdutoService {
         items.setCodigoItem(item.getIdItem());
         items.setCodBarra(item.getCodBarra());
         items.setDescricaoItem(item.getDescricaoItem());
-        items.setDepartamento(produto.getDepartamento());
-        items.setLinha(produto.getLinha());
-        items.setFamilia(produto.getFamilia());
-        items.setGrupo(produto.getGrupo());
-        items.setFornecedor(produto.getFornecedor());
-        items.setModelo(produto.getModelo());
-        items.setTipoProduto(produto.getTipoProduto());
-        items.setUnidadeMedida(produto.getUnidadeMedida());
-        if(produto.isProcessado()){
-            items.setProcessado("SIM");
-        }else{
-            items.setProcessado("NÃO");
+        if (produto != null) {
+            items.setDepartamento(produto.getDepartamento());
+            items.setLinha(produto.getLinha());
+            items.setFamilia(produto.getFamilia());
+            items.setGrupo(produto.getGrupo());
+            items.setFornecedor(produto.getFornecedor());
+            items.setModelo(produto.getModelo());
+            items.setTipoProduto(produto.getTipoProduto());
+            items.setUnidadeMedida(produto.getUnidadeMedida());
+            if (produto.isProcessado()) {
+                items.setProcessado("SIM");
+            } else {
+                items.setProcessado("NÃO");
+            }
+            items.setCor(item.getCor());
+            items.setEspecificacao(item.getEspecificacao());
+            return items;
         }
-        items.setCor(item.getCor());
-        items.setEspecificacao(item.getEspecificacao());
-        return items;
+        return null;
     }
 
     /**
