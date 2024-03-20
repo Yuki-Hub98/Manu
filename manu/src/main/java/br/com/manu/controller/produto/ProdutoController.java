@@ -52,12 +52,16 @@ public class ProdutoController {
         return ResponseEntity.ok(service.getProduto(decricaoProduto, fornecedor));
     }
 
+    @GetMapping("/produto/edit/{idItem}")
+    public ResponseEntity <ProdutoResponse> getProdutoToEdit(@PathVariable int idItem){
+        return ResponseEntity.ok(service.getProdutoToEdit(idItem));
+    }
     @GetMapping("/lastId")
         public ResponseEntity <lastIdItem> getLastId () {
             return ResponseEntity.ok(service.getLastId());
         }
     @PutMapping("/edit/{id}")
-    public ResponseEntity<ResponseItem> edit(@PathVariable int id, @RequestBody ItemsRequestParams request){
+    public ResponseEntity<ResponseItem> edit(@PathVariable int id, @RequestBody ProdutoRequest request){
         return ResponseEntity.ok(service.edit(id, request));
     }
 
