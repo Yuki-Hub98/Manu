@@ -16,6 +16,9 @@ public class Item {
     private String especificacao;
     private String _idProduto;
     private String fornecedor;
+    private String precoVenda;
+    private String margem;
+    private String custo;
     @CreatedDate
     private Date dataCriacao;
     @LastModifiedDate
@@ -36,7 +39,8 @@ public class Item {
         this.fornecedor = fornecedor;
     }
 
-    public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto, String fornecedor, Date dataCriacao, Date dataModificacao) {
+    public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto, String fornecedor,
+                String precoVenda, String margem, String custo, Date dataCriacao, Date dataModificacao) {
         this.id = id;
         this.idItem = idItem;
         this.descricaoItem = descricaoItem;
@@ -45,6 +49,9 @@ public class Item {
         this.especificacao = especificacao;
         this._idProduto = _idProduto;
         this.fornecedor = fornecedor;
+        this.precoVenda = precoVenda;
+        this.margem = margem;
+        this.custo = custo;
         this.dataCriacao = dataCriacao;
         this.dataModificacao = dataModificacao;
     }
@@ -111,6 +118,30 @@ public class Item {
 
     public void setFornecedor(String fornecedor) {
         this.fornecedor = fornecedor;
+    }
+
+    public String getPrecoVenda() {
+        return precoVenda;
+    }
+
+    public void setPrecoVenda(String precoVenda) {
+        this.precoVenda = precoVenda;
+    }
+
+    public String getMargem() {
+        return margem;
+    }
+
+    public void setMargem(String margem) {
+        this.margem = margem;
+    }
+
+    public String getCusto() {
+        return custo;
+    }
+
+    public void setCusto(String custo) {
+        this.custo = custo;
     }
 
     public Date getDataCriacao() {

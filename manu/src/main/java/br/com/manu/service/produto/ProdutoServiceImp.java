@@ -5,6 +5,7 @@ import br.com.manu.persistence.entity.produtos.item.Item;
 import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 import br.com.manu.persistence.entity.produtos.produto.Produto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -110,6 +111,49 @@ public class ProdutoServiceImp implements ProdutoService {
 
         return createResponseProduto(prodSave);
     }
+
+    @Override
+    public Modelo createModelo(Modelo request) {
+        Modelo modelo = new Modelo();
+        modelo.setDescricao(request.getDescricao());
+        mongoTemplate.save(modelo, "modelo");
+        return modelo;
+    }
+
+    @Override
+    public List<Modelo> getAllModelos() {
+        return mongoTemplate.findAll(Modelo.class, "modelo");
+    }
+
+    @Override
+    public Modelo editModelo(ModeloEdit request) {
+        Modelo modelo = new Modelo();
+        modelo = mongoTemplate.findOne(Query.query(Criteria.where("descricao").is(request.getDescricao())), Modelo.class, "modelo");
+        if (modelo != null) {
+            mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(modelo.getDescricao())),
+                    Update.update("descricao", request.getEdit()), Modelo.class, "modelo");
+            modelo.setDescricao(request.getEdit());
+            return modelo;
+        }
+        return null;
+    }
+
+    @Override
+    public ModeloDel delModelo(Modelo request) {
+        ModeloDel del = new ModeloDel();
+        Produto produto = mongoTemplate.findOne(Query.query(Criteria.where("modelo").is(request.getDescricao())), Produto.class, "produto");
+        if (produto != null){
+            try {
+                throw new DataIntegrityViolationException(request.getDescricao());
+            } catch (DataIntegrityViolationException e) {
+                throw new DataIntegrityViolationException(request.getDescricao());
+            }
+        }
+        mongoTemplate.remove(Query.query(Criteria.where("descricao").is(request.getDescricao())), Modelo.class, "modelo");
+        del.setDel(request.getDescricao());
+        return del;
+    }
+
     /**
      * Modulo de pesquisa geral
      * O primeiro get é feito com base nessa class ResponseItem, porque as infarmações que importam são os itens em si, o _idProduto consegue trazer as informações
@@ -211,19 +255,20 @@ public class ProdutoServiceImp implements ProdutoService {
 
     /**
      * Modulo de edit
-     * Faz o update em item e depois em produto, atualiza o documento produto.
-     * @param id id do item
-     * @param request parametros do item que vai ser editado.
-     * @return retorna o item editado
+     * Faz o update do produto, recebe o produto junto com array faz o find pelo id do produto e atualiza ele.
+     * @param id id do Produto
+     * @param request Produto e array de itens, edita todas as informações
+     * @return retorna o produto editado
      */
     @Override
     public ResponseItem edit(int id, ProdutoRequest request) {
         List<Item> itemUpdate = new ArrayList<>();
 
-        Produto produtoUpdate = mongoTemplate.findOne(Query.query(Criteria.where("descricaoProduto").is(request.getDescricaoProduto())
+        Produto produtoUpdate = mongoTemplate.findOne(Query.query(Criteria.where("idProduto").is(id)
                 .and("fornecedor").is(request.getFornecedor())), Produto.class, "produto");
 
         assert produtoUpdate != null;
+        produtoUpdate.setDescricaoProduto(request.getDescricaoProduto());
         produtoUpdate.setDepartamento(request.getDepartamento());
         produtoUpdate.setLinha(request.getLinha());
         produtoUpdate.setFamilia(request.getFamilia());
@@ -237,10 +282,18 @@ public class ProdutoServiceImp implements ProdutoService {
                     item.getEspecificacao(), produtoUpdate.getFornecedor()));
         });
         produtoUpdate.setItems(itemUpdate);
-
-        mongoTemplate.updateFirst(Query.query(Criteria.where("descricaoProduto").is(request.getDescricaoProduto())
+        produtoUpdate.getItems().forEach(item -> {
+            if(duplicatedItem(item)){
+                try {
+                    throw new InvalidRelationIdException();
+                } catch (InvalidRelationIdException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        mongoTemplate.updateFirst(Query.query(Criteria.where("idProduto").is(id)
                         .and("fornecedor").is(request.getFornecedor())),
-                new Update().set("departamento", produtoUpdate.getDepartamento()).set("linha", produtoUpdate.getLinha()).set("familia", produtoUpdate.getFamilia())
+                new Update().set("descricaoProduto", produtoUpdate.getDescricaoProduto()).set("departamento", produtoUpdate.getDepartamento()).set("linha", produtoUpdate.getLinha()).set("familia", produtoUpdate.getFamilia())
                         .set("grupo", produtoUpdate.getGrupo()).set("fornecedor", produtoUpdate.getFornecedor()).set("modelo", produtoUpdate.getModelo())
                         .set("tipoProduto", produtoUpdate.getTipoProduto()).set("unidadeMedida", produtoUpdate.getUnidadeMedida()).set("items", produtoUpdate.getItems()),
                     Produto.class, "produto");
