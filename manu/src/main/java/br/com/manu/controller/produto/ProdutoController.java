@@ -43,7 +43,7 @@ public class ProdutoController {
                 linha,familia,grupo,fornecedor,modelo,tipoProduto,unidadeMedida,cor,especificacao));
     }
 
-    @GetMapping("/modelo")
+    @GetMapping("/modelo/linha")
     public ResponseEntity<List<ModeloProduto>> getModels(@RequestParam("linha") String linha){
         return ResponseEntity.ok(service.getModels(linha));
     }
@@ -78,4 +78,23 @@ public class ProdutoController {
     public ResponseEntity<ProdutoDel> del(@PathVariable int id){
         return ResponseEntity.ok(service.del(id));
     }
+
+    @PostMapping("/modelos")
+    public ResponseEntity<Modelo>createModelo(@RequestBody Modelo request){
+        return ResponseEntity.ok(service.createModelo(request));
+    }
+
+    @GetMapping("/modelos")
+    public ResponseEntity<List<Modelo>>getAllModelos(){
+        return ResponseEntity.ok(service.getAllModelos());
+    }
+    @PutMapping("/modelos/edit")
+    public ResponseEntity<Modelo>editModelo(@RequestBody ModeloEdit request){
+        return ResponseEntity.ok(service.editModelo(request));
+    }
+    @DeleteMapping("/modelos/del")
+    public ResponseEntity<ModeloDel>delModelo(@RequestParam("descricao") Modelo request){
+        return ResponseEntity.ok(service.delModelo(request));
+    }
+
 }
