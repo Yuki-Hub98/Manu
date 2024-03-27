@@ -34,13 +34,13 @@ public class GrupoController {
         return ResponseEntity.ok(service.getGrupoByFamilia(familia));
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity <GrupoResponse> edit(@RequestBody GrupoEdit request){
-        return ResponseEntity.ok(service.edit(request));
+    @PutMapping("/edit/{codigo}")
+    public ResponseEntity <GrupoResponse> edit(@PathVariable int codigo, @RequestBody GrupoRequest request){
+        return ResponseEntity.ok(service.edit(codigo, request));
     }
 
-    @DeleteMapping("del")
-    public ResponseEntity<GrupoDel>del(@RequestParam("descricao") String descricao, @RequestBody GrupoRequest request){
-        return ResponseEntity.ok(service.del(descricao, request));
+    @DeleteMapping("/del/{codigo}")
+    public ResponseEntity<GrupoDel>del(@RequestBody GrupoRequest request, @PathVariable int codigo){
+        return ResponseEntity.ok(service.del(codigo, request));
     }
 }

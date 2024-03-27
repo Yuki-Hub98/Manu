@@ -1,12 +1,13 @@
-package br.com.manu.model.arvoreProduto.departamento;
+package br.com.manu.model.cadastroDeFuncao;
 
-public class DepartamentoDel {
+public class CadastroDeFuncaoDel {
     private int codigo;
     private String del;
-    public DepartamentoDel() {
+    public CadastroDeFuncaoDel() {
+
     }
 
-    public DepartamentoDel(int codigo, String del) {
+    public CadastroDeFuncaoDel(int codigo, String del) {
         this.codigo = codigo;
         this.del = del;
     }
@@ -22,6 +23,7 @@ public class DepartamentoDel {
     public String getDel() {
         return del;
     }
+
     public void setDel(String del) {
         this.del = del;
     }

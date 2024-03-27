@@ -3,7 +3,7 @@ package br.com.manu.model.arvoreProduto.grupo;
 import org.springframework.data.annotation.Id;
 
 public class GrupoResponse {
-
+    private int codigo;
     private String familia;
     private String descricao;
 
@@ -11,10 +11,18 @@ public class GrupoResponse {
 
     }
 
-    public GrupoResponse( String familia, String descricao) {
-
+    public GrupoResponse(int codigo, String familia, String descricao) {
+        this.codigo = codigo;
         this.familia = familia;
         this.descricao = descricao;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getFamilia() {

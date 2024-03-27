@@ -1,6 +1,7 @@
 package br.com.manu.model.arvoreProduto.linha;
 
 public class LinhaResponseDepartamento {
+    private int codigo;
     private String departamento;
     private String linha;
 
@@ -8,9 +9,18 @@ public class LinhaResponseDepartamento {
 
     }
 
-    public LinhaResponseDepartamento(String departamento, String linha) {
+    public LinhaResponseDepartamento(int codigo, String departamento, String linha) {
+        this.codigo = codigo;
         this.departamento = departamento;
         this.linha = linha;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getDepartamento() {

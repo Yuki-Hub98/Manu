@@ -1,15 +1,14 @@
 package br.com.manu.service.arvoreProduto.linha;
 
-import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
-import br.com.manu.model.arvoreProduto.familia.FamiliaEdit;
 import br.com.manu.model.arvoreProduto.linha.*;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
+import br.com.manu.persistence.entity.produtos.produto.Produto;
 import br.com.manu.persistence.repository.arvoreProduto.LinhaRepository;
-import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -32,18 +31,11 @@ public class LinhaServiceImp implements LinhaService {
     }
     @Override
     public LinhaResponse create(LinhaRequest request) {
+        Duplicated(request);
         Linha linha = new Linha();
+        linha.setCodigo(incrementCodigo());
         linha.setDepartamento(request.getDepartamento());
         linha.setDescricao(request.getDescricao());
-        find(linha).forEach((li) -> {
-            if (li.getDescricao().equals(linha.getDescricao()) && li.getDepartamento().equals(linha.getDepartamento())) {
-                try {
-                    throw new InvalidRelationIdException();
-                } catch (InvalidRelationIdException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
         repository.save(linha);
         return createResponse(linha);
 
@@ -77,49 +69,66 @@ public class LinhaServiceImp implements LinhaService {
         return responses;
     }
 
+    /**
+     * Recebe o objeto que precisa ser editado, verifica se existe esse objeto em outras collections @familia e @produto, collections relacionadas
+     * com @linha, executa um updateMulti na collection @familia e @produto com a informação nova do objeto.
+     * @param codigo
+     * @param request
+     * @return objeto editado
+     */
     @Override
-    public LinhaResponse edit(LinhaEdit request) {
+    public LinhaResponse edit(int codigo, LinhaRequest request) {
+        Duplicated(request);
         Linha newLinha = new Linha();
+        newLinha.setCodigo(codigo);
         newLinha.setDepartamento(request.getDepartamento());
-        newLinha.setDescricao(request.getEditDescricao());
-        find(newLinha).forEach(newDep -> {
-            if(newDep.getDescricao().equals(newLinha.getDescricao())){
-                try {
-                    throw new InvalidRelationIdException();
-                } catch (InvalidRelationIdException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        List<Familia> familias = mongoTemplate.find(Query.query(Criteria.where("linha").is(request.getDescricao())),
+        newLinha.setDescricao(request.getDescricao());
+        Linha linhaEdited = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(codigo)),
+                Linha.class, "linha");
+        Boolean existsInFamilia = mongoTemplate.exists(Query.query(Criteria.where("linha").is(linhaEdited.getDescricao())),
                 Familia.class, "familia");
-
-        if(!familias.isEmpty()){
-            editLin(request);
-            mongoTemplate.updateMulti(Query.query(Criteria.where("linha").is(request.getDescricao())),
-                    Update.update("linha", request.getEditDescricao()),
+        Boolean existsInProduto = mongoTemplate.exists(Query.query(Criteria.where("linha").is(linhaEdited.getDescricao())),
+                Produto.class, "produto");
+        editLinha(newLinha);
+        if(existsInFamilia){
+            mongoTemplate.updateMulti(Query.query(Criteria.where("linha").is(linhaEdited.getDescricao())),
+                    Update.update("linha", newLinha.getDescricao()),
                     Familia.class, "familia");
-        }else {
-            editLin(request);
+            if (existsInProduto) {
+                mongoTemplate.updateMulti(Query.query(Criteria.where("linha").is(linhaEdited.getDescricao())),
+                        Update.update("linha", newLinha.getDescricao()),
+                        Produto.class, "produto");
+            }
         }
 
         return createResponse(newLinha);
     }
 
+    /**
+     * Antes de deletar, verifica na @produto e @familia, duas collections que estõo relacionadas com @linha, se tiver lança um exeception para
+     * Avisar que esse documento está sendo utilizado, tem que excluir primeiro nas collections relacionadas para conseguir excluir.
+     * @param codigo
+     * @param request
+     * @return objeto excluido
+     */
     @Override
-    public LinhaDel del(String descricao, LinhaRequest request) {
+    public LinhaDel del(int codigo, LinhaRequest request) {
         Linha del = new Linha();
+        del.setCodigo(codigo);
         del.setDepartamento(request.getDepartamento());
         del.setDescricao(request.getDescricao());
-        List<Familia> familias = mongoTemplate.find(Query.query(Criteria.where("linha").is(descricao)), Familia.class, "familia");
-        if (!familias.isEmpty()){
+        Boolean existsInFamilia = mongoTemplate.exists(Query.query(Criteria.where("linha").is(del.getDescricao())),
+                Familia.class, "familia");
+        Boolean existsInProduto = mongoTemplate.exists(Query.query(Criteria.where("linha").is(del.getDescricao())),
+                Produto.class, "produto");
+        if (existsInFamilia || existsInProduto){
             try {
-                throw new DataIntegrityViolationException(descricao);
+                throw new DataIntegrityViolationException(del.getDescricao());
             } catch (DataIntegrityViolationException e) {
-                throw new DataIntegrityViolationException(descricao);
+                throw new DataIntegrityViolationException(del.getDescricao());
             }
         }else{
-            mongoTemplate.remove(Query.query(Criteria.where("departamento").is(del.getDepartamento()).and("descricao").is(del.getDescricao())),
+            mongoTemplate.remove(Query.query(Criteria.where("departamento").is(del.getDepartamento()).and("codigo").is(codigo)),
                     Linha.class, "linha");
         }
         return responseDel(del);
@@ -127,31 +136,61 @@ public class LinhaServiceImp implements LinhaService {
 
     private LinhaResponse createResponse(Linha linha) {
         LinhaResponse response = new LinhaResponse();
+        response.setCodigo(linha.getCodigo());
         response.setDepartamento(linha.getDepartamento());
         response.setDescricao(linha.getDescricao());
         return response;
     }
     private LinhaResponseDepartamento createResponseByDepartamento(Linha linha){
         LinhaResponseDepartamento response = new LinhaResponseDepartamento();
+        response.setCodigo(linha.getCodigo());
         response.setDepartamento(linha.getDepartamento());
         response.setLinha(linha.getDescricao());
         return response;
     }
     private LinhaDel responseDel(Linha linha){
         LinhaDel response = new LinhaDel();
+        response.setCodigo(linha.getCodigo());
         response.setDepDel(linha.getDepartamento());
         response.setDel(linha.getDescricao());
         return response;
     }
 
-    private List<Linha> find(Linha campo){
-        List<Linha> find = repository.findByname(campo.getDepartamento(), campo.getDescricao());
-        return find;
+
+    private void editLinha (Linha request){
+        mongoTemplate.updateFirst(Query.query(Criteria.where("codigo").is(request.getCodigo())),
+                Update.update("descricao", request.getDescricao()).set("departamento", request.getDepartamento()),
+                Linha.class, "linha");
     }
 
-    private void editLin (LinhaEdit request){
-        mongoTemplate.updateFirst(Query.query(Criteria.where("descricao").is(request.getDescricao())),
-                Update.update("descricao", request.getEditDescricao()).set("departamento", request.getEditDepartamento()),
-                Linha.class, "linha");
+    /**
+     * Verifica se o objeto está cadastro na collection @linha, se tiver executa uma exeception
+     * informando que já existe cadastro
+     * @param request
+     */
+    private void Duplicated (LinhaRequest request){
+        Boolean exist = mongoTemplate.exists(Query.query(Criteria.where("descricao").is(request.getDescricao())
+                        .and("departamento").is(request.getDepartamento())), Linha.class, "linha");
+        if(exist) {
+            try {
+                throw new InvalidRelationIdException();
+            } catch (InvalidRelationIdException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private int incrementCodigo () {
+        int id = 0;
+        List<Linha> prodIds =  mongoTemplate.findAll(Linha.class, "linha");
+        if(prodIds.isEmpty()){
+            id ++;
+        }else {
+            Linha lastId = mongoTemplate.findOne(new Query().limit(1).with(Sort.by(Sort.Direction.DESC, "_id")),
+                    Linha.class, "linha");
+            assert lastId != null;
+            id = (int) (lastId.getCodigo() + 1);
+        }
+        return id;
     }
 }
