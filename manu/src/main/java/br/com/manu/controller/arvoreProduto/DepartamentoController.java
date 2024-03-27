@@ -1,7 +1,6 @@
 package br.com.manu.controller.arvoreProduto;
 
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoDel;
-import br.com.manu.model.arvoreProduto.departamento.DepartamentoEdit;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
 import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
 import br.com.manu.service.arvoreProduto.departamento.DepartamentoService;
@@ -31,14 +30,14 @@ public class DepartamentoController {
         return  ResponseEntity.ok(service.getDescricao(request));
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity <DepartamentoResponse> edit(@RequestBody DepartamentoEdit request){
-        return ResponseEntity.ok(service.edit(request));
+    @PutMapping("/edit/{codigo}")
+    public ResponseEntity <DepartamentoResponse> edit(@PathVariable int codigo, @RequestBody DepartamentoRequest request){
+        return ResponseEntity.ok(service.edit(codigo, request));
     }
 
-    @DeleteMapping("/del")
-    public ResponseEntity <DepartamentoDel> del(@RequestParam("descricao") DepartamentoRequest request){
-        return ResponseEntity.ok(service.del(request));
+    @DeleteMapping("/del/{codigo}")
+    public ResponseEntity <DepartamentoDel> del(@RequestBody DepartamentoRequest request, @PathVariable int codigo){
+        return ResponseEntity.ok(service.del(codigo, request));
     }
 
 }

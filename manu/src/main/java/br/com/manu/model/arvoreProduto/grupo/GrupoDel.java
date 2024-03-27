@@ -1,19 +1,34 @@
 package br.com.manu.model.arvoreProduto.grupo;
 
 public class GrupoDel {
-    private String delFam;
+    private int codigo;
+    private String delFamilia;
     private String del;
 
     public GrupoDel() {
 
     }
 
-    public String getDelFam() {
-        return delFam;
+    public GrupoDel(int codigo, String delFamilia, String del) {
+        this.codigo = codigo;
+        this.delFamilia = delFamilia;
+        this.del = del;
     }
 
-    public void setDelFam(String delFam) {
-        this.delFam = delFam;
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getDelFamilia() {
+        return delFamilia;
+    }
+
+    public void setDelFamilia(String delFamilia) {
+        this.delFamilia = delFamilia;
     }
 
     public String getDel() {

@@ -10,6 +10,6 @@ public interface GrupoService  {
     List<GrupoResponse> getAll();
     List<GrupoResponse> getDescricao(String request);
     List<GrupoResponseFamilia> getGrupoByFamilia(String request);
-    GrupoResponse edit(GrupoEdit request);
-    GrupoDel del(String descricao, GrupoRequest request);
+    GrupoResponse edit(int codigo ,GrupoRequest request);
+    GrupoDel del(int codigo, GrupoRequest request);
 }
