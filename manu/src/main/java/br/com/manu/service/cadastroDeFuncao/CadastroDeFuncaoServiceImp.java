@@ -73,6 +73,7 @@ public class CadastroDeFuncaoServiceImp implements CadastroDeFuncaoService {
         cadastroDeFuncaoDel.setCodigo(id);
         cadastroDeFuncaoDel.setDel("O item: " + id + " foi deletado");
         return cadastroDeFuncaoDel;
+
     }
 
 

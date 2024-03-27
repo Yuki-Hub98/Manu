@@ -3,7 +3,6 @@ package br.com.manu.service.cadastroDeFuncao;
 import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoDel;
 import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoRequest;
 import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoResponse;
-
 import java.util.List;
 
 public interface CadastroDeFuncaoService {
