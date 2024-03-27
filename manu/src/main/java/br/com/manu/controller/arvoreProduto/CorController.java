@@ -1,12 +1,8 @@
 package br.com.manu.controller.arvoreProduto;
 
 import br.com.manu.model.arvoreProduto.cor.CorDel;
-import br.com.manu.model.arvoreProduto.cor.CorEdit;
 import br.com.manu.model.arvoreProduto.cor.CorRequest;
 import br.com.manu.model.arvoreProduto.cor.CorResponse;
-import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
-import br.com.manu.model.arvoreProduto.departamento.DepartamentoResponse;
-import br.com.manu.persistence.entity.arvoreProduto.Cor;
 import br.com.manu.service.arvoreProduto.cor.CorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +29,12 @@ public class CorController {
     public  ResponseEntity<List<CorResponse>> getDescricao(@RequestParam("descricao") String request){
         return  ResponseEntity.ok(service.getDescricao(request));
     }
-    @PutMapping("/edit")
-    public ResponseEntity<CorResponse> edit(@RequestBody CorEdit request){
-        return ResponseEntity.ok(service.edit(request));
+    @PutMapping("/edit/{codigo}")
+    public ResponseEntity<CorResponse> edit(@PathVariable int codigo, @RequestBody CorRequest request){
+        return ResponseEntity.ok(service.edit(codigo, request));
     }
-    @DeleteMapping("/del")
-    public ResponseEntity<CorDel> del(@RequestParam("descricao") CorRequest request){
-        return ResponseEntity.ok(service.del(request));
+    @DeleteMapping("/del/{codigo}")
+    public ResponseEntity<CorDel> del(@PathVariable int codigo, @RequestBody CorRequest request){
+        return ResponseEntity.ok(service.del(codigo, request));
     }
 }

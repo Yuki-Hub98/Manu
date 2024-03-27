@@ -31,13 +31,13 @@ public class LinhaController {
     public ResponseEntity<List<LinhaResponseDepartamento>> getDescricaoByDepartamento(@PathVariable String departamento){
         return ResponseEntity.ok(service.getDescricaoByDepartamento(departamento));
     }
-    @PutMapping("/edit")
-    public ResponseEntity<LinhaResponse> edit(@RequestBody LinhaEdit request){
-        return ResponseEntity.ok(service.edit(request));
+    @PutMapping("/edit/{codigo}")
+    public ResponseEntity<LinhaResponse> edit(@PathVariable int codigo, @RequestBody LinhaRequest request){
+        return ResponseEntity.ok(service.edit(codigo, request));
     }
 
-    @DeleteMapping("/del")
-    public ResponseEntity<LinhaDel>del(@RequestParam("descricao") String descricao, @RequestBody LinhaRequest request){
-        return ResponseEntity.ok(service.del(descricao, request));
+    @DeleteMapping("/del/{codigo}")
+    public ResponseEntity<LinhaDel>del(@RequestBody LinhaRequest request, @PathVariable int codigo){
+        return ResponseEntity.ok(service.del(codigo,request));
     }
 }

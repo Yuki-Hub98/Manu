@@ -33,12 +33,12 @@ public class FamiliaController {
     public  ResponseEntity<List<FamiliaResponseLinha>> getFamiliaByLinha(@PathVariable String linha){
         return  ResponseEntity.ok(service.getFamiliaByLinha(linha));
     }
-    @PutMapping("/edit")
-    public ResponseEntity<FamiliaResponse> edit(@RequestBody FamiliaEdit request){
-        return ResponseEntity.ok(service.edit(request));
+    @PutMapping("/edit/{codigo}")
+    public ResponseEntity<FamiliaResponse> edit(@PathVariable int codigo, @RequestBody FamiliaResquest request){
+        return ResponseEntity.ok(service.edit(codigo, request));
     }
-    @DeleteMapping("/del")
-    public ResponseEntity<FamiliaDel> del(@RequestParam ("descricao") String descricao, @RequestBody FamiliaResquest request){
-        return ResponseEntity.ok(service.del(descricao, request));
+    @DeleteMapping("/del/{codigo}")
+    public ResponseEntity<FamiliaDel> del(@RequestBody FamiliaResquest request, @PathVariable int codigo){
+        return ResponseEntity.ok(service.del(codigo, request));
     }
 }

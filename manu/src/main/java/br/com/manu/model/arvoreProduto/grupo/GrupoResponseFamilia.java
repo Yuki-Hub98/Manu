@@ -1,6 +1,7 @@
 package br.com.manu.model.arvoreProduto.grupo;
 
 public class GrupoResponseFamilia {
+    private int codigo;
     private String familia;
     private String grupo;
 
@@ -8,9 +9,18 @@ public class GrupoResponseFamilia {
 
     }
 
-    public GrupoResponseFamilia(String familia, String grupo) {
+    public GrupoResponseFamilia(int codigo, String familia, String grupo) {
+        this.codigo = codigo;
         this.familia = familia;
         this.grupo = grupo;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getFamilia() {

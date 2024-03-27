@@ -7,16 +7,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Grupo {
     @Id
     private String id;
+    private int codigo;
     private String familia;
     private String descricao;
 
     public Grupo() {
     }
 
-    public Grupo(String id, String familia, String descricao) {
+    public Grupo(String id, int codigo, String familia, String descricao) {
         this.id = id;
+        this.codigo = codigo;
         this.familia = familia;
         this.descricao = descricao;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getId() {

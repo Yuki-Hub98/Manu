@@ -1,6 +1,6 @@
 package br.com.manu.service.cadastroDeFuncao;
 
-import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncao;
+import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoDel;
 import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoRequest;
 import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +67,12 @@ public class CadastroDeFuncaoServiceImp implements CadastroDeFuncaoService {
     }
 
     @Override
-    public CadastroDeFuncao del(int id) {
-        CadastroDeFuncao cadastroDeFuncao = new CadastroDeFuncao();
+    public CadastroDeFuncaoDel del(int id) {
+        CadastroDeFuncaoDel cadastroDeFuncaoDel = new CadastroDeFuncaoDel();
         mongoTemplate.remove(Query.query(Criteria.where("codigo").is(id)), br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao.class, "cadastroDeFuncao");
-        cadastroDeFuncao.setId(id);
-        cadastroDeFuncao.setDel("O item: " + id + " foi deletado");
-        return cadastroDeFuncao;
+        cadastroDeFuncaoDel.setCodigo(id);
+        cadastroDeFuncaoDel.setDel("O item: " + id + " foi deletado");
+        return cadastroDeFuncaoDel;
     }
 
 

@@ -1,5 +1,6 @@
 package br.com.manu.controller.cadastroDeFuncao;
 
+import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoDel;
 import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoRequest;
 import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoResponse;
 import br.com.manu.service.cadastroDeFuncao.CadastroDeFuncaoService;
@@ -28,7 +29,7 @@ public class CadastroDeFuncao {
         return ResponseEntity.ok(service.edit(codigo, request));
     }
     @DeleteMapping("del/{codigo}")
-    public ResponseEntity<br.com.manu.model.cadastroDeFuncao.CadastroDeFuncao> del(@PathVariable int codigo){
+    public ResponseEntity<CadastroDeFuncaoDel> del(@PathVariable int codigo){
         return ResponseEntity.ok(service.del(codigo));
     }
 

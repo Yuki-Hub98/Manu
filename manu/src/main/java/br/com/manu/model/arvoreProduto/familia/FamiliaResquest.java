@@ -4,17 +4,26 @@ import org.springframework.data.annotation.Id;
 
 public class FamiliaResquest {
 
+    private int codigo;
     private String linha;
     private String descricao;
 
     public FamiliaResquest() {
     }
 
-    public FamiliaResquest(String linha, String descricao) {
+    public FamiliaResquest(int codigo, String linha, String descricao) {
+        this.codigo = codigo;
         this.linha = linha;
         this.descricao = descricao;
     }
 
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
 
     public String getLinha() {
         return linha;

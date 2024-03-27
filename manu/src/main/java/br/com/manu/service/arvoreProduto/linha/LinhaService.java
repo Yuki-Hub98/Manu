@@ -9,6 +9,6 @@ public interface LinhaService {
     List<LinhaResponse> getAll();
     List<LinhaResponse> getDescricao(String request);
     List<LinhaResponseDepartamento> getDescricaoByDepartamento(String request);
-    LinhaResponse edit(LinhaEdit request);
-    LinhaDel del(String descricao, LinhaRequest request);
+    LinhaResponse edit(int codigo, LinhaRequest request);
+    LinhaDel del(int codigo, LinhaRequest request);
 }
