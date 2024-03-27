@@ -1,9 +1,8 @@
-package br.com.manu.controller.maoDeObra;
+package br.com.manu.controller.cadastroDeFuncao;
 
-import br.com.manu.model.maoDeObra.MaoDeObraDel;
-import br.com.manu.model.maoDeObra.MaoDeObraRequest;
-import br.com.manu.model.maoDeObra.MaoDeObraResponse;
-import br.com.manu.service.maoDeObra.MaoDeObraService;
+import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoRequest;
+import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoResponse;
+import br.com.manu.service.cadastroDeFuncao.CadastroDeFuncaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,25 +10,25 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mao-de-obra")
-public class MaoDeObraController {
+@RequestMapping("/cadastro-de-funcao")
+public class CadastroDeFuncao {
     @Autowired
-    MaoDeObraService service;
+    CadastroDeFuncaoService service;
 
     @PostMapping
-    public ResponseEntity<MaoDeObraResponse> create(@RequestBody MaoDeObraRequest request){
+    public ResponseEntity<CadastroDeFuncaoResponse> create(@RequestBody CadastroDeFuncaoRequest request){
        return ResponseEntity.ok(service.create(request));
     }
     @GetMapping
-    public ResponseEntity<List<MaoDeObraResponse>> geAll(){
+    public ResponseEntity<List<CadastroDeFuncaoResponse>> geAll(){
         return ResponseEntity.ok(service.getAll());
     }
     @PutMapping("/edit/{codigo}")
-    public ResponseEntity<MaoDeObraResponse> edit(@PathVariable int codigo, @RequestBody MaoDeObraRequest request){
+    public ResponseEntity<CadastroDeFuncaoResponse> edit(@PathVariable int codigo, @RequestBody CadastroDeFuncaoRequest request){
         return ResponseEntity.ok(service.edit(codigo, request));
     }
     @DeleteMapping("del/{codigo}")
-    public ResponseEntity<MaoDeObraDel> del(@PathVariable int codigo){
+    public ResponseEntity<br.com.manu.model.cadastroDeFuncao.CadastroDeFuncao> del(@PathVariable int codigo){
         return ResponseEntity.ok(service.del(codigo));
     }
 

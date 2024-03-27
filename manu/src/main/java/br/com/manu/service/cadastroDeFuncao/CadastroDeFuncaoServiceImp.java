@@ -1,9 +1,8 @@
-package br.com.manu.service.maoDeObra;
+package br.com.manu.service.cadastroDeFuncao;
 
-import br.com.manu.model.maoDeObra.MaoDeObraDel;
-import br.com.manu.model.maoDeObra.MaoDeObraRequest;
-import br.com.manu.model.maoDeObra.MaoDeObraResponse;
-import br.com.manu.persistence.entity.maoDeObra.MaoDeObra;
+import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncao;
+import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoRequest;
+import br.com.manu.model.cadastroDeFuncao.CadastroDeFuncaoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,49 +14,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MaoDeObraServiceImp implements MaoDeObraService {
+public class CadastroDeFuncaoServiceImp implements CadastroDeFuncaoService {
     @Autowired
     private final MongoTemplate mongoTemplate;
 
-    public MaoDeObraServiceImp(MongoTemplate mongoTemplate) {
+    public CadastroDeFuncaoServiceImp(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
     @Override
-    public MaoDeObraResponse create(MaoDeObraRequest request) {
-        MaoDeObra maoDeObra = new MaoDeObra();
+    public CadastroDeFuncaoResponse create(CadastroDeFuncaoRequest request) {
+        br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao cadastroDeFuncao = new br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao();
         Float valor = Float.parseFloat(request.getSalario());
-        maoDeObra.setCodigo(incrementCodigo());
-        maoDeObra.setFuncao(request.getFuncao());
-        maoDeObra.setSalario(valor);
+        cadastroDeFuncao.setCodigo(incrementCodigo());
+        cadastroDeFuncao.setFuncao(request.getFuncao());
+        cadastroDeFuncao.setSalario(valor);
         Float calculo = (valor / 220) / 60;
-        maoDeObra.setValorMinuto((float) Math.round(calculo * 100.0) / 100.0);
-        mongoTemplate.save(maoDeObra, "maoDeObra");
+        cadastroDeFuncao.setValorMinuto((float) Math.round(calculo * 100.0) / 100.0);
+        mongoTemplate.save(cadastroDeFuncao, "cadastroDeFuncao");
 
-        return generateResponse(maoDeObra);
+        return generateResponse(cadastroDeFuncao);
     }
 
     @Override
-    public List<MaoDeObraResponse> getAll() {
-        List<MaoDeObra> maoDeObra = mongoTemplate.findAll(MaoDeObra.class);
-        List<MaoDeObraResponse> maoDeObraResponseList = new ArrayList<>();
-        maoDeObra.forEach(item -> {
-            maoDeObraResponseList.add(generateResponse(item));
+    public List<CadastroDeFuncaoResponse> getAll() {
+        List<br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao> cadastroDeFuncao = mongoTemplate.findAll(br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao.class);
+        List<CadastroDeFuncaoResponse> cadastroDeFuncaoResponseList = new ArrayList<>();
+        cadastroDeFuncao.forEach(item -> {
+            cadastroDeFuncaoResponseList.add(generateResponse(item));
         });
-        return maoDeObraResponseList;
+        return cadastroDeFuncaoResponseList;
     }
 
     @Override
-    public MaoDeObraResponse edit(int codigo, MaoDeObraRequest request) {
-        MaoDeObra maoDeObra = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(codigo)), MaoDeObra.class, "maoDeObra");
-        MaoDeObra response = new MaoDeObra();
-        if(maoDeObra != null){
-            float media = (maoDeObra.getSalario() / 220) / 60;
+    public CadastroDeFuncaoResponse edit(int codigo, CadastroDeFuncaoRequest request) {
+        br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao cadastroDeFuncao = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(codigo)), br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao.class, "cadastroDeFuncao");
+        br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao response = new br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao();
+        if(cadastroDeFuncao != null){
+            float media = (cadastroDeFuncao.getSalario() / 220) / 60;
             double calculo = (float) Math.round(media * 100.0) / 100.0;
             float salario = Float.parseFloat(request.getSalario().replace(",", "."));
-            mongoTemplate.updateFirst(Query.query(Criteria.where("codigo").is(maoDeObra.getCodigo())),
+            mongoTemplate.updateFirst(Query.query(Criteria.where("codigo").is(cadastroDeFuncao.getCodigo())),
                   Update.update("funcao", request.getFuncao()).set("salario", salario).set("valorMinuto",calculo),
-                    MaoDeObra.class, "maoDeObra");
+                    br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao.class, "cadastroDeFuncao");
             response.setCodigo(codigo);
             response.setSalario(salario);
             response.setFuncao(request.getFuncao());
@@ -68,33 +67,33 @@ public class MaoDeObraServiceImp implements MaoDeObraService {
     }
 
     @Override
-    public MaoDeObraDel del(int id) {
-        MaoDeObraDel maoDeObraDel = new MaoDeObraDel();
-        mongoTemplate.remove(Query.query(Criteria.where("codigo").is(id)), MaoDeObra.class, "maoDeObra");
-        maoDeObraDel.setId(id);
-        maoDeObraDel.setDel("O item: " + id + " foi deletado");
-        return maoDeObraDel;
+    public CadastroDeFuncao del(int id) {
+        CadastroDeFuncao cadastroDeFuncao = new CadastroDeFuncao();
+        mongoTemplate.remove(Query.query(Criteria.where("codigo").is(id)), br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao.class, "cadastroDeFuncao");
+        cadastroDeFuncao.setId(id);
+        cadastroDeFuncao.setDel("O item: " + id + " foi deletado");
+        return cadastroDeFuncao;
     }
 
 
-    private MaoDeObraResponse generateResponse(MaoDeObra maoDeObra){
-        MaoDeObraResponse maoDeObraResponse = new MaoDeObraResponse();
-        maoDeObraResponse.setCodigo(maoDeObra.getCodigo());
-        maoDeObraResponse.setFuncao(maoDeObra.getFuncao());
-        maoDeObraResponse.setSalario(String.format("%.2f", maoDeObra.getSalario()));
-        maoDeObraResponse.setValorMinuto(String.format("%.2f", maoDeObra.getValorMinuto()));
-        return maoDeObraResponse;
+    private CadastroDeFuncaoResponse generateResponse(br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao cadastroDeFuncao){
+        CadastroDeFuncaoResponse cadastroDeFuncaoResponse = new CadastroDeFuncaoResponse();
+        cadastroDeFuncaoResponse.setCodigo(cadastroDeFuncao.getCodigo());
+        cadastroDeFuncaoResponse.setFuncao(cadastroDeFuncao.getFuncao());
+        cadastroDeFuncaoResponse.setSalario(String.format("%.2f", cadastroDeFuncao.getSalario()));
+        cadastroDeFuncaoResponse.setValorMinuto(String.format("%.2f", cadastroDeFuncao.getValorMinuto()));
+        return cadastroDeFuncaoResponse;
 
     }
 
     private int incrementCodigo () {
         int id = 0;
-        List<MaoDeObra> maoDeObra =  mongoTemplate.findAll(MaoDeObra.class, "maoDeObra");
-        if(maoDeObra.isEmpty()){
+        List<br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao> cadastroDeFuncao =  mongoTemplate.findAll(br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao.class, "cadastroDeFuncao");
+        if(cadastroDeFuncao.isEmpty()){
             id ++;
         }else {
-            MaoDeObra lastId = mongoTemplate.findOne(new Query().limit(1).with(Sort.by(Sort.Direction.DESC, "_id")),
-                    MaoDeObra.class, "maoDeObra");
+            br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao lastId = mongoTemplate.findOne(new Query().limit(1).with(Sort.by(Sort.Direction.DESC, "_id")),
+                    br.com.manu.persistence.entity.cadastroDeFuncao.CadastroDeFuncao.class, "cadastroDeFuncao");
             assert lastId != null;
             id = (int) (lastId.getCodigo() + 1);
         }

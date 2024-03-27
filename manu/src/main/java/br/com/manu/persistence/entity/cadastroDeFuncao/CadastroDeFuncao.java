@@ -1,8 +1,8 @@
-package br.com.manu.persistence.entity.maoDeObra;
+package br.com.manu.persistence.entity.cadastroDeFuncao;
 
 import org.springframework.data.annotation.Id;
 
-public class MaoDeObra {
+public class CadastroDeFuncao {
     @Id
     private String id;
     private int codigo;
@@ -10,11 +10,11 @@ public class MaoDeObra {
     private float salario;
     private double valorMinuto;
 
-    public MaoDeObra() {
+    public CadastroDeFuncao() {
 
     }
 
-    public MaoDeObra(String id, int codigo, String funcao, float salario, double valorMinuto) {
+    public CadastroDeFuncao(String id, int codigo, String funcao, float salario, double valorMinuto) {
         this.id = id;
         this.codigo = codigo;
         this.funcao = funcao;
