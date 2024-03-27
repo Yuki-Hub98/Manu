@@ -1,16 +1,16 @@
-package br.com.manu.model.maoDeObra;
+package br.com.manu.model.cadastroDeFuncao;
 
-public class MaoDeObraResponse {
+public class CadastroDeFuncaoResponse {
     private int codigo;
     private String funcao;
     private String salario;
     private String valorMinuto;
 
-    public MaoDeObraResponse() {
+    public CadastroDeFuncaoResponse() {
 
     }
 
-    public MaoDeObraResponse(int codigo, String funcao, String salario, String valorMinuto) {
+    public CadastroDeFuncaoResponse(int codigo, String funcao, String salario, String valorMinuto) {
         this.codigo = codigo;
         this.funcao = funcao;
         this.salario = salario;

@@ -1,12 +1,12 @@
-package br.com.manu.model.maoDeObra;
+package br.com.manu.model.cadastroDeFuncao;
 
-public class MaoDeObraDel {
+public class CadastroDeFuncao {
     private int id;
     private String del;
-    public MaoDeObraDel() {
+    public CadastroDeFuncao() {
 
     }
-    public MaoDeObraDel(int id, String del) {
+    public CadastroDeFuncao(int id, String del) {
         this.id = id;
         this.del = del;
     }

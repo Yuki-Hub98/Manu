@@ -1,14 +1,14 @@
-package br.com.manu.model.maoDeObra;
+package br.com.manu.model.cadastroDeFuncao;
 
-public class MaoDeObraRequest {
+public class CadastroDeFuncaoRequest {
     private String funcao;
     private String salario;
 
-    public MaoDeObraRequest() {
+    public CadastroDeFuncaoRequest() {
 
     }
 
-    public MaoDeObraRequest(String funcao, String salario) {
+    public CadastroDeFuncaoRequest(String funcao, String salario) {
         this.funcao = funcao;
         this.salario = salario;
     }
