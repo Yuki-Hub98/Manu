@@ -116,7 +116,7 @@ public class GrupoServiceImp implements GrupoService{
         del.setCodigo(codigo);
         del.setDescricao(request.getDescricao());
         del.setFamilia(request.getFamilia());
-        mongoTemplate.remove(Query.query(Criteria.where("familia").is(request.getFamilia()).and("descricao").is(request.getDescricao())),
+        mongoTemplate.remove(Query.query(Criteria.where("codigo").is(codigo)),
                 Grupo.class, "grupo");
         return responseDel(del);
     }

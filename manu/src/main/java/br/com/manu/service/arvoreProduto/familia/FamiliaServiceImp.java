@@ -126,7 +126,7 @@ public class FamiliaServiceImp implements FamiliaService{
                 throw new DataIntegrityViolationException(del.getDescricao());
             }
         }else{
-            mongoTemplate.remove(Query.query(Criteria.where("linha").is(request.getLinha()).and("descricao").is(request.getDescricao())),
+            mongoTemplate.remove(Query.query(Criteria.where("codigo").is(codigo)),
                     Familia.class, "familia");
         }
         return responseDel(del);
