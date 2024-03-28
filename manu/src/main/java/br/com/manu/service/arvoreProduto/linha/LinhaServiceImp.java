@@ -128,7 +128,7 @@ public class LinhaServiceImp implements LinhaService {
                 throw new DataIntegrityViolationException(del.getDescricao());
             }
         }else{
-            mongoTemplate.remove(Query.query(Criteria.where("departamento").is(del.getDepartamento()).and("codigo").is(codigo)),
+            mongoTemplate.remove(Query.query(Criteria.where("codigo").is(codigo)),
                     Linha.class, "linha");
         }
         return responseDel(del);
