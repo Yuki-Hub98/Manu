@@ -4,8 +4,10 @@ import br.com.manu.model.fornecedor.FornecedorName;
 import br.com.manu.model.fornecedor.FornecedorRequest;
 import br.com.manu.model.fornecedor.FornecedorResponse;
 import br.com.manu.persistence.entity.fornecedor.Fornecedor;
+import br.com.manu.persistence.entity.produtos.produto.Produto;
 import br.com.manu.persistence.repository.fornecedor.FornecedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,8 +39,8 @@ public class FornecedorServiceImp implements FornecedorService {
                 throw new RuntimeException(e);
             }
         }
-        fornecedor.setIdCad(incrementId());
-        fornecedor = createFornecedor(fornecedor.getIdCad(), request);
+        fornecedor.setCodigo(incrementId());
+        fornecedor = createFornecedor(fornecedor.getCodigo(), request);
 
         repository.save(fornecedor);
         return createResponse(fornecedor);
@@ -87,23 +89,36 @@ public class FornecedorServiceImp implements FornecedorService {
 
     @Override
     public FornecedorResponse edit(int id, FornecedorRequest request) {
+        Fornecedor fornecedorEdited = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(id)), Fornecedor.class, "fornecedor");
         editTemplate(id, request);
+        Boolean exist = mongoTemplate.exists(Query.query(Criteria.where("fornecedor").is(fornecedorEdited.getNomeFantasiaFornecedor())),
+                Produto.class, "produto");
+        if (exist){
+            mongoTemplate.updateMulti(Query.query(Criteria.where("fornecedor").is(fornecedorEdited.getNomeFantasiaFornecedor())),
+                    Update.update("fornecedor", request.getNomeFantasiaFornecedor()),
+                    Produto.class, "produto");
+        }
         Fornecedor fornecedor = createFornecedor(id, request);
         return createResponse(fornecedor);
     }
 
     @Override
-    public FornecedorDel del(int id) {
-        FornecedorDel del = new FornecedorDel();
-        mongoTemplate.remove(Query.query(Criteria.where("idCad").is(id)), Fornecedor.class, "fornecedor");
-        String id_ = String.valueOf(id);
-        del.setDel("idCad: " + id_);
-        del.setMessage("Deletado com sucesso");
-        return del;
+    public FornecedorResponse del(int id, FornecedorRequest request) {
+        Boolean exist = mongoTemplate.exists(Query.query(Criteria.where("fornecedor").is(request.getNomeFantasiaFornecedor())), Produto.class, "produto");
+        if(exist){
+            try {
+                throw new DataIntegrityViolationException(request.getNomeFantasiaFornecedor());
+            } catch (DataIntegrityViolationException e) {
+                throw new DataIntegrityViolationException(request.getNomeFantasiaFornecedor());
+            }
+        }
+        Fornecedor del = createFornecedor(id, request);
+        mongoTemplate.remove(Query.query(Criteria.where("codigo").is(id)), Fornecedor.class, "fornecedor");
+        return createResponse(del);
     }
 
     private void editTemplate (int id, FornecedorRequest request){
-        mongoTemplate.updateFirst(Query.query(Criteria.where("idCad").is(id)),
+        mongoTemplate.updateFirst(Query.query(Criteria.where("codigo").is(id)),
                 Update.update("razaoSocialFornecedor", request.getRazaoSocialFornecedor()).
                         set("nomeFantasiaFornecedor", request.getNomeFantasiaFornecedor()).
                         set("cpfCnpjFornecedor", request.getCpfCnpjFornecedor()).
@@ -148,10 +163,11 @@ public class FornecedorServiceImp implements FornecedorService {
                         set("orgaoEmissorBanco", request.getOrgaoEmissorBanco()).
                         set("pix", request.getPix()),
                 Fornecedor.class, "fornecedor");
+
     }
     private Fornecedor createFornecedor (int idCad, FornecedorRequest request){
         Fornecedor newFornecedor = new Fornecedor();
-        newFornecedor.setIdCad(idCad);
+        newFornecedor.setCodigo(idCad);
         newFornecedor.setRazaoSocialFornecedor(request.getRazaoSocialFornecedor());
         newFornecedor.setNomeFantasiaFornecedor(request.getNomeFantasiaFornecedor());
         newFornecedor.setCpfCnpjFornecedor(request.getCpfCnpjFornecedor());
@@ -208,7 +224,7 @@ public class FornecedorServiceImp implements FornecedorService {
     }
     private FornecedorResponse createResponse(Fornecedor fornecedor){
         FornecedorResponse response = new FornecedorResponse();
-        response.setIdCad(fornecedor.getIdCad());
+        response.setCodigo(fornecedor.getCodigo());
         response.setRazaoSocialFornecedor(fornecedor.getRazaoSocialFornecedor());
         response.setNomeFantasiaFornecedor(fornecedor.getNomeFantasiaFornecedor());
         response.setCpfCnpjFornecedor(fornecedor.getCpfCnpjFornecedor());
@@ -267,7 +283,7 @@ public class FornecedorServiceImp implements FornecedorService {
             Fornecedor lastId = mongoTemplate.findOne(new Query().limit(1).with(Sort.by(Sort.Direction.DESC, "_id")),
                     Fornecedor.class, "fornecedor");
             assert lastId != null;
-            id = lastId.getIdCad() + 1;
+            id = lastId.getCodigo() + 1;
         }
       return id;
     }
