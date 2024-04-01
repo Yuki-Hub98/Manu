@@ -6,7 +6,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.util.Date;
 
 public class FornecedorRequest {
-
+    private int codigo;
     private String razaoSocialFornecedor;
     private String nomeFantasiaFornecedor;
     private String cpfCnpjFornecedor;
@@ -61,15 +61,17 @@ public class FornecedorRequest {
 
     }
 
-    public FornecedorRequest(String razaoSocialFornecedor, String nomeFantasiaFornecedor, String cpfCnpjFornecedor, String ieRgFornecedor, String orgaoEmissorFornecedor,
-                             String ufRgFornecedor, String dataEmissaoFornecedor, String cepFornecedor, String enderecoFornecedor, String numeroFornecedor,
-                             String complementoFornecedor, String bairroFornecedor, String cidadeFornecedor, String ufFornecedor, String contatoFornecedor,
-                             String telefoneFornecedor, String celularFornecedor, String emailFornecedor, String siteFornecedor, String razaoSocialRepresentante,
-                             String nomeFantasiaRepresentante, String cpfCnpjRepresentante, String ieRgRepresentante, String orgaoEmissorRepresentante, String ufRgRepresentante,
-                             String dataEmissaoRepresentante, String cepRepresentante, String enderecoRepresentante, String numeroRepresentante, String complementoRepresentante,
-                             String bairroRepresentante, String cidadeRepresentante, String ufRepresentante, String contatoRepresentante, String telefoneRepresentante,
-                             String celularRepresentante, String emailRepresentante, String siteRepresentante, String codBanco, String banco, String agencia, String contaBanco,
-                             String orgaoEmissorBanco, String pix, Date dataCriacao, Date dataModificacao) {
+    public FornecedorRequest(int codigo, String razaoSocialFornecedor, String nomeFantasiaFornecedor, String cpfCnpjFornecedor, String ieRgFornecedor,
+                             String orgaoEmissorFornecedor, String ufRgFornecedor, String dataEmissaoFornecedor, String cepFornecedor, String enderecoFornecedor,
+                             String numeroFornecedor, String complementoFornecedor, String bairroFornecedor, String cidadeFornecedor, String ufFornecedor,
+                             String contatoFornecedor, String telefoneFornecedor, String celularFornecedor, String emailFornecedor, String siteFornecedor,
+                             String razaoSocialRepresentante, String nomeFantasiaRepresentante, String cpfCnpjRepresentante, String ieRgRepresentante,
+                             String orgaoEmissorRepresentante, String ufRgRepresentante, String dataEmissaoRepresentante, String cepRepresentante,
+                             String enderecoRepresentante, String numeroRepresentante, String complementoRepresentante, String bairroRepresentante,
+                             String cidadeRepresentante, String ufRepresentante, String contatoRepresentante, String telefoneRepresentante,
+                             String celularRepresentante, String emailRepresentante, String siteRepresentante, String codBanco, String banco, String agencia,
+                             String contaBanco, String orgaoEmissorBanco, String pix, Date dataCriacao, Date dataModificacao) {
+        this.codigo = codigo;
         this.razaoSocialFornecedor = razaoSocialFornecedor;
         this.nomeFantasiaFornecedor = nomeFantasiaFornecedor;
         this.cpfCnpjFornecedor = cpfCnpjFornecedor;
@@ -116,6 +118,14 @@ public class FornecedorRequest {
         this.pix = pix;
         this.dataCriacao = dataCriacao;
         this.dataModificacao = dataModificacao;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getRazaoSocialFornecedor() {

@@ -44,8 +44,8 @@ public class FornecedorController {
     }
 
     @DeleteMapping("/del/{id}")
-    public ResponseEntity<FornecedorDel> del(@PathVariable int id){
-        return ResponseEntity.ok(service.del(id));
+    public ResponseEntity<FornecedorResponse> del(@RequestBody FornecedorRequest request, @PathVariable int id){
+        return ResponseEntity.ok(service.del(id, request));
     }
 
 
