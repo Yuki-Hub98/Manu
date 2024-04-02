@@ -21,7 +21,7 @@ public interface ProdutoService {
     ResponseItem del(int id, ResponseItem item);
     Modelo createModelo(Modelo request);
     List<Modelo> getAllModelos();
-    Modelo editModelo(ModeloEdit request);
-    ModeloDel delModelo(Modelo request);
+    Modelo editModelo(Modelo request);
+    Modelo delModelo(Modelo request);
 
 }

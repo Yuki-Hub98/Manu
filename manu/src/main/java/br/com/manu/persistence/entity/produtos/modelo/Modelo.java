@@ -5,12 +5,15 @@ import org.springframework.data.annotation.Id;
 public class Modelo {
     @Id
     private String id;
+    private int codigo;
     private String descricao;
 
     public Modelo() {
     }
 
-    public Modelo(String descricao) {
+    public Modelo(String id, int codigo, String descricao) {
+        this.id = id;
+        this.codigo = codigo;
         this.descricao = descricao;
     }
 
@@ -20,6 +23,14 @@ public class Modelo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getDescricao() {
