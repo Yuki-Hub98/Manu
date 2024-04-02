@@ -2,7 +2,7 @@ package br.com.manu.model.produto;
 import java.util.Objects;
 
 public class ResponseItem {
-    private long codigoItem;
+    private long codigo;
     private String descricaoItem;
     private String codBarra;
     private String departamento;
@@ -21,9 +21,9 @@ public class ResponseItem {
 
     }
 
-    public ResponseItem(long codigoItem, String descricaoItem, String codBarra, String departamento, String linha, String familia, String grupo, String fornecedor,
+    public ResponseItem(long codigo, String descricaoItem, String codBarra, String departamento, String linha, String familia, String grupo, String fornecedor,
                         String modelo, String tipoProduto, String unidadeMedida, String cor, String especificacao, String processado) {
-        this.codigoItem = codigoItem;
+        this.codigo = codigo;
         this.descricaoItem = descricaoItem;
         this.codBarra = codBarra;
         this.departamento = departamento;
@@ -36,15 +36,15 @@ public class ResponseItem {
         this.unidadeMedida = unidadeMedida;
         this.cor = cor;
         this.especificacao = especificacao;
-        processado = processado;
+        this.processado = processado;
     }
 
-    public long getCodigoItem() {
-        return codigoItem;
+    public long getCodigo() {
+        return codigo;
     }
 
-    public void setCodigoItem(long codigoItem) {
-        this.codigoItem = codigoItem;
+    public void setCodigo(long codigo) {
+        this.codigo = codigo;
     }
 
     public String getDescricaoItem() {
@@ -160,7 +160,7 @@ public class ResponseItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResponseItem item = (ResponseItem) o;
-        return codigoItem == item.codigoItem &&
+        return codigo == item.codigo&&
                 Objects.equals(descricaoItem, item.descricaoItem) &&
                 Objects.equals(codBarra, item.codBarra) &&
                 Objects.equals(departamento, item.departamento) &&
@@ -178,7 +178,7 @@ public class ResponseItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigoItem, descricaoItem, codBarra, departamento, linha, familia, grupo, fornecedor,
+        return Objects.hash(codigo, descricaoItem, codBarra, departamento, linha, familia, grupo, fornecedor,
                 modelo, tipoProduto, unidadeMedida, cor, especificacao, processado);
     }
 }
