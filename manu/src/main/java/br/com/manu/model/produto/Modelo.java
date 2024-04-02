@@ -1,14 +1,25 @@
 package br.com.manu.model.produto;
 
 public class Modelo {
+    private int codigo;
     private String descricao;
 
-    public Modelo(String descricao) {
+    public Modelo() {
+    }
+
+    public Modelo(int codigo, String descricao) {
+        this.codigo = codigo;
         this.descricao = descricao;
     }
-    public Modelo() {
 
+    public int getCodigo() {
+        return codigo;
     }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
     public String getDescricao() {
         return descricao;
     }
