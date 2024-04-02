@@ -16,7 +16,7 @@ public class ProdutoController {
     @Autowired
     ProdutoService service;
     @PostMapping
-    public ResponseEntity<ProdutoResponse>create(@RequestBody ProdutoRequest request){
+    public ResponseEntity<List<ResponseItem>>create(@RequestBody ProdutoRequest request){
         return ResponseEntity.ok(service.create(request));
     }
     @GetMapping
@@ -61,7 +61,7 @@ public class ProdutoController {
             return ResponseEntity.ok(service.getLastId());
         }
     @PutMapping("/edit/{id}")
-    public ResponseEntity<ResponseItem> edit(@PathVariable int id, @RequestBody ProdutoRequest request){
+    public ResponseEntity<List<ResponseItem>> edit(@PathVariable int id, @RequestBody ProdutoRequest request){
         return ResponseEntity.ok(service.edit(id, request));
     }
 
@@ -75,8 +75,8 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/del/{id}")
-    public ResponseEntity<ProdutoDel> del(@PathVariable int id){
-        return ResponseEntity.ok(service.del(id));
+    public ResponseEntity<ResponseItem> del(@RequestBody ResponseItem item, @PathVariable int id){
+        return ResponseEntity.ok(service.del(id, item));
     }
 
     @PostMapping("/modelos")

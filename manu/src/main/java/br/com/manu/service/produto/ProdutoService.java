@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public interface ProdutoService {
-    ProdutoResponse create(ProdutoRequest request);
+    List<ResponseItem> create(ProdutoRequest request);
     List<ResponseItem> getAll();
     List<ResponseItem> getParams( String idItem, String descricaoItem, String codBarra,String departamento,
                                   String linha,String familia,String grupo,String fornecedor,String modelo,
@@ -14,11 +14,11 @@ public interface ProdutoService {
     List<ModeloProduto> getModels(String linha);
     ProdutoResponse getProdutoToEdit(int id);
     lastIdItem getLastId ();
-    ResponseItem edit(int id, ProdutoRequest request);
+    List<ResponseItem> edit(int id, ProdutoRequest request);
     ProdutoResponse getProduto(String descricaoProduto, String fornecedor);
     List<ProdutoCstIcmsResponse> getCstIcms(String request);
     List<ProdutoNcm> getNcm(String request);
-    ProdutoDel del(int id);
+    ResponseItem del(int id, ResponseItem item);
     Modelo createModelo(Modelo request);
     List<Modelo> getAllModelos();
     Modelo editModelo(ModeloEdit request);
