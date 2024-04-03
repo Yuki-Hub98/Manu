@@ -1,13 +1,13 @@
-package br.com.manu.model.cadastroDeFuncao;
+package br.com.manu.model.cadastroDeRecurso;
 
-public class CadastroDeFuncaoDel {
+public class CadastroDeRecursoDel {
     private int codigo;
     private String del;
-    public CadastroDeFuncaoDel() {
+    public CadastroDeRecursoDel() {
 
     }
 
-    public CadastroDeFuncaoDel(int codigo, String del) {
+    public CadastroDeRecursoDel(int codigo, String del) {
         this.codigo = codigo;
         this.del = del;
     }
