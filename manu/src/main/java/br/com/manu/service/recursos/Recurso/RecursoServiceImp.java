@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.InvalidRelationIdException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class RecursoServiceImp implements RecursoService {
 
     @Override
     public RecursoResponse create(RecursoRequest request) {
-
+        Duplicated(request);
         Recurso recurso = new Recurso();
         recurso.setCodigo(incrementCodigo());
         recurso.setRecurso(request.getRecurso());
@@ -68,7 +69,7 @@ public class RecursoServiceImp implements RecursoService {
 
     @Override
     public RecursoResponse edit(int codigo, RecursoRequest request) {
-
+        Duplicated(request);
         Recurso cadastroDeRecurso = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(codigo)),
                 Recurso.class, "recurso");
         Recurso response = new Recurso();
@@ -157,6 +158,18 @@ public class RecursoServiceImp implements RecursoService {
 
     }
 
+    private void Duplicated (RecursoRequest request){
+        boolean exist = mongoTemplate.exists(Query.query(Criteria.where("descricao").is(request.getRecurso())),
+                GrupoDeRecurso.class, "grupoDeRecurso");
+        if(exist) {
+            try {
+                throw new InvalidRelationIdException(request.getRecurso());
+            } catch (InvalidRelationIdException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private int incrementCodigo () {
         int id = 0;
         List<Recurso> recurso =  mongoTemplate.findAll(Recurso.class, "recurso");
@@ -166,7 +179,7 @@ public class RecursoServiceImp implements RecursoService {
             Recurso lastId = mongoTemplate.findOne(new Query().limit(1).with(Sort.by(Sort.Direction.DESC, "_id")),
                     Recurso.class, "recurso");
             assert lastId != null;
-            id = (int) (lastId.getCodigo() + 1);
+            id = (lastId.getCodigo() + 1);
         }
         return id;
     }
