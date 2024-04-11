@@ -1,37 +1,31 @@
-package br.com.manu.persistence.entity.cadastroDeRecurso;
+package br.com.manu.model.recursos.cadastroDeRecurso;
 
-import org.springframework.data.annotation.Id;
-
-public class CadastroDeRecurso {
-    @Id
-    private String id;
+public class RecursoRequest {
     private int codigo;
     private String tipoRecurso;
     private String unidadeMedida;
     private String recurso;
-    private float valor;
-    private double valorMedida;
+    private String valor;
+    private String valorUnitario;
 
-    public CadastroDeRecurso() {
+    public RecursoRequest() {
 
     }
 
-    public CadastroDeRecurso(String id, int codigo, String tipoRecurso, String unidadeMedida, String recurso, float valor, double valorMedida) {
-        this.id = id;
+    public RecursoRequest(int codigo, String tipoRecurso, String unidadeMedida, String recurso, String valor, String valorUnitario) {
         this.codigo = codigo;
         this.tipoRecurso = tipoRecurso;
         this.unidadeMedida = unidadeMedida;
         this.recurso = recurso;
         this.valor = valor;
-        this.valorMedida = valorMedida;
+        this.valorUnitario = valorUnitario;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public RecursoRequest(int codigo, String tipoRecurso, String unidadeMedida, String recurso) {
+        this.codigo = codigo;
+        this.tipoRecurso = tipoRecurso;
+        this.unidadeMedida = unidadeMedida;
+        this.recurso = recurso;
     }
 
     public int getCodigo() {
@@ -66,19 +60,19 @@ public class CadastroDeRecurso {
         this.recurso = recurso;
     }
 
-    public float getValor() {
+    public String getValor() {
         return valor;
     }
 
-    public void setValor(float valor) {
+    public void setValor(String valor) {
         this.valor = valor;
     }
 
-    public double getValorMedida() {
-        return valorMedida;
+    public String getValorUnitario() {
+        return valorUnitario;
     }
 
-    public void setValorMedida(double valorMedida) {
-        this.valorMedida = valorMedida;
+    public void setValorUnitario(String valorUnitario) {
+        this.valorUnitario = valorUnitario;
     }
 }

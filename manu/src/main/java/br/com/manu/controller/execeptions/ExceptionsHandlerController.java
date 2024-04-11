@@ -25,7 +25,7 @@ public class ExceptionsHandlerController {
         error.setTimesTamp(Instant.now());
         error.setStatus(422);
         error.setError("Campo vazio");
-        error.setMessage("Campo vazio por favor preencha o campo de maneira adequada");
+        error.setMessage("Campo vazio " + exception.getMessage() + " por favor preencha o campo de maneira adequada");
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(422).body(error);
 
@@ -38,7 +38,7 @@ public class ExceptionsHandlerController {
         error.setTimesTamp(Instant.now());
         error.setStatus(422);
         error.setError("Campo Existente");
-        error.setMessage("Essa informação já está cadastrada");
+        error.setMessage("Essa informação " + exception.getMessage() + " já está cadastrada");
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(422).body(error);
     }
@@ -49,7 +49,7 @@ public class ExceptionsHandlerController {
         error.setTimesTamp(Instant.now());
         error.setStatus(403);
         error.setError("Cadastro Relacionado");
-        error.setMessage("Essa informação está relacionada a outro documento");
+        error.setMessage("Essa informação " + exception.getMessage() + " está relacionada a outro documento");
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(403).body(error);
     }
