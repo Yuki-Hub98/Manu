@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.InvalidRelationIdException;
 import java.util.*;
 
 @Service
@@ -23,6 +24,7 @@ public class GrupoDeRecursoServiceImp implements GrupoDeRecursoService {
 
     @Override
     public GrupoDeRecursoResponse create(GrupoDeRecursoRequestSave request) {
+        Duplicated(request);
         GrupoDeRecurso newGrupoRecurso = new GrupoDeRecurso();
         List<RecursoRequest> cadastroDeRecursos = new ArrayList<>();
         final double[] valor = {0};
@@ -69,6 +71,7 @@ public class GrupoDeRecursoServiceImp implements GrupoDeRecursoService {
 
     @Override
     public GrupoDeRecursoResponse edit(int id, GrupoDeRecursoRequestSave request) {
+        Duplicated(request);
         GrupoDeRecurso editGrupoDeRecurso = new GrupoDeRecurso();
         final double[] valor = {0};
         double valorDefinitvo;
@@ -116,6 +119,18 @@ public class GrupoDeRecursoServiceImp implements GrupoDeRecursoService {
         response.addSummaryItems(grupoDeRecursoSummary);
 
         return response;
+    }
+
+    private void Duplicated (GrupoDeRecursoRequestSave request){
+        boolean exist = mongoTemplate.exists(Query.query(Criteria.where("descricao").is(request.getGrupoRecurso())),
+                GrupoDeRecurso.class, "grupoDeRecurso");
+        if(exist) {
+            try {
+                throw new InvalidRelationIdException(request.getGrupoRecurso());
+            } catch (InvalidRelationIdException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private int incrementCodigo () {
