@@ -1,24 +1,37 @@
-package br.com.manu.model.cadastroDeRecurso;
+package br.com.manu.persistence.entity.recursos;
 
-public class CadastroDeRecursoRequest {
+import org.springframework.data.annotation.Id;
+
+public class Recurso {
+    @Id
+    private String id;
     private int codigo;
     private String tipoRecurso;
     private String unidadeMedida;
     private String recurso;
-    private String valor;
-    private String valorMedida;
+    private float valor;
+    private double valorUnitario;
 
-    public CadastroDeRecursoRequest() {
+    public Recurso() {
 
     }
 
-    public CadastroDeRecursoRequest(int codigo, String tipoRecurso, String unidadeMedida, String recurso, String valor, String valorMedida) {
+    public Recurso(String id, int codigo, String tipoRecurso, String unidadeMedida, String recurso, float valor, double valorUnitario) {
+        this.id = id;
         this.codigo = codigo;
         this.tipoRecurso = tipoRecurso;
         this.unidadeMedida = unidadeMedida;
         this.recurso = recurso;
         this.valor = valor;
-        this.valorMedida = valorMedida;
+        this.valorUnitario = valorUnitario;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getCodigo() {
@@ -53,19 +66,19 @@ public class CadastroDeRecursoRequest {
         this.recurso = recurso;
     }
 
-    public String getValor() {
+    public float getValor() {
         return valor;
     }
 
-    public void setValor(String valor) {
+    public void setValor(float valor) {
         this.valor = valor;
     }
 
-    public String getValorMedida() {
-        return valorMedida;
+    public double getValorUnitario() {
+        return valorUnitario;
     }
 
-    public void setValorMedida(String valorMedida) {
-        this.valorMedida = valorMedida;
+    public void setValorUnitario(double valorUnitario) {
+        this.valorUnitario = valorUnitario;
     }
 }

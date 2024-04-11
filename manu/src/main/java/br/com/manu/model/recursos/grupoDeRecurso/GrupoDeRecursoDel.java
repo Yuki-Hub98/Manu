@@ -1,13 +1,13 @@
-package br.com.manu.model.cadastroDeRecurso;
+package br.com.manu.model.recursos.grupoDeRecurso;
 
-public class CadastroDeRecursoDel {
+public class GrupoDeRecursoDel {
     private int codigo;
     private String del;
-    public CadastroDeRecursoDel() {
 
+    public GrupoDeRecursoDel() {
     }
 
-    public CadastroDeRecursoDel(int codigo, String del) {
+    public GrupoDeRecursoDel(int codigo, String del) {
         this.codigo = codigo;
         this.del = del;
     }
