@@ -16,6 +16,7 @@ public class Item {
     private String especificacao;
     private String _idProduto;
     private String fornecedor;
+    private float valorItem;
     private float precoVenda;
     private float margem;
     private float custo;
@@ -40,7 +41,7 @@ public class Item {
     }
 
     public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto, String fornecedor,
-                float precoVenda, float margem, float custo) {
+                float valorItem, float precoVenda, float margem, float custo, Date dataCriacao, Date dataModificacao) {
         this.id = id;
         this.idItem = idItem;
         this.descricaoItem = descricaoItem;
@@ -49,9 +50,12 @@ public class Item {
         this.especificacao = especificacao;
         this._idProduto = _idProduto;
         this.fornecedor = fornecedor;
+        this.valorItem = valorItem;
         this.precoVenda = precoVenda;
         this.margem = margem;
         this.custo = custo;
+        this.dataCriacao = dataCriacao;
+        this.dataModificacao = dataModificacao;
     }
 
     public String getId() {
@@ -116,6 +120,14 @@ public class Item {
 
     public void setFornecedor(String fornecedor) {
         this.fornecedor = fornecedor;
+    }
+
+    public float getValorItem() {
+        return valorItem;
+    }
+
+    public void setValorItem(float valorItem) {
+        this.valorItem = valorItem;
     }
 
     public float getPrecoVenda() {
