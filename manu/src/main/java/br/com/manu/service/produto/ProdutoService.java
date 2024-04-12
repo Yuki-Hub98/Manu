@@ -19,9 +19,9 @@ public interface ProdutoService {
     List<ProdutoCstIcmsResponse> getCstIcms(String request);
     List<ProdutoNcm> getNcm(String request);
     ResponseItem del(int id, ResponseItem item);
-    Modelo createModelo(Modelo request);
-    List<Modelo> getAllModelos();
-    Modelo editModelo(Modelo request);
-    Modelo delModelo(Modelo request);
+    ModeloRe createModelo(ModeloRe request);
+    List<ModeloRe> getAllModelos();
+    ModeloRe editModelo(ModeloRe request);
+    ModeloRe delModelo(ModeloRe request);
 
 }

@@ -1,8 +1,12 @@
 package br.com.manu.persistence.entity.arvoreProduto;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
 
 @Document(collection = "linha")
 public class Linha {
@@ -11,6 +15,10 @@ public class Linha {
     private int codigo;
     private String departamento;
     private String descricao;
+    @CreatedDate
+    private Date dataCriacao;
+    @LastModifiedDate
+    private Date dataModificacao;
 
     public Linha() {
     }
@@ -53,5 +61,21 @@ public class Linha {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Date getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(Date dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public Date getDataModificacao() {
+        return dataModificacao;
+    }
+
+    public void setDataModificacao(Date dataModificacao) {
+        this.dataModificacao = dataModificacao;
     }
 }

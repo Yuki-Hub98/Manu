@@ -1,10 +1,8 @@
 package br.com.manu.service.produto;
-import br.com.manu.model.arvoreProduto.departamento.DepartamentoRequest;
 import br.com.manu.model.produto.*;
-import br.com.manu.persistence.entity.arvoreProduto.Departamento;
-import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.entity.produtos.csticms.CstIcms;
 import br.com.manu.persistence.entity.produtos.item.Item;
+import br.com.manu.persistence.entity.produtos.modelo.Modelo;
 import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 import br.com.manu.persistence.entity.produtos.produto.Produto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,40 +136,41 @@ public class ProdutoServiceImp implements ProdutoService {
     }
 
     @Override
-    public Modelo createModelo(Modelo request) {
+    public ModeloRe createModelo(ModeloRe request) {
         DuplicatedModelo(request);
         Modelo modelo = new Modelo();
         modelo.setCodigo(incrementIdModelo());
         modelo.setDescricao(request.getDescricao());
+        ModeloRe modeloRe = new ModeloRe(modelo.getCodigo(), modelo.getDescricao());
         mongoTemplate.save(modelo, "modelo");
-        return modelo;
+        return modeloRe;
     }
 
     @Override
-    public List<Modelo> getAllModelos() {
-        return mongoTemplate.findAll(Modelo.class, "modelo");
+    public List<ModeloRe> getAllModelos() {
+        return mongoTemplate.findAll(ModeloRe.class, "modelo");
     }
 
     @Override
-    public Modelo editModelo(Modelo request) {
+    public ModeloRe editModelo(ModeloRe request) {
         DuplicatedModelo(request);
-        Modelo newModelo = new Modelo();
-        newModelo.setCodigo(request.getCodigo());
-        newModelo.setDescricao(request.getDescricao());
-        Modelo modeloEdited = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(request.getCodigo())), Modelo.class, "modelo");
-        Boolean exists = mongoTemplate.exists(Query.query(Criteria.where("modelo").is(modeloEdited.getDescricao())), Produto.class, "produto");
+        Modelo newModeloRe = new Modelo();
+        newModeloRe.setCodigo(request.getCodigo());
+        newModeloRe.setDescricao(request.getDescricao());
+        Modelo modeloReEdited = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(request.getCodigo())), Modelo.class, "modelo");
+        Boolean exists = mongoTemplate.exists(Query.query(Criteria.where("modelo").is(modeloReEdited.getDescricao())), Produto.class, "produto");
         mongoTemplate.updateFirst(Query.query(Criteria.where("codigo").is(request.getCodigo())),
-                Update.update("descricao", newModelo.getDescricao()), Modelo.class, "modelo");
+                Update.update("descricao", newModeloRe.getDescricao()), Modelo.class, "modelo");
         if(exists){
-            mongoTemplate.updateMulti(Query.query(Criteria.where("modelo").is(modeloEdited.getDescricao())),
-                    Update.update("modelo", newModelo.getDescricao()),
+            mongoTemplate.updateMulti(Query.query(Criteria.where("modelo").is(modeloReEdited.getDescricao())),
+                    Update.update("modelo", newModeloRe.getDescricao()),
                     Produto.class, "produto");
         }
-        return newModelo;
+        return request;
     }
 
     @Override
-    public Modelo delModelo(Modelo request) {
+    public ModeloRe delModelo(ModeloRe request) {
         Boolean exists = mongoTemplate.exists(Query.query(Criteria.where("modelo").is(request.getDescricao())), Produto.class, "produto");
         if (exists){
             try {
@@ -184,7 +183,7 @@ public class ProdutoServiceImp implements ProdutoService {
         del.setCodigo(request.getCodigo());
         del.setDescricao(request.getDescricao());
         mongoTemplate.remove(Query.query(Criteria.where("codigo").is(request.getCodigo())), Modelo.class, "modelo");
-        return del;
+        return request;
     }
 
     /**
@@ -565,9 +564,9 @@ public class ProdutoServiceImp implements ProdutoService {
         return items != null;
     }
 
-    private void DuplicatedModelo (Modelo request){
+    private void DuplicatedModelo (ModeloRe request){
         Boolean exist = mongoTemplate.exists(Query.query(Criteria.where("descricao").is(request.getDescricao())),
-                Modelo.class, "modelo");
+                ModeloRe.class, "modelo");
         if(exist) {
             try {
                 throw new InvalidRelationIdException();
