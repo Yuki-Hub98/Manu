@@ -3,6 +3,7 @@ package br.com.manu.service.arvoreProduto.linha;
 import br.com.manu.model.arvoreProduto.linha.*;
 import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
+import br.com.manu.persistence.entity.arvoreProduto.Grupo;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.entity.produtos.produto.Produto;
 import br.com.manu.persistence.repository.arvoreProduto.LinhaRepository;
@@ -54,6 +55,13 @@ public class LinhaServiceImp implements LinhaService {
     @Override
     public List<LinhaResponse> getDescricao(String request) {
         List<LinhaResponse> response = new ArrayList<>();
+        if (request.equals("undefined")){
+            List<Linha> linhas = repository.findAll();
+            if(!linhas.isEmpty()){
+                linhas.forEach(linha -> response.add(createResponse(linha)));
+                return response;
+            }
+        }
         List<Linha> search = repository.findRegex(request);
         if(!search.isEmpty()){
             search.forEach(descricao -> response.add(createResponse(descricao)));

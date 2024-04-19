@@ -2,6 +2,7 @@ package br.com.manu.service.arvoreProduto.familia;
 
 import br.com.manu.model.arvoreProduto.familia.*;
 import br.com.manu.model.arvoreProduto.linha.LinhaRequest;
+import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
 import br.com.manu.persistence.entity.arvoreProduto.Grupo;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
@@ -54,6 +55,13 @@ public class FamiliaServiceImp implements FamiliaService{
     @Override
     public List<FamiliaResponse> getDescricao(String request) {
         List<FamiliaResponse> response = new ArrayList<>();
+        if (request.equals("undefined")){
+            List<Familia> familias = repository.findAll();
+            if(!familias.isEmpty()){
+                familias.forEach(familia -> response.add(createResponse(familia)));
+                return response;
+            }
+        }
         List<Familia> search = repository.findRegex(request);
         if(!search.isEmpty()){
             search.forEach(descricao -> response.add(createResponse(descricao)));

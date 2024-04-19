@@ -2,6 +2,7 @@ package br.com.manu.service.arvoreProduto.grupo;
 
 import br.com.manu.model.arvoreProduto.familia.FamiliaResquest;
 import br.com.manu.model.arvoreProduto.grupo.*;
+import br.com.manu.persistence.entity.arvoreProduto.Especificacao;
 import br.com.manu.persistence.entity.arvoreProduto.Familia;
 import br.com.manu.persistence.entity.arvoreProduto.Grupo;
 import br.com.manu.persistence.entity.produtos.produto.Produto;
@@ -52,6 +53,13 @@ public class GrupoServiceImp implements GrupoService{
     @Override
     public List<GrupoResponse> getDescricao(String request) {
         List<GrupoResponse> response = new ArrayList<>();
+        if (request.equals("undefined")){
+            List<Grupo> grupos = repository.findAll();
+            if(!grupos.isEmpty()){
+                grupos.forEach(grupo -> response.add(createResponse(grupo)));
+                return response;
+            }
+        }
         List<Grupo> search = repository.findRegex(request);
         if(!search.isEmpty()){
             search.forEach(descricao -> response.add(createResponse(descricao)));
