@@ -1,6 +1,6 @@
 package br.com.manu.model.recursos.grupoDeRecurso;
 
-import br.com.manu.model.recursos.cadastroDeRecurso.RecursoRequest;
+import br.com.manu.model.recursos.recurso.RecursoRequest;
 
 public class RecursoModel extends RecursoRequest {
     private double valor;

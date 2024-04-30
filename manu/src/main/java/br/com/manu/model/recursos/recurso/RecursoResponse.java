@@ -1,4 +1,4 @@
-package br.com.manu.model.recursos.cadastroDeRecurso;
+package br.com.manu.model.recursos.recurso;
 
 public class RecursoResponse extends RecursoRequest {
     public RecursoResponse() {

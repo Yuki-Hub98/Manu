@@ -4,6 +4,7 @@ import br.com.manu.model.arvoreProduto.cor.CorDel;
 import br.com.manu.model.arvoreProduto.cor.CorRequest;
 import br.com.manu.model.arvoreProduto.cor.CorResponse;
 import br.com.manu.persistence.entity.arvoreProduto.Cor;
+import br.com.manu.persistence.entity.arvoreProduto.Departamento;
 import br.com.manu.persistence.entity.arvoreProduto.Linha;
 import br.com.manu.persistence.entity.produtos.item.Item;
 import br.com.manu.persistence.repository.arvoreProduto.CorRepository;
@@ -53,6 +54,13 @@ public class CorServiceImp implements CorService{
     @Override
     public List<CorResponse> getDescricao(String request) {
         List<CorResponse> response = new ArrayList<>();
+        if (request.equals("undefined")){
+            List<Cor> cors = repository.findAll();
+            if(!cors.isEmpty()){
+                cors.forEach(cor -> response.add(createResponse(cor)));
+                return response;
+            }
+        }
         List<Cor> seach = repository.findRegex(request);
         if(!seach.isEmpty()){
             seach.forEach(descricao -> response.add(createResponse(descricao)));

@@ -53,6 +53,13 @@ public class EspecificacaoServiceImp implements EspecificacaoService{
     @Override
     public List<EspecificacaoResponse> getDescricao(String request) {
         List<EspecificacaoResponse> response = new ArrayList<>();
+        if (request.equals("undefined")){
+            List<Especificacao> especificacaos = repository.findAll();
+            if(!especificacaos.isEmpty()){
+                especificacaos.forEach(especificacao -> response.add(createResponse(especificacao)));
+                return response;
+            }
+        }
         List<Especificacao> seach = repository.findRegex(request);
         if(!seach.isEmpty()){
             seach.forEach(descricao -> response.add(createResponse(descricao)));

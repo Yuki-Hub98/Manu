@@ -1,9 +1,7 @@
 package br.com.manu.service.recursos.grupoDeRecurso;
 
-import br.com.manu.model.recursos.grupoDeRecurso.GrupoDeRecursoDel;
-import br.com.manu.model.recursos.grupoDeRecurso.GrupoDeRecursoRequestSave;
-import br.com.manu.model.recursos.grupoDeRecurso.GrupoDeRecursoResponse;
-import br.com.manu.model.recursos.grupoDeRecurso.GrupoDeRecursoResponseSimplified;
+import br.com.manu.model.recursos.grupoDeRecurso.*;
+import br.com.manu.persistence.entity.recursos.Recurso;
 
 import java.util.List;
 
@@ -13,4 +11,5 @@ public interface GrupoDeRecursoService {
     List<GrupoDeRecursoResponse> searchGrupoRecurso(String grupoRecurso);
     GrupoDeRecursoResponse edit(int id, GrupoDeRecursoRequestSave request);
     GrupoDeRecursoDel dell(int id, GrupoDeRecursoResponseSimplified request);
+    void updateGrupoRecursoByRecurso(Recurso recurso);
 }

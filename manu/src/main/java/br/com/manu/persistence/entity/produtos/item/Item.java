@@ -16,9 +16,10 @@ public class Item {
     private String especificacao;
     private String _idProduto;
     private String fornecedor;
-    private String precoVenda;
-    private String margem;
-    private String custo;
+    private float valorItem;
+    private float precoVenda;
+    private float margem;
+    private float custo;
     @CreatedDate
     private Date dataCriacao;
     @LastModifiedDate
@@ -40,7 +41,7 @@ public class Item {
     }
 
     public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto, String fornecedor,
-                String precoVenda, String margem, String custo, Date dataCriacao, Date dataModificacao) {
+                float valorItem, float precoVenda, float margem, float custo, Date dataCriacao, Date dataModificacao) {
         this.id = id;
         this.idItem = idItem;
         this.descricaoItem = descricaoItem;
@@ -49,6 +50,7 @@ public class Item {
         this.especificacao = especificacao;
         this._idProduto = _idProduto;
         this.fornecedor = fornecedor;
+        this.valorItem = valorItem;
         this.precoVenda = precoVenda;
         this.margem = margem;
         this.custo = custo;
@@ -120,27 +122,35 @@ public class Item {
         this.fornecedor = fornecedor;
     }
 
-    public String getPrecoVenda() {
+    public float getValorItem() {
+        return valorItem;
+    }
+
+    public void setValorItem(float valorItem) {
+        this.valorItem = valorItem;
+    }
+
+    public float getPrecoVenda() {
         return precoVenda;
     }
 
-    public void setPrecoVenda(String precoVenda) {
+    public void setPrecoVenda(float precoVenda) {
         this.precoVenda = precoVenda;
     }
 
-    public String getMargem() {
+    public float getMargem() {
         return margem;
     }
 
-    public void setMargem(String margem) {
+    public void setMargem(float margem) {
         this.margem = margem;
     }
 
-    public String getCusto() {
+    public float getCusto() {
         return custo;
     }
 
-    public void setCusto(String custo) {
+    public void setCusto(float custo) {
         this.custo = custo;
     }
 

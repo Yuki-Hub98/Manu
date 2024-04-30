@@ -1,9 +1,6 @@
 package br.com.manu.controller.recursos;
 
-import br.com.manu.model.recursos.grupoDeRecurso.GrupoDeRecursoDel;
-import br.com.manu.model.recursos.grupoDeRecurso.GrupoDeRecursoRequestSave;
-import br.com.manu.model.recursos.grupoDeRecurso.GrupoDeRecursoResponse;
-import br.com.manu.model.recursos.grupoDeRecurso.GrupoDeRecursoResponseSimplified;
+import br.com.manu.model.recursos.grupoDeRecurso.*;
 import br.com.manu.service.recursos.grupoDeRecurso.GrupoDeRecursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
