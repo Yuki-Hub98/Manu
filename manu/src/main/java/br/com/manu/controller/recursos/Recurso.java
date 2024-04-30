@@ -1,9 +1,9 @@
 package br.com.manu.controller.recursos;
 
-import br.com.manu.model.recursos.cadastroDeRecurso.RecursoDel;
-import br.com.manu.model.recursos.cadastroDeRecurso.RecursoRequest;
-import br.com.manu.model.recursos.cadastroDeRecurso.RecursoResponse;
-import br.com.manu.service.recursos.Recurso.RecursoService;
+import br.com.manu.model.recursos.recurso.RecursoDel;
+import br.com.manu.model.recursos.recurso.RecursoRequest;
+import br.com.manu.model.recursos.recurso.RecursoResponse;
+import br.com.manu.service.recursos.recurso.RecursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +33,8 @@ public class Recurso {
         return ResponseEntity.ok(service.edit(codigo, request));
     }
     @DeleteMapping("/del/{codigo}")
-    public ResponseEntity<RecursoDel> del(@PathVariable int codigo){
-        return ResponseEntity.ok(service.del(codigo));
+    public ResponseEntity<RecursoDel> del(@RequestBody RecursoRequest request, @PathVariable int codigo){
+        return ResponseEntity.ok(service.del(request,codigo));
     }
 
 }

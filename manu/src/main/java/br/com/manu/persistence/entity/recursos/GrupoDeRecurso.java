@@ -1,6 +1,6 @@
 package br.com.manu.persistence.entity.recursos;
 
-import br.com.manu.model.recursos.cadastroDeRecurso.RecursoRequest;
+import br.com.manu.model.recursos.recurso.RecursoRequest;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;

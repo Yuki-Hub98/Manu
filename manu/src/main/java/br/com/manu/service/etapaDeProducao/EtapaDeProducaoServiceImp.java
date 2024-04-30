@@ -1,6 +1,7 @@
 package br.com.manu.service.etapaDeProducao;
 
 import br.com.manu.model.etapaDeProducao.EtapaDeProducaoDel;
+import br.com.manu.model.etapaDeProducao.EtapaDeProducaoFichaTecnica;
 import br.com.manu.model.etapaDeProducao.EtapaDeProducaoRe;
 import br.com.manu.persistence.entity.etapaDeProducao.EtapaDeProducao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class EtapaDeProducaoImp implements EtapaDeProducaoService{
+public class EtapaDeProducaoServiceImp implements EtapaDeProducaoService{
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public EtapaDeProducaoImp (MongoTemplate mongoTemplate){
+    public EtapaDeProducaoServiceImp(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -44,6 +45,17 @@ public class EtapaDeProducaoImp implements EtapaDeProducaoService{
         });
 
         return etapaDeProducaoRes;
+    }
+
+    @Override
+    public List<EtapaDeProducaoFichaTecnica> getEtapaFichaTecnica() {
+        List<EtapaDeProducao> etapaDeProducao = mongoTemplate.findAll(EtapaDeProducao.class, "etapaDeProducao");
+        List<EtapaDeProducaoFichaTecnica> list = new ArrayList<>();
+        etapaDeProducao.forEach(items -> {
+            list.add(new EtapaDeProducaoFichaTecnica(items.getCodigo(), items.getEtapaDeProducao()));
+        });
+
+        return list;
     }
 
     @Override

@@ -42,6 +42,18 @@ public class ProdutoController {
                 linha,familia,grupo,fornecedor,modelo,tipoProduto,unidadeMedida,cor,especificacao));
     }
 
+    @GetMapping("/search/fichaTecnicaItemVendaFilter")
+    public ResponseEntity<List<ResponseItem>> searchFichaTecnicaItemVendaFilter(@RequestParam ("idItem") String idItem,
+                                                                 @RequestParam ("descricaoItem") String descricaoItem,
+                                                                 @RequestParam ("codBarra") String codBarra,
+                                                                 @RequestParam ("departamento") String departamento,
+                                                                 @RequestParam ("linha") String linha,
+                                                                 @RequestParam ("modelo") String modelo) {
+
+        return ResponseEntity.ok(service.searchFichaTecnicaItemVendaFilter(idItem,descricaoItem,codBarra,departamento,
+                linha,modelo));
+    }
+
     @GetMapping("/modelo/linha")
     public ResponseEntity<List<ModeloProduto>> getModels(@RequestParam("linha") String linha){
         return ResponseEntity.ok(service.getModels(linha));
@@ -62,6 +74,12 @@ public class ProdutoController {
     @PutMapping("/edit/{id}")
     public ResponseEntity<List<ResponseItem>> edit(@PathVariable int id, @RequestBody ProdutoRequest request){
         return ResponseEntity.ok(service.edit(id, request));
+    }
+
+
+    @GetMapping("/descricao-item/fichaTecnicaItemMateriaPrima")
+    public ResponseEntity<List<ItemModelFichaTecnica>> getItemFichaTecnicaMateriaPrima(){
+        return ResponseEntity.ok(service.getItemFichaTecnicaMateriaPrima());
     }
 
     @GetMapping("/csticms")

@@ -212,6 +212,14 @@ public class ProdutoServiceImp implements ProdutoService {
 
         List<ResponseItem> responseItems = new ArrayList<>();
 
+        if (idItem.equals("undefined") && descricaoItem.equals("undefined") && departamento.equals("undefined")
+                && linha.equals("undefined")  && modelo.equals("undefined")){
+            List<Produto> produtos = mongoTemplate.findAll(Produto.class, "produto");
+            produtos.forEach(item -> {
+                responseItems.add(createResponseItemByProduto(item));
+            });
+        }
+
         if (!descricaoItem.isEmpty() || !codBarra.isEmpty() || !cor.isEmpty() || !especificacao.isEmpty()){
             /*
              * Find executado na collection de Item, adiciona na array responseItem.
@@ -232,6 +240,68 @@ public class ProdutoServiceImp implements ProdutoService {
                     Criteria.where("linha").is(linha), Criteria.where("familia").is(familia), Criteria.where("grupo").is(grupo),
                     Criteria.where("fornecedor").is(fornecedor), Criteria.where("modelo").is(modelo), Criteria.where("tipoProduto").is(tipoProduto),
                     Criteria.where("unidadeMedida").is(unidadeMedida), Criteria.where("cor").is(cor), Criteria.where("especificacao").is(especificacao))),
+                    Produto.class, "produto");
+            if (!produtos.isEmpty()){
+                produtos.forEach(produto -> {
+                    if (!responseItems.contains(createResponseItemByProduto(produto))){
+                        responseItems.add(createResponseItemByProduto(produto));
+                    }});
+            }
+        }
+        if (!idItem.isEmpty()) {
+            if (idItem.equals("undefined") || idItem.equals("")){
+                return responseItems;
+            }
+            long id = Long.parseLong(idItem);
+            Item item = mongoTemplate.findOne(new Query().addCriteria( new Criteria().orOperator(Criteria.where("idItem").is(id))),
+                    Item.class, "item");
+            responseItems.add(0, createResponseItem(item));
+        }
+
+        return responseItems;
+    }
+
+    @Override
+    public List<ResponseItem> searchFichaTecnicaItemVendaFilter(String idItem, String descricaoItem,
+                                                 String codBarra, String departamento,
+                                                 String linha, String modelo) {
+
+        List<ResponseItem> responseItems = new ArrayList<>();
+        if (idItem.equals("undefined") && descricaoItem.equals("undefined") && codBarra.equals("undefined")
+                && departamento.equals("undefined") && linha.equals("undefined")  && modelo.equals("undefined")){
+            List<Produto> produtos = mongoTemplate.findAll(Produto.class, "produto");
+            produtos.forEach(item -> {
+                if ("ITEM DE VENDA".equals(item.getTipoProduto())) {
+                    responseItems.add(createResponseItemByProduto(item));
+                }
+            });
+        }
+        if (!descricaoItem.isEmpty() || !codBarra.isEmpty()){
+            /*
+             * Find executado na collection de Item, adiciona na array responseItem.
+             * */
+            List<Item> items = mongoTemplate.find(new Query().addCriteria( new Criteria().orOperator(Criteria.where("codBarra").is(codBarra),
+                            Criteria.where("descricaoItem").regex(descricaoItem))),
+                    Item.class, "item");
+            if (!items.isEmpty()){
+                items.forEach(item -> {
+                   Produto produto = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(item.get_idProduto())), Produto.class, "produto");
+                   if ((produto != null ? produto.getTipoProduto().equals("ITEM DE VENDA") : false) && produto.isProcessado()){
+                       if (!responseItems.contains(createResponseItemByProduto(produto))){
+                           responseItems.add(createResponseItemByProduto(produto));
+                       };
+                   }
+                });
+            }
+        }
+        if (!departamento.isEmpty() || !linha.isEmpty() || !modelo.isEmpty()){
+            /*
+             * Find executado na collection de Produto, adiciona na array responseItem.
+             * */
+            List<Produto> produtos = mongoTemplate.find(new Query().addCriteria(new Criteria().orOperator(Criteria.where("departamento").is(departamento)
+                                    .and("processado").is(true).and("tipoProduto").is("ITEM DE VENDA"), Criteria.where("linha").is(linha)
+                                    .and("processado").is(true).and("tipoProduto").is("ITEM DE VENDA"),
+                            Criteria.where("modelo").is(modelo)).and("processado").is(true).and("tipoProduto").is("ITEM DE VENDA")),
                     Produto.class, "produto");
             if (!produtos.isEmpty()){
                 produtos.forEach(produto -> {
@@ -342,6 +412,16 @@ public class ProdutoServiceImp implements ProdutoService {
     }
 
     @Override
+    public List<ItemModelFichaTecnica> getItemFichaTecnicaMateriaPrima() {
+        List<Produto> produtos = mongoTemplate.findAll(Produto.class, "produto");
+        List<ItemModelFichaTecnica> list = new ArrayList<>();
+        produtos.stream().filter(produto -> "MATÉRIA PRIMA".equals(produto.getTipoProduto())).forEach(produto -> {
+            list.add(createModelFichaTecnica(produto));
+        });
+        return list;
+    }
+
+    @Override
     public ProdutoResponse getProduto(String descricaoProduto, String fornecedor) {
         Produto produto = mongoTemplate.findOne(Query.query(Criteria.where("descricaoProduto").is(descricaoProduto)
                 .and("fornecedor").is(fornecedor)), Produto.class, "produto");
@@ -404,6 +484,10 @@ public class ProdutoServiceImp implements ProdutoService {
         newItem.setEspecificacao(item.getEspecificacao());
         newItem.setCor(item.getCor());
         newItem.setFornecedor(fornecedor);
+        newItem.setCusto(0);
+        newItem.setValorItem(0);
+        newItem.setMargem(0);
+        newItem.setPrecoVenda(0);
         return newItem;
     }
 
@@ -487,6 +571,16 @@ public class ProdutoServiceImp implements ProdutoService {
             items.setProcessado("NÃO");
         }
         return items;
+    }
+
+    private ItemModelFichaTecnica createModelFichaTecnica(Produto produto){
+        ItemModelFichaTecnica response = new ItemModelFichaTecnica();
+        produto.getItems().forEach(item -> {
+            response.setCodigo(item.getIdItem());
+            response.setDescricaoItem(item.getDescricaoItem());
+            response.setValorItem(item.getValorItem());
+        });
+        return response;
     }
 
     /**

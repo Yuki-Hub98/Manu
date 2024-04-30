@@ -1,23 +1,19 @@
 package br.com.manu.model.recursos.grupoDeRecurso;
 
-
-import br.com.manu.model.recursos.recurso.RecursoRequest;
-
-import java.util.List;
-
-public class GrupoDeRecursoRequestSave {
+public class GrupoModelFichaTecnica {
     private int codigo;
     private String grupoRecurso;
-    private List<RecursoRequest> recursos;
+    private double valorTotalUnitario;
+    private String tipo;
 
-    public GrupoDeRecursoRequestSave() {
+    public GrupoModelFichaTecnica() {
 
     }
 
-    public GrupoDeRecursoRequestSave(int codigo, String grupoRecurso, List<RecursoRequest> recursos) {
+    public GrupoModelFichaTecnica(int codigo, String grupoRecurso, double valorTotalUnitario) {
         this.codigo = codigo;
         this.grupoRecurso = grupoRecurso;
-        this.recursos = recursos;
+        this.valorTotalUnitario = valorTotalUnitario;
     }
 
     public int getCodigo() {
@@ -36,11 +32,11 @@ public class GrupoDeRecursoRequestSave {
         this.grupoRecurso = grupoRecurso;
     }
 
-    public List<RecursoRequest> getRecursos() {
-        return recursos;
+    public double getValorTotalUnitario() {
+        return valorTotalUnitario;
     }
 
-    public void setRecursos(List<RecursoRequest> recursos) {
-        this.recursos = recursos;
+    public void setValorTotalUnitario(double valorTotalUnitario) {
+        this.valorTotalUnitario = valorTotalUnitario;
     }
 }

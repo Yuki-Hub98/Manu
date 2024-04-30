@@ -1,13 +1,14 @@
-package br.com.manu.model.recursos.cadastroDeRecurso;
+package br.com.manu.model.fichaTecnica;
 
-public class RecursoDel {
+public class FichaTecnicaDel {
     private int codigo;
     private String del;
-    public RecursoDel() {
+
+    public FichaTecnicaDel() {
 
     }
 
-    public RecursoDel(int codigo, String del) {
+    public FichaTecnicaDel(int codigo, String del) {
         this.codigo = codigo;
         this.del = del;
     }
