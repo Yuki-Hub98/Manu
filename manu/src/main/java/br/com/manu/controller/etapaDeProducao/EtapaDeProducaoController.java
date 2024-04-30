@@ -1,6 +1,7 @@
 package br.com.manu.controller.etapaDeProducao;
 
 import br.com.manu.model.etapaDeProducao.EtapaDeProducaoDel;
+import br.com.manu.model.etapaDeProducao.EtapaDeProducaoFichaTecnica;
 import br.com.manu.model.etapaDeProducao.EtapaDeProducaoRe;
 import br.com.manu.service.etapaDeProducao.EtapaDeProducaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class EtapaDeProducaoController {
     @GetMapping
     public ResponseEntity<List<EtapaDeProducaoRe>> gelAll(){
         return ResponseEntity.ok(service.getAll());
+    }
+    @GetMapping("/fichaTecnica/etapa-de-producao")
+    public ResponseEntity<List<EtapaDeProducaoFichaTecnica>> getEtapaFichaTecnica(){
+        return ResponseEntity.ok(service.getEtapaFichaTecnica());
     }
     @PutMapping("/edit/{codigo}")
     public ResponseEntity<EtapaDeProducaoRe> edit(@RequestBody EtapaDeProducaoRe request, @PathVariable int codigo){

@@ -58,7 +58,6 @@ public class Fornecedor {
     private String contaBanco;
     private String orgaoEmissorBanco;
     private String pix;
-
     @CreatedDate
     private Date dataCriacao;
     @LastModifiedDate

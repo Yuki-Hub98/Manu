@@ -1,6 +1,10 @@
 package br.com.manu.persistence.entity.recursos;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.util.Date;
 
 public class Recurso {
     @Id
@@ -11,6 +15,10 @@ public class Recurso {
     private String recurso;
     private float valor;
     private double valorUnitario;
+    @CreatedDate
+    private Date dataCriacao;
+    @LastModifiedDate
+    private Date dataModificacao;
 
     public Recurso() {
 
@@ -80,5 +88,21 @@ public class Recurso {
 
     public void setValorUnitario(double valorUnitario) {
         this.valorUnitario = valorUnitario;
+    }
+
+    public Date getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(Date dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public Date getDataModificacao() {
+        return dataModificacao;
+    }
+
+    public void setDataModificacao(Date dataModificacao) {
+        this.dataModificacao = dataModificacao;
     }
 }

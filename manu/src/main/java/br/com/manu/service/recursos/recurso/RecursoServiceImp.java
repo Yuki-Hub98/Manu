@@ -1,10 +1,12 @@
-package br.com.manu.service.recursos.Recurso;
+package br.com.manu.service.recursos.recurso;
 
-import br.com.manu.model.recursos.cadastroDeRecurso.RecursoDel;
-import br.com.manu.model.recursos.cadastroDeRecurso.RecursoRequest;
-import br.com.manu.model.recursos.cadastroDeRecurso.RecursoResponse;
+import br.com.manu.model.fichaTecnica.FichaTecnicaRequest;
+import br.com.manu.model.recursos.recurso.RecursoDel;
+import br.com.manu.model.recursos.recurso.RecursoRequest;
+import br.com.manu.model.recursos.recurso.RecursoResponse;
 import br.com.manu.persistence.entity.recursos.Recurso;
 import br.com.manu.persistence.entity.recursos.GrupoDeRecurso;
+import br.com.manu.service.recursos.grupoDeRecurso.GrupoDeRecursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
@@ -21,10 +23,12 @@ import java.util.List;
 @Service
 public class RecursoServiceImp implements RecursoService {
     @Autowired
-    private final MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
+    private GrupoDeRecursoService grupoDeRecursoService;
 
-    public RecursoServiceImp(MongoTemplate mongoTemplate) {
+    public RecursoServiceImp(MongoTemplate mongoTemplate, GrupoDeRecursoService grupoDeRecursoService) {
         this.mongoTemplate = mongoTemplate;
+        this.grupoDeRecursoService = grupoDeRecursoService;
     }
 
     @Override
@@ -58,18 +62,31 @@ public class RecursoServiceImp implements RecursoService {
 
     @Override
     public List<RecursoResponse> searchRecurso(String recurso) {
+        List<RecursoResponse> recursoResponseList = new ArrayList<>();
+        if(recurso.equals("undefined")){
+            List<Recurso> recursos = mongoTemplate.findAll(Recurso.class, "recurso");
+            recursos.forEach(item -> {
+                recursoResponseList.add(generateResponse(item));
+            });
+            return recursoResponseList;
+        }
         List<Recurso> recursos = mongoTemplate.find(new Query().addCriteria(Criteria.where("recurso").regex(recurso)),
                 Recurso.class, "recurso");
-        List<RecursoResponse> recursoResponseList = new ArrayList<>();
         recursos.forEach(item -> {
             recursoResponseList.add(generateResponse(item));
         });
         return recursoResponseList;
     }
 
+    /**
+     * Função recebe os parametros e atualiza o documento no banco, e retorna um objeto.
+     * @param codigo
+     * @param request
+     * @return
+     */
+
     @Override
     public RecursoResponse edit(int codigo, RecursoRequest request) {
-        Duplicated(request);
         Recurso cadastroDeRecurso = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(codigo)),
                 Recurso.class, "recurso");
         Recurso response = new Recurso();
@@ -89,35 +106,13 @@ public class RecursoServiceImp implements RecursoService {
                                 .set("unidadeMedida", request.getUnidadeMedida()).set("tipoRecurso", request.getTipoRecurso()),
                         Recurso.class, "recurso");
 
-                String calculoForGrupoRecurso = String.valueOf(calculo).replace(".", ",");
-                Query queryGrupoRecursos = new Query((Criteria.where("recursos")
-                        .elemMatch(Criteria.where("codigo").is(codigo))));
-                Update updateInGrupoDeRecursos = new Update().set("recursos.$.tipoRecurso", request.getTipoRecurso())
-                        .set("recursos.$.unidadeMedida", request.getUnidadeMedida()).set("recursos.$.recurso", request.getRecurso())
-                        .set("recursos.$.valor", request.getValor()).set("recursos.$.valorUnitario", calculoForGrupoRecurso);
-
-                mongoTemplate.updateMulti(queryGrupoRecursos, updateInGrupoDeRecursos, GrupoDeRecurso.class, "grupoDeRecurso");
-
-                List<GrupoDeRecurso> grupoDeRecursos = mongoTemplate.find(Query.query(Criteria.where("recursos").elemMatch(Criteria.where("codigo").is(codigo))),
-                        GrupoDeRecurso.class, "grupoDeRecurso");
-
-                final double[] valorUnitario = {0};
-                double valorDefinitvo;
-                grupoDeRecursos.forEach(item -> {
-                    item.getRecursos().forEach(recurso -> {
-                        String _valorUnitario = recurso.getValorUnitario().replace(",", ".");
-                        valorUnitario[0] += Double.parseDouble(_valorUnitario);
-                    });
-                });
-                valorDefinitvo = (float) Math.round(valorUnitario[0] * 100.0) / 100.0 ;
-
-                grupoDeRecursos.forEach(item -> {
-                    mongoTemplate.updateFirst(Query.query(Criteria.where("codigo").is(item.getCodigo())),
-                            Update.update("valorTotalUnitario", valorDefinitvo), GrupoDeRecurso.class, "grupoDeRecurso");
-                });
-
                 response.setValor(valor);
                 response.setValorUnitario(calculo);
+                /**
+                 * Essa função void é para atualizar a collection de *grupoGrupoDeRecurso*
+                 * de acordo com o objeto fornecido
+                 */
+                grupoDeRecursoService.updateGrupoRecursoByRecurso(response);
                 return generateResponse(response);
             }
 
@@ -126,15 +121,15 @@ public class RecursoServiceImp implements RecursoService {
     }
 
     @Override
-    public RecursoDel del(int id) {
+    public RecursoDel del(RecursoRequest request, int id) {
         boolean exists = mongoTemplate.exists(Query.query((Criteria.where("recursos")
                 .elemMatch(Criteria.where("codigo").is(id)))),
                 GrupoDeRecurso.class, "grupoDeRecurso");
         if(exists){
             try {
-                throw new DataIntegrityViolationException("codigo " + id);
+                throw new DataIntegrityViolationException(request.getRecurso());
             } catch (DataIntegrityViolationException e) {
-                throw new DataIntegrityViolationException("codigo " + id);
+                throw new DataIntegrityViolationException(request.getRecurso());
             }
         }
         RecursoDel recursoDel = new RecursoDel();
@@ -159,7 +154,7 @@ public class RecursoServiceImp implements RecursoService {
     }
 
     private void Duplicated (RecursoRequest request){
-        boolean exist = mongoTemplate.exists(Query.query(Criteria.where("descricao").is(request.getRecurso())),
+        boolean exist = mongoTemplate.exists(Query.query(Criteria.where("recurso").is(request.getRecurso())),
                 GrupoDeRecurso.class, "grupoDeRecurso");
         if(exist) {
             try {

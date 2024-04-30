@@ -59,6 +59,12 @@ public class FornecedorServiceImp implements FornecedorService {
     @Override
     public List<FornecedorResponse> getParams(String requestName, String requestRazao, String requestCpfCnpj){
         List<FornecedorResponse> fornecedorResponses = new ArrayList<>();
+        if (requestName.equals("undefined") && requestRazao.equals("undefined") && requestCpfCnpj.equals("undefined")){
+            List<Fornecedor> fornecedors = mongoTemplate.findAll(Fornecedor.class, "fornecedor");
+            fornecedors.forEach(fornecedor -> {
+                fornecedorResponses.add(createResponse(fornecedor));
+            });
+        }
         if(requestName.isEmpty() || requestCpfCnpj.isEmpty() || requestRazao.isEmpty()){
             List<Fornecedor> fornecedors = mongoTemplate.find(Query.query(
                     new Criteria().orOperator(Criteria.where("nomeFantasiaFornecedor").is(requestName),

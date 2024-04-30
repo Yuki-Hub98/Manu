@@ -1,7 +1,6 @@
 package br.com.manu.controller.produto;
 
 import br.com.manu.model.produto.*;
-import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 import br.com.manu.service.produto.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +42,18 @@ public class ProdutoController {
                 linha,familia,grupo,fornecedor,modelo,tipoProduto,unidadeMedida,cor,especificacao));
     }
 
+    @GetMapping("/search/fichaTecnicaItemVendaFilter")
+    public ResponseEntity<List<ResponseItem>> searchFichaTecnicaItemVendaFilter(@RequestParam ("idItem") String idItem,
+                                                                 @RequestParam ("descricaoItem") String descricaoItem,
+                                                                 @RequestParam ("codBarra") String codBarra,
+                                                                 @RequestParam ("departamento") String departamento,
+                                                                 @RequestParam ("linha") String linha,
+                                                                 @RequestParam ("modelo") String modelo) {
+
+        return ResponseEntity.ok(service.searchFichaTecnicaItemVendaFilter(idItem,descricaoItem,codBarra,departamento,
+                linha,modelo));
+    }
+
     @GetMapping("/modelo/linha")
     public ResponseEntity<List<ModeloProduto>> getModels(@RequestParam("linha") String linha){
         return ResponseEntity.ok(service.getModels(linha));
@@ -65,6 +76,12 @@ public class ProdutoController {
         return ResponseEntity.ok(service.edit(id, request));
     }
 
+
+    @GetMapping("/descricao-item/fichaTecnicaItemMateriaPrima")
+    public ResponseEntity<List<ItemModelFichaTecnica>> getItemFichaTecnicaMateriaPrima(){
+        return ResponseEntity.ok(service.getItemFichaTecnicaMateriaPrima());
+    }
+
     @GetMapping("/csticms")
     public ResponseEntity<List<ProdutoCstIcmsResponse>> getCstIcms(@RequestParam("origem") String request){
         return ResponseEntity.ok(service.getCstIcms(request));
@@ -80,20 +97,20 @@ public class ProdutoController {
     }
 
     @PostMapping("/modelos")
-    public ResponseEntity<Modelo>createModelo(@RequestBody Modelo request){
+    public ResponseEntity<ModeloRe>createModelo(@RequestBody ModeloRe request){
         return ResponseEntity.ok(service.createModelo(request));
     }
 
     @GetMapping("/modelos")
-    public ResponseEntity<List<Modelo>>getAllModelos(){
+    public ResponseEntity<List<ModeloRe>>getAllModelos(){
         return ResponseEntity.ok(service.getAllModelos());
     }
     @PutMapping("/modelos/edit")
-    public ResponseEntity<Modelo>editModelo(@RequestBody Modelo request){
+    public ResponseEntity<ModeloRe>editModelo(@RequestBody ModeloRe request){
         return ResponseEntity.ok(service.editModelo(request));
     }
     @DeleteMapping("/modelos/del")
-    public ResponseEntity<Modelo>delModelo(@RequestBody Modelo request){
+    public ResponseEntity<ModeloRe>delModelo(@RequestBody ModeloRe request){
         return ResponseEntity.ok(service.delModelo(request));
     }
 

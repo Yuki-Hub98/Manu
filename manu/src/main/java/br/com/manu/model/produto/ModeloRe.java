@@ -1,13 +1,13 @@
 package br.com.manu.model.produto;
 
-public class Modelo {
+public class ModeloRe {
     private int codigo;
     private String descricao;
 
-    public Modelo() {
+    public ModeloRe() {
     }
 
-    public Modelo(int codigo, String descricao) {
+    public ModeloRe(int codigo, String descricao) {
         this.codigo = codigo;
         this.descricao = descricao;
     }
