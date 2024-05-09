@@ -12,6 +12,7 @@ import java.util.List;
 public interface FichaTecnicaService {
     FichaTecnicaResponse create(FichaTecnicaRequest request);
     List<FichaTecnicaResponse> getAll();
+    FichaTecnicaResponse onlyFicha(int codigo);
     FichaTecnicaResponse edit(FichaTecnicaRequest request, int codigo);
     List<FichaTecnicaResponse> getParams(String fichaTecnica);
     FichaTecnicaModalItemRecursoEtapa getModalItemRecursoEtapa();
