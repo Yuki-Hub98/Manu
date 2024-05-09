@@ -3,13 +3,13 @@ package br.com.manu.model.produto;
 public class ItemModelFichaTecnica {
     private long codigo;
     private String descricaoItem;
-    private float valorItem;
+    private double valorItem;
 
     public ItemModelFichaTecnica() {
 
     }
 
-    public ItemModelFichaTecnica(long codigo, String descricaoItem, float valorItem) {
+    public ItemModelFichaTecnica(long codigo, String descricaoItem, double valorItem) {
         this.codigo = codigo;
         this.descricaoItem = descricaoItem;
         this.valorItem = valorItem;
@@ -31,11 +31,11 @@ public class ItemModelFichaTecnica {
         this.descricaoItem = descricaoItem;
     }
 
-    public float getValorItem() {
+    public double getValorItem() {
         return valorItem;
     }
 
-    public void setValorItem(float valorItem) {
+    public void setValorItem(double valorItem) {
         this.valorItem = valorItem;
     }
 }
