@@ -35,6 +35,11 @@ public class FichaTecnicaController {
         return ResponseEntity.ok(service.getParams(fichaTecnica));
     }
 
+    @GetMapping("/onlyFicha/{codigo}")
+    public ResponseEntity<FichaTecnicaResponse> onlyFicha(@PathVariable int codigo){
+        return ResponseEntity.ok(service.onlyFicha(codigo));
+    }
+
     @DeleteMapping("/del/{codigo}")
     public ResponseEntity<FichaTecnicaDel> del(@RequestBody FichaTecnicaRequest request, @PathVariable int codigo){
         return ResponseEntity.ok(service.del(request, codigo));
