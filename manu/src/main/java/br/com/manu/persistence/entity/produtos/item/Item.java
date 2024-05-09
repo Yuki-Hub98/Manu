@@ -16,10 +16,10 @@ public class Item {
     private String especificacao;
     private String _idProduto;
     private String fornecedor;
-    private float valorItem;
-    private float precoVenda;
-    private float margem;
-    private float custo;
+    private double valorItem;
+    private double precoVenda;
+    private double margem;
+    private double custo;
     @CreatedDate
     private Date dataCriacao;
     @LastModifiedDate
@@ -40,8 +40,8 @@ public class Item {
         this.fornecedor = fornecedor;
     }
 
-    public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto, String fornecedor,
-                float valorItem, float precoVenda, float margem, float custo, Date dataCriacao, Date dataModificacao) {
+    public Item(String id, long idItem, String descricaoItem, String codBarra, String cor, String especificacao, String _idProduto,
+                String fornecedor, double valorItem, double precoVenda, double margem, double custo, Date dataCriacao, Date dataModificacao) {
         this.id = id;
         this.idItem = idItem;
         this.descricaoItem = descricaoItem;
@@ -122,32 +122,36 @@ public class Item {
         this.fornecedor = fornecedor;
     }
 
-    public float getValorItem() {
+    public double getValorItem() {
         return valorItem;
     }
 
-    public void setValorItem(float valorItem) {
+    public void setValorItem(double valorItem) {
         this.valorItem = valorItem;
     }
 
-    public float getPrecoVenda() {
+    public double getPrecoVenda() {
         return precoVenda;
     }
 
-    public void setPrecoVenda(float precoVenda) {
+    public void setPrecoVenda(double precoVenda) {
         this.precoVenda = precoVenda;
     }
 
-    public float getMargem() {
+    public double getMargem() {
         return margem;
     }
 
-    public void setMargem(float margem) {
+    public void setMargem(double margem) {
         this.margem = margem;
     }
 
-    public float getCusto() {
+    public double getCusto() {
         return custo;
+    }
+
+    public void setCusto(double custo) {
+        this.custo = custo;
     }
 
     public void setCusto(float custo) {

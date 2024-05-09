@@ -1,10 +1,13 @@
 package br.com.manu.service.produto;
 import br.com.manu.model.produto.*;
+import br.com.manu.persistence.entity.administracaoDePreco.AdministracaoDePreco;
+import br.com.manu.persistence.entity.fichaTenica.FichaTecnica;
 import br.com.manu.persistence.entity.produtos.csticms.CstIcms;
 import br.com.manu.persistence.entity.produtos.item.Item;
 import br.com.manu.persistence.entity.produtos.modelo.Modelo;
 import br.com.manu.persistence.entity.produtos.ncm.Ncm;
 import br.com.manu.persistence.entity.produtos.produto.Produto;
+import br.com.manu.service.administracaoDePreco.AdministracaoDePrecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
@@ -23,8 +26,10 @@ import java.util.List;
 public class ProdutoServiceImp implements ProdutoService {
     @Autowired
     private final MongoTemplate mongoTemplate;
-    public ProdutoServiceImp (MongoTemplate mongoTemplate){
+    private AdministracaoDePrecoService administracaoDePrecoService;
+    public ProdutoServiceImp (MongoTemplate mongoTemplate, AdministracaoDePrecoService administracaoDePrecoService){
         this.mongoTemplate = mongoTemplate;
+        this.administracaoDePrecoService = administracaoDePrecoService;
     }
 
     /**
@@ -73,6 +78,7 @@ public class ProdutoServiceImp implements ProdutoService {
                            duplicateProd.getLinha(), duplicateProd.getFamilia(), duplicateProd.getGrupo(), duplicateProd.getFornecedor(),
                            duplicateProd.getModelo(), duplicateProd.getTipoProduto(), duplicateProd.getUnidadeMedida(), item.getCor(), item.getEspecificacao(), _Processado));
                });
+               administracaoDePrecoService.generateAdministracaoDePreco(responseItems);
                return responseItems;
            }
         }
@@ -132,6 +138,7 @@ public class ProdutoServiceImp implements ProdutoService {
                     prodSave.getLinha(), prodSave.getFamilia(), prodSave.getGrupo(), prodSave.getFornecedor(),
                     prodSave.getModelo(), prodSave.getTipoProduto(), prodSave.getUnidadeMedida(), item.getCor(), item.getEspecificacao(), _Processado));
         });
+        administracaoDePrecoService.generateAdministracaoDePreco(responseItems);
         return responseItems;
     }
 
@@ -408,6 +415,9 @@ public class ProdutoServiceImp implements ProdutoService {
                     produtoUpdate.getLinha(), produtoUpdate.getFamilia(), produtoUpdate.getGrupo(), produtoUpdate.getFornecedor(),
                     produtoUpdate.getModelo(), produtoUpdate.getTipoProduto(), produtoUpdate.getUnidadeMedida(), item.getCor(), item.getEspecificacao(), _Processado));
         });
+
+        administracaoDePrecoService.updateAdministracaoPrecoByProduto(responseItems);
+
         return responseItems;
     }
 
@@ -460,6 +470,16 @@ public class ProdutoServiceImp implements ProdutoService {
      */
     @Override
     public ResponseItem del(int id, ResponseItem item) {
+        boolean exists = mongoTemplate.exists(Query.query(Criteria.where("fichaTecnica").is(item.getDescricaoItem())),
+                FichaTecnica.class, "fichaTecnica");
+        if (exists){
+            try {
+                throw new DataIntegrityViolationException(item.getDescricaoItem());
+            } catch (DataIntegrityViolationException e) {
+                throw new DataIntegrityViolationException(item.getDescricaoItem());
+            }
+        }
+
         Item items = mongoTemplate.findOne(Query.query(Criteria.where("idItem").is(id)), Item.class, "item");
         if(items != null){
             Produto produto = mongoTemplate.findById(items.get_idProduto(), Produto.class, "produto");
@@ -472,6 +492,8 @@ public class ProdutoServiceImp implements ProdutoService {
                 }
             });
             mongoTemplate.remove(Query.query(Criteria.where("idItem").is(id)), Item.class, "item");
+            mongoTemplate.remove(Query.query(Criteria.where("codigo").is(id)),
+                   AdministracaoDePreco.class, "administracaoDePreco");
         }
         return item;
     }
