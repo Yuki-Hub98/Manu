@@ -39,7 +39,7 @@ public class FichaTecnicaServiceImp implements FichaTecnicaService {
         final double[] totalDeRecurso = {0};
         final double[] totalDeItem = {0};
         final int[] quantidadeTempo = {0};
-        fichaTecnica.setCodigo(incrementCodigo());
+        fichaTecnica.setCodigo(request.getCodigo());
         fichaTecnica.setFichaTecnica(request.getFichaTecnica());
         fichaTecnica.setEtapas(request.getEtapas());
         request.getEtapas().forEach(item -> {
@@ -73,6 +73,13 @@ public class FichaTecnicaServiceImp implements FichaTecnicaService {
         });
 
         return fichaTecnicaResponseList;
+    }
+
+    @Override
+    public FichaTecnicaResponse onlyFicha(int codigo) {
+        FichaTecnica fichaTecnica = mongoTemplate.findOne(Query.query(Criteria.where("codigo").is(codigo)),
+                FichaTecnica.class, "fichaTecnica");
+        return createResponse(fichaTecnica);
     }
 
     @Override
